@@ -1,4 +1,5 @@
 using EcommerseApplication.Models;
+using EcommerseApplication.Repository;
 using EcommerseApplication.Respository;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,12 @@ builder.Services.AddDbContext<Context>(optionBuider =>
 {
     optionBuider.UseSqlServer(con);
 });
+builder.Services.AddScoped<Ifeedback, feedbackRepository>();
+builder.Services.AddScoped<Ipartener, PartenerRepository>();
+builder.Services.AddScoped<Ishipper, shipperRepository>();
+builder.Services.AddScoped<IshippingDetails, shippingDetailsRepository>();
+builder.Services.AddScoped<IsubCategory,subcategoryRepository>();
+
 builder.Services.AddApplicationInsightsTelemetry();
 
 var app = builder.Build();
