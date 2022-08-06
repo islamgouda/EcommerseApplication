@@ -24,6 +24,11 @@ builder.Services.AddScoped<Ishipper, shipperRepository>();
 builder.Services.AddScoped<IshippingDetails, shippingDetailsRepository>();
 builder.Services.AddScoped<IsubCategory,subcategoryRepository>();
 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IShopping_SessionRepository, Shopping_SessionRepository>();
+builder.Services.AddScoped<IPayment_DetailsRepository, Payment_DetailsRepository>();
+builder.Services.AddScoped<ICart_ItemRepository, Cart_ItemRepository>();
+
 builder.Services.AddApplicationInsightsTelemetry();
 
 var app = builder.Build();
