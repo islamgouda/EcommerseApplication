@@ -8,14 +8,14 @@ namespace EcommerseApplication.Models
     {
         public int Id { get; set; }
         public string UserName { get; set; }//real user Name
-        public string UserNameAR { get; set; }
+        public string? UserNameAR { get; set; }
  
-        public string AcountID { get; set; }//linked to user Account
+        public string? AcountID { get; set; }//linked to user Account
         //public string Password { get; set; }
-        public string FirstName { get; set; }
-        public string FirstNameAR { get; set; }
-        public string LastName { get; set; }
-        public string LastNameAR { get; set; }
+        public string? FirstName { get; set; }
+        public string? FirstNameAR { get; set; }
+        public string? LastName { get; set; }
+        public string? LastNameAR { get; set; }
         public string? Phone { get; set; }
         public string? Gender { get; set; }
         [Column(TypeName = "date")]
@@ -23,7 +23,9 @@ namespace EcommerseApplication.Models
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
-
+        [ForeignKey("Identity")]
+        public string IdentityId { get; set; } //reference to AppUser and maps to it
+        public AppUser Identity { get; set; }
 
         // public virtual List<Product>? Products { get; set; }
         public virtual List<Shopping_Session>? Shopping_Sessions { get; set; }
