@@ -8,7 +8,8 @@ namespace EcommerseApplication.Repository
         public subCategory getByID(int id);
         public subCategory getByName(string name);
         public List<subCategory> getAll();
-        public void delete(int id);
         public List<subCategory> getAllByCategoryID(int categoryID);
+        public void delete(int id);
+        public List<subCategory> GetAllWithIncludeByCategoryID(int categoryID);
     }
 }

@@ -13,7 +13,18 @@ ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
 
+builder.Services.AddScoped<IProductCategory, ProductCategoryRespository>();
+builder.Services.AddScoped<IDiscount, DiscountRepository>();
+//
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddCors();
+
+
 // For Entity Framework
+
 string con = builder.Configuration.GetConnectionString("cs");
 builder.Services.AddDbContext<Context>(optionBuider =>
 {
@@ -68,6 +79,12 @@ builder.Services.AddScoped<IShopping_SessionRepository, Shopping_SessionReposito
 builder.Services.AddScoped<IPayment_DetailsRepository, Payment_DetailsRepository>();
 builder.Services.AddScoped<ICart_ItemRepository, Cart_ItemRepository>();
 
+builder.Services.AddScoped<IProductRepository, ProductRepository> ();
+builder.Services.AddScoped<IProduct_InventoryRepository, Product_InventoryRepository> ();
+builder.Services.AddScoped<IOrder_DetailsRepository, Order_DetailsRepository> ();
+builder.Services.AddScoped<IOrder_ItemsRepository, Order_ItemsRepository> ();
+builder.Services.AddScoped<IProduct_ImageRepository, Product_ImageRepository> ();
+
 builder.Services.AddApplicationInsightsTelemetry();
 
 var app = builder.Build();
@@ -82,7 +99,12 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
+
+app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
+
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();

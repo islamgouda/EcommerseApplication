@@ -1,4 +1,5 @@
 ﻿using EcommerseApplication.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerseApplication.Repository
 {
@@ -53,6 +54,11 @@ namespace EcommerseApplication.Repository
             old.CategoryId=subCategory.CategoryId;
            old.Description=subCategory.Description;
             context.SaveChanges();
+        }
+
+        public List<subCategory> GetAllWithIncludeByCategoryID(int CategoryID)
+        {
+            return context.subCategories.Include(s => s.category).Where(s=>s.CategoryId == CategoryID).ToList();
         }
     }
 }
