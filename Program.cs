@@ -34,6 +34,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository> ();
 builder.Services.AddScoped<IProduct_InventoryRepository, Product_InventoryRepository> ();
 builder.Services.AddScoped<IOrder_DetailsRepository, Order_DetailsRepository> ();
 builder.Services.AddScoped<IOrder_ItemsRepository, Order_ItemsRepository> ();
+builder.Services.AddScoped<IProduct_ImageRepository, Product_ImageRepository> ();
 
 builder.Services.AddApplicationInsightsTelemetry();
 

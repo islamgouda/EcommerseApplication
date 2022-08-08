@@ -1,4 +1,5 @@
 ﻿using EcommerseApplication.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerseApplication.Respository
 {
@@ -58,5 +59,10 @@ namespace EcommerseApplication.Respository
             context.SaveChanges();
         }
 
+
+        public List<Product_Category> GetAllWithSubCategory()
+        {
+            return context.Product_Categorys.Include(p => p.SubCategories).ToList();
+        }
     }
 }
