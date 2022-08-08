@@ -1,6 +1,7 @@
 ﻿using EcommerseApplication.Models;
 using EcommerseApplication.Respository;
 using EcommerseApplication.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace EcommerseApplication.Controllers
         {
             productCategoryRespository = productCategory;
         }
+       
         [HttpGet]
         [Route("GetallCategories")]
         public List<Product_Category> GetallCategories()

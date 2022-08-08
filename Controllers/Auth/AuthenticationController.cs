@@ -116,6 +116,7 @@ namespace EcommerseApplication.Controllers.Auth
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
                     expiration = token.ValidTo
+                    
                 });
             }
             return Unauthorized();

@@ -1,19 +1,27 @@
-using EcommerseApplication.Models;
-using EcommerseApplication.Repository;
-using EcommerseApplication.Respository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using EcommerseApplication.Models;
+using EcommerseApplication.Repository;
+using EcommerseApplication.Respository;
+
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
-builder.Services.AddScoped<IProductCategory, ProductCategoryRespository>();
-builder.Services.AddScoped<IDiscount, DiscountRepository>();
-//
+
+// For Entity Framework
+string con = builder.Configuration.GetConnectionString("cs");
+builder.Services.AddDbContext<Context>(optionBuider =>
+{
+    optionBuider.UseSqlServer(con);
+});
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+    .AddEntityFrameworkStores<Context>()
+    .AddDefaultTokenProviders();
 
 // Adding Authentication
 builder.Services.AddAuthentication(options =>
@@ -45,14 +53,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-string con = builder.Configuration.GetConnectionString("cs");
-builder.Services.AddDbContext<Context>(optionBuider =>
-{
-    optionBuider.UseSqlServer(con);
-});
-builder.Services.AddIdentity<AppUser, IdentityRole>()
-    .AddEntityFrameworkStores<Context>()
-    .AddDefaultTokenProviders();
+
+
+builder.Services.AddScoped<IProductCategory, ProductCategoryRespository>();
+builder.Services.AddScoped<IDiscount, DiscountRepository>();
 builder.Services.AddScoped<Ifeedback, feedbackRepository>();
 builder.Services.AddScoped<Ipartener, PartenerRepository>();
 builder.Services.AddScoped<Ishipper, shipperRepository>();
@@ -75,6 +79,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseHttpsRedirection();
+
+
 app.UseAuthentication();
 app.UseAuthorization();
 
