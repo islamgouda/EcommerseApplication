@@ -16,6 +16,7 @@ namespace EcommerseApplication.Repository
 
 
             context.shippers.Remove(shipper);
+            context.SaveChanges();
         }
 
         public List<Shipper> getAll()
@@ -36,6 +37,7 @@ namespace EcommerseApplication.Repository
         public void insert(Shipper shipper)
         {
             context.shippers.Add(shipper);
+            context.SaveChanges();
         }
 
         public void update(int id, Shipper shipper)
