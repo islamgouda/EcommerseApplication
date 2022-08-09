@@ -9,8 +9,12 @@ namespace EcommerseApplication.Repository
         public shippingDetails getByID(int id);
         public shippingDetails getByName(string name);
         public List<shippingDetails> getAll();
+        public List<shippingDetails> getAllbyUserID(int id);
+        public List<shippingDetails> getAllbyShipperID(int id);
         public void delete(int id);
         public void updateState(int id, string shippingstate);
+        public void updateShippingDetails(int id,shippingDetails shippingDetails);
+        
 
     }
 }
