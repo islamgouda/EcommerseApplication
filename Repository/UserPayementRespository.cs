@@ -1,4 +1,5 @@
-﻿using EcommerseApplication.Models;
+﻿using EcommerseApplication.DTO;
+using EcommerseApplication.Models;
 
 namespace EcommerseApplication.Repository
 {
@@ -16,6 +17,20 @@ namespace EcommerseApplication.Repository
             context.User_Payements.Add(newPaement);
             context.SaveChanges();
         }
+        public void AddUSerPaymentt(UserPaymentDTO newpayement)
+        {
+            User_Payement userpayment = new User_Payement();
+            userpayment.PayementType = newpayement.PayementType;
+            userpayment.UserId = 4;
+            userpayment.Provider = newpayement.Provider;
+            userpayment.arabicPayementType = "dddd";
+            userpayment.arabicProvider = "ffff";
+            userpayment.AccountNo = newpayement.AccountNo;
+            userpayment.Expiry = DateTime.Now;
+            context.User_Payements.Add(userpayment);
+            context.SaveChanges();
+        }
+
 
         public void DeleteUserPayment(int id)
         {

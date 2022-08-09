@@ -1,4 +1,5 @@
 ﻿using EcommerseApplication.Models;
+using EcommerseApplication.ViewModels;
 
 namespace EcommerseApplication.Repository
 {
@@ -14,6 +15,20 @@ namespace EcommerseApplication.Repository
         public User_address  GetAddress(int id)
         {
             return context.User_Addresses.FirstOrDefault(i => i.Id == id);
+        }
+        public void AddNewAddresss(UserAddressUSerIdDTO NewAddress)
+        {
+            User_address user_Address = new User_address();
+            user_Address.AddressLine1 = NewAddress.AddressLine1;
+            user_Address.AddressLine2 = NewAddress.AddressLine2;
+            user_Address.City = NewAddress.City;
+            user_Address.Country = NewAddress.Country;
+            user_Address.PostalCode = NewAddress.PostalCode;
+            user_Address.mobile = NewAddress.mobile;
+            user_Address.telephone = NewAddress.telephone;
+            user_Address.UserId = 2;
+            context.User_Addresses.Add(user_Address);
+            context.SaveChanges();
         }
         public void AddNewAddress(User_address user_Address)
         {

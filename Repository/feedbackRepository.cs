@@ -15,7 +15,6 @@ namespace EcommerseApplication.Repository
             context.feedbacks.Remove(feedback);
             context.SaveChanges();
         }
-
         public List<feedback> getAll()
         {
             return context.feedbacks.ToList();
@@ -47,11 +46,36 @@ namespace EcommerseApplication.Repository
             old.Comment=feedback.Comment;
             old.productID = feedback.productID;
             context.SaveChanges();
-
         }
         public feedback getByProductID(int id)
         {
             return context.feedbacks.FirstOrDefault(feed => feed.productID == id);
+        }
+        public List<feedback> getByfeedbackProductID(int Id)
+        {
+                List<feedback> feedbackList = context.feedbacks.Where(feed => feed.productID == Id).ToList();
+                return feedbackList;
+        }
+        public decimal getratepartnerbyId(int Id)
+        {
+           
+            List<int> productsID = context.Products.Where(p=> p.PartenerID == Id).Select(p=>p.ID).ToList();
+            List<Decimal> partnerRate = new List<decimal>();
+            int count = 0;
+            foreach (int product in productsID)
+            {
+                List<Decimal> ratOfEachProduct = context.feedbacks.Where(f => f.productID == product).Select(f => f.Rate).ToList();
+                 count+= ratOfEachProduct.Count;
+                partnerRate.Add(ratOfEachProduct.Sum());
+                
+            }
+            decimal TotalRate = partnerRate.Sum();
+            decimal PartnerRate=0;
+            if (count > 0)
+            {
+                PartnerRate = TotalRate/count;
+            }
+            return PartnerRate;
         }
     }
 }
