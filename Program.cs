@@ -1,3 +1,4 @@
+using EcommerseApplication.DDO;
 using EcommerseApplication.Models;
 using EcommerseApplication.Repository;
 using EcommerseApplication.Respository;
@@ -20,14 +21,18 @@ builder.Services.AddDbContext<Context>(optionBuider =>
 });
 builder.Services.AddScoped<Ifeedback, feedbackRepository>();
 builder.Services.AddScoped<Ipartener, PartenerRepository>();
+builder.Services.AddScoped<ConsumerRespons>();
 builder.Services.AddScoped<Ishipper, shipperRepository>();
 builder.Services.AddScoped<IshippingDetails, shippingDetailsRepository>();
 builder.Services.AddScoped<IsubCategory,subcategoryRepository>();
-
+builder.Services.AddScoped<IUserAddress, UserAddressRepository>();
+builder.Services.AddScoped<IUserPayement, UserPayementRespository>();
+builder.Services.AddScoped<Ifeedback,feedbackRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IShopping_SessionRepository, Shopping_SessionRepository>();
 builder.Services.AddScoped<IPayment_DetailsRepository, Payment_DetailsRepository>();
 builder.Services.AddScoped<ICart_ItemRepository, Cart_ItemRepository>();
+builder.Services.AddScoped<IProductRepository,ProductRepository>();
 
 builder.Services.AddApplicationInsightsTelemetry();
 
