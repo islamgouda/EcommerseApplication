@@ -1,7 +1,7 @@
-﻿using EcommerseApplication.DDO;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using EcommerseApplication.Repository;
+using EcommerseApplication.DTO;
 
 namespace EcommerseApplication.Controllers
 {

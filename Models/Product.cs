@@ -7,9 +7,9 @@ namespace EcommerseApplication.Models
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public string Name_Ar { get; set; }
+        public string? Name_Ar { get; set; }
         public string Description { get; set; }
-        public string Description_Ar { get; set; }
+        public string? Description_Ar { get; set; }
         public int Price { get; set; }
         public bool IsAvailable { get; set; }
 
@@ -21,7 +21,7 @@ namespace EcommerseApplication.Models
         [ForeignKey("Discount")]
         public int? DiscountID { get; set; }
         [ForeignKey("Partener")]
-        public int PartenerID { get; set; }
+        public int? PartenerID { get; set; }
         [ForeignKey("subcategory")]
         public int? subcategoryID { get; set; }
 

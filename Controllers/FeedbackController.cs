@@ -1,4 +1,4 @@
-﻿using EcommerseApplication.DDO;
+﻿using EcommerseApplication.DTO;
 using EcommerseApplication.Models;
 using EcommerseApplication.Repository;
 using Microsoft.AspNetCore.Http;

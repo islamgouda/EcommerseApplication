@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EcommerseApplication.DDO
+namespace EcommerseApplication.DTO
 {
     public class DiscountDTO
     {
@@ -14,10 +14,10 @@ namespace EcommerseApplication.DDO
         public bool Active { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
-       
 
 
 
-       
+
+
     }
 }

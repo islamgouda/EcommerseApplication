@@ -1,12 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 namespace EcommerseApplication.Models
 {
-    public class Context : DbContext
+    public class Context : IdentityDbContext<AppUser>
     {
         public Context(DbContextOptions options) : base(options)
         {
 
+        }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
         }
         /*  protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
           {

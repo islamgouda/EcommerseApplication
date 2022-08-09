@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EcommerseApplication.DDO
+namespace EcommerseApplication.DTO
 {
     public class ProductCetegorySubcategoryDTO
     {
@@ -20,7 +20,7 @@ namespace EcommerseApplication.DDO
         [Required]
         public int? subcategoryID { get; set; }
         [Required]
- 
+
         public int? InventoryID { get; set; }
 
     }

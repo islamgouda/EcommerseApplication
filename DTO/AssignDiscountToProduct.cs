@@ -1,4 +1,4 @@
-﻿namespace EcommerseApplication.DDO
+﻿namespace EcommerseApplication.DTO
 {
     public class AssignDiscountToProduct
     {

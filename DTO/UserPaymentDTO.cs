@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EcommerseApplication.DDO
+namespace EcommerseApplication.DTO
 {
     public class UserPaymentDTO
     {
@@ -14,6 +14,6 @@ namespace EcommerseApplication.DDO
         public string arabicProvider { get; set; }
         [Required]
         public int AccountNo { get; set; }
-       
+
     }
 }
