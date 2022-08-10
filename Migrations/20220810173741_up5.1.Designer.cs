@@ -4,6 +4,7 @@ using EcommerseApplication.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcommerseApplication.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220810173741_up5.1")]
+    partial class up51
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -310,10 +312,10 @@ namespace EcommerseApplication.Migrations
                     b.Property<int>("Amount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DeletedAt")
+                    b.Property<DateTime>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Provider")
@@ -323,7 +325,7 @@ namespace EcommerseApplication.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("ID");
@@ -528,13 +530,6 @@ namespace EcommerseApplication.Migrations
                     b.Property<string>("ALLaddress")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ALLaddress_Ar")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CustomerMobile")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("addressID")
                         .HasColumnType("int");
 
@@ -672,6 +667,7 @@ namespace EcommerseApplication.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IdentityId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LastName")
@@ -716,6 +712,7 @@ namespace EcommerseApplication.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AddressLine2")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
@@ -730,7 +727,7 @@ namespace EcommerseApplication.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<string>("arabicAddressLine1")
@@ -750,6 +747,7 @@ namespace EcommerseApplication.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("telephone")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -785,9 +783,11 @@ namespace EcommerseApplication.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("arabicPayementType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("arabicProvider")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1100,7 +1100,9 @@ namespace EcommerseApplication.Migrations
                 {
                     b.HasOne("EcommerseApplication.Models.AppUser", "Identity")
                         .WithMany()
-                        .HasForeignKey("IdentityId");
+                        .HasForeignKey("IdentityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Identity");
                 });
@@ -1109,7 +1111,9 @@ namespace EcommerseApplication.Migrations
                 {
                     b.HasOne("EcommerseApplication.Models.User", "user")
                         .WithMany("User_Address")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("user");
                 });

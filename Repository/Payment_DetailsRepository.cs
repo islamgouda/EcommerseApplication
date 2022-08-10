@@ -23,6 +23,7 @@ namespace EcommerseApplication.Repository
         {
             if (NewPayment_Details != null)
             {
+                NewPayment_Details.CreatedAt = DateTime.Now;
                 context.Payment_Details.Add(NewPayment_Details);
                 context.SaveChanges();
             }
@@ -54,9 +55,7 @@ namespace EcommerseApplication.Repository
                 oldPayment_Details.Status = Newpayment_Details.Status;
                 oldPayment_Details.Provider = Newpayment_Details.Provider;
                 oldPayment_Details.Amount = Newpayment_Details.Amount;
-                oldPayment_Details.CreatedAt = Newpayment_Details.CreatedAt;
-                oldPayment_Details.UpdatedAt = Newpayment_Details.UpdatedAt;
-                oldPayment_Details.DeletedAt = Newpayment_Details.DeletedAt;
+                oldPayment_Details.UpdatedAt = DateTime.Now;
                 return context.SaveChanges();
             }
             return 0;
