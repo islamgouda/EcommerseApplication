@@ -44,7 +44,7 @@ namespace EcommerseApplication.Controllers
                     return NotFound(new { Success = true, Message = NotFoundMSG, Data = AllSubCategoryDTOs });
                 if (AllSubCategorys != null)
                 {
-                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images");
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/SubCategory");
                     
                     for (int i = 0; i < AllSubCategorys.Count; i++)
                     {
@@ -56,8 +56,9 @@ namespace EcommerseApplication.Controllers
                         string fileNameWithPath = Path.Combine(path, AllSubCategorys[i].image);
                         if (System.IO.File.Exists(fileNameWithPath))
                         {
-                            byte[] imgByte = System.IO.File.ReadAllBytes(fileNameWithPath);
-                            AllSubCategoryDTOs[i].Image = Convert.ToBase64String(imgByte);
+                            //byte[] imgByte = System.IO.File.ReadAllBytes(fileNameWithPath);
+                            //AllSubCategoryDTOs[i].Image = Convert.ToBase64String(imgByte);
+                            AllSubCategoryDTOs[i].Image = fileNameWithPath;
                         }
 
                         AllSubCategoryDTOs[i].CategoryName = AllSubCategorys[i].category.Name;
@@ -95,7 +96,7 @@ namespace EcommerseApplication.Controllers
 
 
                 string ImageName = Guid.NewGuid() + "_" + subCategoryDTO.image.FileName;
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images");
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/SubCategory");
                 string fileNameWithPath = Path.Combine(path, ImageName);
 
                 if (!Directory.Exists(path))

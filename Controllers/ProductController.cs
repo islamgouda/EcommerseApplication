@@ -62,15 +62,21 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
 
+                        if(AllProducts[i].Name_Ar != null)
+                            ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
+                        if (AllProducts[i].Description_Ar != null)
+                            ProductDTO[i].Description_Ar = AllProducts[i].Description_Ar;
+
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(wwwrootPath, "Images", item.ImageFileName);
-                            byte[] imgByte;
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
-                                imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
-                                ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                                //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                ProductDTO[i].Images.Add(ImageFullPath);
                             }
                         }
                     }
@@ -129,15 +135,22 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
 
+
+                        if (AllProducts[i].Name_Ar != null)
+                            ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
+                        if (AllProducts[i].Description_Ar != null)
+                            ProductDTO[i].Description_Ar = AllProducts[i].Description_Ar;
+
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(wwwrootPath, "Images", item.ImageFileName);
-                            byte[] imgByte;
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
-                                imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
-                                ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                                //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                ProductDTO[i].Images.Add(ImageFullPath);
                             }
                         }
                     }
@@ -196,15 +209,21 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
 
+                        if (AllProducts[i].Name_Ar != null)
+                            ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
+                        if (AllProducts[i].Description_Ar != null)
+                            ProductDTO[i].Description_Ar = AllProducts[i].Description_Ar;
+
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(wwwrootPath, "Images", item.ImageFileName);
-                            byte[] imgByte;
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
-                                imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
-                                ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                                //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                ProductDTO[i].Images.Add(ImageFullPath);
                             }
                         }
                     }
@@ -264,15 +283,21 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
 
+                        if (AllProducts[i].Name_Ar != null)
+                            ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
+                        if (AllProducts[i].Description_Ar != null)
+                            ProductDTO[i].Description_Ar = AllProducts[i].Description_Ar;
+
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(wwwrootPath, "Images", item.ImageFileName);
-                            byte[] imgByte;
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
-                                imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
-                                ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                                //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                ProductDTO[i].Images.Add(ImageFullPath);
                             }
                         }
                     }
@@ -331,15 +356,21 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
 
+                        if (AllProducts[i].Name_Ar != null)
+                            ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
+                        if (AllProducts[i].Description_Ar != null)
+                            ProductDTO[i].Description_Ar = AllProducts[i].Description_Ar;
+
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(wwwrootPath, "Images", item.ImageFileName);
-                            byte[] imgByte;
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
-                                imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
-                                ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                                //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                ProductDTO[i].Images.Add(ImageFullPath);
                             }
                         }
                     }
@@ -398,15 +429,21 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
 
+                        if (AllProducts[i].Name_Ar != null)
+                            ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
+                        if (AllProducts[i].Description_Ar != null)
+                            ProductDTO[i].Description_Ar = AllProducts[i].Description_Ar;
+
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(wwwrootPath, "Images", item.ImageFileName);
-                            byte[] imgByte;
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
-                                imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
-                                ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                                //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                ProductDTO[i].Images.Add(ImageFullPath);
                             }
                         }
 

@@ -1,4 +1,5 @@
 ﻿using EcommerseApplication.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerseApplication.Repository
 {
@@ -60,6 +61,12 @@ namespace EcommerseApplication.Repository
                 return context.SaveChanges();
             }
             return 0;
+        }
+
+
+        public List<Cart_Item> GetAllBySessionID(int ShoppingSessionID)
+        {
+            return context.Cart_Items.Include(c=>c.product).ThenInclude(p=>p.Product_Inventory).Include(c => c.product.Product_Images).Where(c => c.SessionId == ShoppingSessionID).ToList();
         }
     }
 }

@@ -8,9 +8,9 @@ namespace EcommerseApplication.DTO
         
         public int ID { get; set; }
         public string Name { get; set; }
-        //public string? Name_Ar { get; set; }
+        public string Name_Ar { get; set; }
         public string Description { get; set; }
-        //public string? Description_Ar { get; set; }
+        public string Description_Ar { get; set; }
         public int Quantity { get; set; }
         public int Price { get; set; }
         public decimal? Discount { get; set; }

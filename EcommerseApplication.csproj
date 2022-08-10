@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <Folder Include="DDO\" />
-    <Folder Include="wwwroot\Images\" />
+    <Folder Include="wwwroot\Images\User\" />
   </ItemGroup>
 
 </Project>
