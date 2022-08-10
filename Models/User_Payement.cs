@@ -9,9 +9,9 @@ namespace EcommerseApplication.Models
         public int Id { get; set; }
       
         public string PayementType { get; set; }
-        public string arabicPayementType { get; set; }
+        public string? arabicPayementType { get; set; }
         public string Provider { get; set; }
-        public string arabicProvider { get; set; }
+        public string? arabicProvider { get; set; }
 
         public int AccountNo { get; set; }
         [DataType(DataType.Date)]

@@ -24,8 +24,8 @@ namespace EcommerseApplication.Models
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
         [ForeignKey("Identity")]
-        public string IdentityId { get; set; } //reference to AppUser and maps to it
-        public AppUser Identity { get; set; }
+        public string? IdentityId { get; set; } //reference to AppUser and maps to it
+        public AppUser? Identity { get; set; }
 
         // public virtual List<Product>? Products { get; set; }
         public virtual List<Shopping_Session>? Shopping_Sessions { get; set; }

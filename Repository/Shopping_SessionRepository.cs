@@ -51,5 +51,13 @@ namespace EcommerseApplication.Repository
         {
             return context.Shopping_Sessions.Where(s => s.UserID == UserId).ToList();
         }
+        
+        public void ClearTotal(int SessionId)
+        {
+            context.Shopping_Sessions.FirstOrDefault(s => s.Id == SessionId).Total = 0;
+            context.SaveChanges();
+        }
+
+
     }
 }
