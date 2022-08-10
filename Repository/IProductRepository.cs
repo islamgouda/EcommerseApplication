@@ -13,6 +13,7 @@ namespace EcommerseApplication.Repository
         List<Product> GetAllBySubCategoryID(int id);
         Product Get(int Id);
         void Create(Product Product);
+        public void IsDiscountFinish();
         void Update(int Id, Product Product);
         void Delete(int Id);
         int Deletee(int Id);

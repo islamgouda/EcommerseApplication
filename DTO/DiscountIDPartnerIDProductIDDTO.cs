@@ -8,7 +8,5 @@ namespace EcommerseApplication.DTO
         public int DiscountId { get; set; }
         [Required]
         public int ProductID { get; set; }
-        [Required]
-        public int PartnerID { get; set; }
     }
 }

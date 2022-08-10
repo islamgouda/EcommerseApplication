@@ -13,7 +13,6 @@ namespace EcommerseApplication.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-
         private readonly string NotFoundMSG = "Data Not Found";
         private readonly string BadRequistMSG = "Invalid Input Data";
         private readonly string SuccessMSG = "Data Found Successfuly";
@@ -34,11 +33,13 @@ namespace EcommerseApplication.Controllers
 
         }
         [HttpGet]
+        
         public IActionResult Index()
         {
             List<ProductResponseDTO> ProductDTO = new List<ProductResponseDTO>();
             try
             {
+                productRepo.IsDiscountFinish();
                 if(!ModelState.IsValid)
                     return BadRequest(new { Success = false,
                                             Message = String.Join("; ",ModelState.Values.SelectMany(n=>n.Errors)
@@ -470,8 +471,7 @@ namespace EcommerseApplication.Controllers
                 return BadRequest(new { Success = false, Message = ex.Message, Data = new List<Product>() });
             }
         }
-        ///////////////////////////////////////////////////////////////////////////
-        ///
+
         [HttpPost]
         public IActionResult AddNewProduct(ProductCetegorySubcategoryDTO NewProduct)
         {
@@ -483,14 +483,11 @@ namespace EcommerseApplication.Controllers
                 product.CreatedAt = DateTime.Now;
                 product.Name_Ar = NewProduct.Name_Ar;
                 product.Description_Ar = NewProduct.Description_Ar;
-                product.DiscountID = NewProduct.DiscountID;
                 product.Description = NewProduct.Description;
                 product.Name = NewProduct.Name;
                 product.Price = NewProduct.Price;
                 product.subcategoryID = NewProduct.subcategoryID;
-                product.PartenerID = NewProduct.PartenerID;
-                product.Description_Ar = "ssssss";
-                product.Name_Ar = "kkkkk";
+                product.PartenerID = 1;
                 int ress = inventproductRepo.AddproductInventory(NewProduct.Quantity);
                 if (ress != 0)
                 {

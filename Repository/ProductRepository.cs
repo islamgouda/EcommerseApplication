@@ -113,5 +113,23 @@ namespace EcommerseApplication.Repository
         {
             context.SaveChanges();
         }
+        public void IsDiscountFinish()
+        {
+            List<Discount> discounts = context.Discounts.ToList();
+            foreach (Discount discount in discounts)
+            {
+                if (discount.EndTime < discount.StartTime)
+                {
+                    List<Product> products = context.Products.Where(p => p.DiscountID == discount.ID).ToList();
+                    foreach (Product product in products)
+                    {
+                        product.DiscountID = null;
+                        context.SaveChanges();
+                    }
+                    context.Discounts.Remove(discount);
+                    context.SaveChanges();
+                }
+            }
+        }
     }
 }

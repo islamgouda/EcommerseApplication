@@ -12,6 +12,8 @@ namespace EcommerseApplication.Respository
         public int DeleteDiscount(int Id);
         public int UpdateDiscount(int Id, DiscountDTO NewDiscount);
         public Discount getDiscountById(int Id);
+        public int AsssignDiscount(DiscountIDPartnerIDProductIDDTO AssignNewDiscount);
+       
 
     }
 }

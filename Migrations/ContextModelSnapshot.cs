@@ -557,7 +557,7 @@ namespace EcommerseApplication.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("userID")
+                    b.Property<int?>("userID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
@@ -1062,9 +1062,7 @@ namespace EcommerseApplication.Migrations
 
                     b.HasOne("EcommerseApplication.Models.User", "user")
                         .WithMany()
-                        .HasForeignKey("userID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("userID");
 
                     b.Navigation("order_Details");
 
