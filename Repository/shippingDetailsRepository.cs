@@ -59,5 +59,24 @@ namespace EcommerseApplication.Repository
             context.SaveChanges();
 
         }
+        public List<shippingDetails> getAllbyUserID(int id)
+        {
+            return context.shippingDetails.Where(ship=>ship.userID==id).ToList();
+        }
+        public void updateShippingDetails(int id, shippingDetails shippingDetails)
+        {
+           shippingDetails old= context.shippingDetails.FirstOrDefault(e => e.ID == id);
+            old.shippingstate = shippingDetails.shippingstate;
+           // old.ALLaddress = shippingDetails.ALLaddress;
+            old.arabicshippingstate = shippingDetails.arabicshippingstate;
+            //old.addressID=shippingDetails.addressID;
+            context.SaveChanges();
+
+        }
+        public List<shippingDetails> getAllbyShipperID(int id)
+        {
+            return context.shippingDetails.Where(ship => ship.shipperID == id).ToList();
+        }
+
     }
 }

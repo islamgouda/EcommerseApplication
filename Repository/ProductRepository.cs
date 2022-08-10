@@ -90,7 +90,6 @@ namespace EcommerseApplication.Repository
         } 
         public void Create(Product Product)
         {
-            Product.CreatedAt = DateTime.Now;
             context.Products.Add(Product);
             context.SaveChanges();
         }
@@ -99,27 +98,19 @@ namespace EcommerseApplication.Repository
             context.Products.Remove(Get(Id));
             context.SaveChanges();
         }
+        public int Deletee(int Id)
+        {
+            Product product = Get(Id);
+            if (product != null)
+            {
+                context.Products.Remove(product);
+                return context.SaveChanges();
+            }
+            return 0;
+           
+        }
         public void Update(int Id, Product Product)
         {
-            Product oldproduct = Get(Id);
-            oldproduct.Name = Product.Name;
-            oldproduct.Description = Product.Description;
-            oldproduct.Price = Product.Price;
-            oldproduct.IsAvailable = Product.IsAvailable;
-
-            if(Product.Description_Ar != null && Product.Description_Ar != String.Empty)
-                oldproduct.Description_Ar = Product.Description_Ar;
-            if(Product.Name_Ar != null && Product.Name_Ar != String.Empty)
-                oldproduct.Name_Ar = Product.Name_Ar;
-
-            oldproduct.UpdatedAt = DateTime.Now;
-
-            oldproduct.CategoryID = Product.CategoryID;
-            oldproduct.DiscountID = Product.DiscountID;
-            oldproduct.InventoryID = Product.InventoryID;
-            oldproduct.PartenerID = Product.PartenerID;
-            oldproduct.subcategoryID = Product.subcategoryID;
-
             context.SaveChanges();
         }
     }
