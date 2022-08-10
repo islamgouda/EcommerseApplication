@@ -8,5 +8,7 @@ namespace EcommerseApplication.Repository
         int DeleteShopping_SessionById(int Id);
         List<Shopping_Session> GetAllShopping_Session();
         Shopping_Session GetShopping_SessionById(int Id);
+
+        List<Shopping_Session> GetByUserId(int Id);
     }
 }

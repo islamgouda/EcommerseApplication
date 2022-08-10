@@ -9,5 +9,7 @@ namespace EcommerseApplication.Repository
         List<Cart_Item> GetAllCart_Items();
         Cart_Item GetCart_ItemById(int Id);
         int UpdateCart_Item(int Id, Cart_Item NewCart_Item);
+
+        List<Cart_Item> GetAllBySessionID(int ShoppingSessionID);
     }
 }
