@@ -47,6 +47,64 @@ namespace EcommerseApplication.Controllers
                 return Ok(Response);
             
         }
+        [HttpDelete("DeleteDiscount")]
+        public IActionResult DeleteDiscount(int Id)
+        {
+            try
+            {
+              int res=  discountrepository.DeleteDiscount(Id);
+                if(res!=0)
+                {
+                    Response.succcess = true;
+                    Response.Message = "Discount Deleted successfully";
+                    Response.Data = "";
+                    return Ok(Response);
+                }
+                else
+                {
+                    Response.succcess = false;
+                    Response.Message = "this Discount Not Found";
+                    Response.Data = "";
+                    return NotFound(Response);
+                }
+            }
+            catch(Exception ex)
+            {
+                Response.Message = ex.Message;
+                Response.succcess = false;
+                Response.Data = "";
+                return BadRequest(Response);
+            }
+        }
+        [HttpPut]
+        public IActionResult UpdateDiscount(int Id,DiscountDTO NewDiscount)
+        {
+            try
+            {
+                int res = discountrepository.UpdateDiscount(Id, NewDiscount);
+                if (res != 0)
+                {
+                    Response.succcess = true;
+                    Response.Message = "Discount Updated successfully";
+                    Response.Data = "";
+                    return Ok(Response);
+                }
+                else
+                {
+                    Response.succcess = false;
+                    Response.Message = "this Discount Not Found";
+                    Response.Data = "";
+                    return NotFound(Response);
+                }
+            }
+            catch (Exception ex)
+            {
+                Response.Message = ex.Message;
+                Response.succcess = false;
+                Response.Data = "";
+                return BadRequest(Response);
+            }
+        }
         [HttpGet("GetDiscount")]
         public IActionResult GetAllDiscounts()
         {
@@ -65,7 +123,7 @@ namespace EcommerseApplication.Controllers
                     discountDTO.Name= discount.Name;
                     DiscountList.Add(discountDTO);
                 }
-                Response.Message = "git Discount Done";
+                Response.Message = "this is All Discount";
                 Response.succcess = true;
                 Response.Data = DiscountList;
                 return Ok(Response);
@@ -74,6 +132,32 @@ namespace EcommerseApplication.Controllers
             catch(Exception ex)
             {
                 Response.Message = ex.InnerException.Message;
+                Response.succcess = false;
+                Response.Data = "";
+                return BadRequest(Response);
+            }
+        }
+        [HttpGet("getDiscountByID")]
+        public IActionResult GetDiscountById(int Id)
+        {
+            try
+            {
+               Discount discount = discountrepository.getDiscountById(Id);
+                    AssignDiscountToProduct discountDTO = new AssignDiscountToProduct();
+                    discountDTO.ID = discount.ID;
+                    discountDTO.StartTime = discount.StartTime;
+                    discountDTO.EndTime = discount.EndTime;
+                    discountDTO.Descount_Persent = discount.Descount_Persent;
+                    discountDTO.Name = discount.Name;
+                Response.Message = "this is the Discount";
+                Response.succcess = true;
+                Response.Data = discountDTO;
+                return Ok(Response);
+
+            }
+            catch (Exception ex)
+            {
+                Response.Message = ex.Message;
                 Response.succcess = false;
                 Response.Data = "";
                 return BadRequest(Response);

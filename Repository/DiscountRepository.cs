@@ -12,8 +12,6 @@ namespace EcommerseApplication.Respository
         {
             context = _context;
         }
-
-
         public void AddnewDiscount(Discount newdiscount)
         {
             context.Add(newdiscount);
@@ -38,11 +36,46 @@ namespace EcommerseApplication.Respository
             return discounts;
 
         }
+        public Discount getDiscountById(int Id)
+        {
+            Discount discount = context.Discounts.FirstOrDefault(d => d.ID == Id);
+            return discount;
+
+        }
+
         public void AssignDiscount(DiscountIDPartnerIDProductIDDTO AssignNewDiscount)
         {
             Product product=context.Products.FirstOrDefault(p=>p.ID==AssignNewDiscount.ProductID && p.PartenerID==AssignNewDiscount.PartnerID);
             product.DiscountID = AssignNewDiscount.DiscountId;
             context.SaveChanges();
+        }
+        public int DeleteDiscount(int Id)
+        {
+            Discount discount=context.Discounts.FirstOrDefault(p=>p.ID==Id);
+            if(discount!=null)
+            {
+                context.Discounts.Remove(discount);
+                return  context.SaveChanges();
+                
+            }
+            return 0;
+        }
+        public int UpdateDiscount(int Id , DiscountDTO NewDiscount)
+        {
+
+            Discount discount = context.Discounts.FirstOrDefault(d => d.ID == Id);
+            if (discount != null)
+            {
+                discount.Name = NewDiscount.Name;
+                discount.Description = NewDiscount.Description;
+                discount.Descount_Persent = NewDiscount.Descount_Persent;
+                discount.UpdatedAt = DateTime.Now;
+                discount.EndTime = NewDiscount.EndTime;
+                discount.StartTime = NewDiscount.StartTime;
+                discount.Active = NewDiscount.Active;
+                return context.SaveChanges();
+            }
+            return 0;
         }
     }
 }

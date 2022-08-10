@@ -361,6 +361,8 @@ namespace EcommerseApplication.Controllers
                 Product product = new Product();
                 product.CategoryID = NewProduct.CategoryID;
                 product.CreatedAt = DateTime.Now;
+                product.Name_Ar = NewProduct.Name_Ar;
+                product.Description_Ar = NewProduct.Description_Ar;
                 product.DiscountID = NewProduct.DiscountID;
                 product.Description = NewProduct.Description;
                 product.Name = NewProduct.Name;

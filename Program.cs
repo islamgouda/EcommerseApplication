@@ -104,7 +104,7 @@ app.UseHttpsRedirection();
 
 
 
-app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+//app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
 
 app.UseAuthentication();
