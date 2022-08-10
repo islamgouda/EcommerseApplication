@@ -20,12 +20,14 @@ namespace EcommerseApplication.Controllers
         private readonly IProductRepository productRepo;
         private readonly IProductRepository productrepository;
         private readonly ConsumerRespons Respons;
+        private readonly IProduct_InventoryRepository inventproductRepo;
 
-        public ProductController(IProductRepository _productRepo, IProductRepository productrepository, ConsumerRespons _Response)
+        public ProductController(IProductRepository _productRepo, IProductRepository productrepository, ConsumerRespons _Response,IProduct_InventoryRepository _inventproductRepo)
         {
            this. productRepo = _productRepo;
            this.productrepository = productrepository;
            this. Respons = _Response;
+            this.inventproductRepo= _inventproductRepo;
         }
         [HttpGet]
         public IActionResult Index()
@@ -363,23 +365,35 @@ namespace EcommerseApplication.Controllers
                 product.Description = NewProduct.Description;
                 product.Name = NewProduct.Name;
                 product.Price = NewProduct.Price;
-                product.InventoryID = NewProduct.InventoryID;
                 product.subcategoryID = NewProduct.subcategoryID;
                 product.PartenerID = NewProduct.PartenerID;
                 product.Description_Ar = "ssssss";
                 product.Name_Ar = "kkkkk";
+                int ress = inventproductRepo.AddproductInventory(NewProduct.Quantity);
+                if (ress != 0)
+                {
 
-                try
-                {
-                    productrepository.Create(product);
-                    Respons.succcess = true;
-                    Respons.Message = "product Added successfuly";
-                    Respons.Data = "";
-                    return Ok(Respons);
+                    try
+                    {
+                        product.InventoryID = ress;
+                        productRepo.Create(product);
+                        Respons.succcess = true;
+                        Respons.Message = "product Added successfuly";
+                        Respons.Data = "";
+                        return Ok(Respons);
+                    }
+                    catch (Exception ex)
+                    {
+                        inventproductRepo.Delete(ress);
+                        Respons.Message = ex.InnerException.Message;
+                        Respons.succcess = false;
+                        Respons.Data = "";
+                        return BadRequest(Respons);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    Respons.Message = ex.InnerException.Message;
+                    Respons.Message = "error when add Quenitiy";
                     Respons.succcess = false;
                     Respons.Data = "";
                     return BadRequest(Respons);
@@ -391,6 +405,7 @@ namespace EcommerseApplication.Controllers
             Respons.Data = "";
             return BadRequest(Respons);
         }
+
         [HttpDelete("DeleteProductById/{Id:int}")]
         public IActionResult DeleteProduct(int Id)
         {
@@ -436,7 +451,7 @@ namespace EcommerseApplication.Controllers
                     oldproduct.Description = NewProduct.Description;
                     oldproduct.Name = NewProduct.Name;
                     oldproduct.Price = NewProduct.Price;
-                    oldproduct.InventoryID = NewProduct.InventoryID;
+                    //oldproduct.InventoryID = NewProduct.InventoryID;
                     oldproduct.subcategoryID = NewProduct.subcategoryID;
                     oldproduct.PartenerID = NewProduct.PartenerID;
                     oldproduct.UpdatedAt = DateTime.Now;

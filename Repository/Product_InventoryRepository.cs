@@ -26,6 +26,27 @@ namespace EcommerseApplication.Repository
             context.Product_Inventorys.Add(Product_Inventory);
             context.SaveChanges();
         }
+        public int AddproductInventory(int Quentity)
+        {
+
+            Product_Inventory Pinventory = new Product_Inventory();
+            if (Quentity > 0)
+            {
+                try
+                {
+                    Pinventory.CreatedAt = DateTime.Now;
+                    Pinventory.Quantity = Quentity;
+                    context.Product_Inventorys.Add(Pinventory);
+                    context.SaveChanges();
+                    return Pinventory.ID;
+                }
+                catch (Exception ex)
+                {
+                    return 0;
+                }
+            }
+            return 0;
+        }
 
         public void Delete(int Id)
         {

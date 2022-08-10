@@ -21,7 +21,7 @@ namespace EcommerseApplication.DTO
         public int? subcategoryID { get; set; }
         [Required]
 
-        public int? InventoryID { get; set; }
+        public int Quantity { get; set; }
 
     }
 }
