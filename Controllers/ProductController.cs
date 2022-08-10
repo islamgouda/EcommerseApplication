@@ -473,7 +473,7 @@ namespace EcommerseApplication.Controllers
         ///////////////////////////////////////////////////////////////////////////
         ///
         [HttpPost]
-        public IActionResult AddNewProduct(ProductCetegorySubcategoryDTO NewProduct)
+        public IActionResult AddNewProduct([FromForm] ProductCetegorySubcategoryDTO NewProduct)
         {
 
             if (ModelState.IsValid == true)
@@ -487,8 +487,26 @@ namespace EcommerseApplication.Controllers
                 product.Price = NewProduct.Price;
                 product.subcategoryID = NewProduct.subcategoryID;
                 product.PartenerID = NewProduct.PartenerID;
-                product.Description_Ar = "ssssss";
-                product.Name_Ar = "kkkkk";
+                product.Description_Ar = NewProduct.Description_Ar;
+                product.Name_Ar = NewProduct.Name_Ar;
+
+                for (int i = 0; i < NewProduct.ImageFiles.Count; i++)
+                {
+                    string ImageName = Guid.NewGuid() + "_" + NewProduct.ImageFiles[i].FileName;
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/Product");
+                    string fileNameWithPath = Path.Combine(path, ImageName);
+
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+                    using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
+                    {
+                        NewProduct.ImageFiles[i].CopyTo(stream);
+                    }
+                }
+                
+
                 int ress = inventproductRepo.AddproductInventory(NewProduct.Quantity);
                 if (ress != 0)
                 {
