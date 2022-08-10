@@ -9,10 +9,11 @@ namespace EcommerseApplication.Models
         public int ID { get; set; }
         public string? shipName { get; set; }
         public string shippingstate { get; set; }//(Pick-up, on-process, on-delivery, Delivered)
+        public string CustomerMobile { get; set; }
 
         public string? arabicshippingstate { get; set; }//(استلام شركة الشحن, جاري التنفيذ, جاري التوصيل, تم التوصيل)
         [ForeignKey("user")]
-        public int? userID { get; set; }  //relation with user
+        public int userID { get; set; }  //relation with user
         [ForeignKey("shipper")]
         public int shipperID { get; set; } //relation with shiper
 
@@ -24,6 +25,8 @@ namespace EcommerseApplication.Models
 
         public DateTime? deletedAt { get; set; }
         public string? ALLaddress { get; set; }
+        public string? ALLaddress_Ar { get; set; }
+
         [ForeignKey("user_Address")]
         public int? addressID { get; set; }//relation with Address
        public Shipper? shipper { get; set; }

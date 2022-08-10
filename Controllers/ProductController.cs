@@ -473,7 +473,7 @@ namespace EcommerseApplication.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddNewProduct(ProductCetegorySubcategoryDTO NewProduct)
+        public IActionResult AddNewProduct([FromForm] ProductCetegorySubcategoryDTO NewProduct)
         {
 
             if (ModelState.IsValid == true)
@@ -487,7 +487,9 @@ namespace EcommerseApplication.Controllers
                 product.Name = NewProduct.Name;
                 product.Price = NewProduct.Price;
                 product.subcategoryID = NewProduct.subcategoryID;
-                product.PartenerID = 1;
+                product.PartenerID = NewProduct.PartenerID;
+                product.Description_Ar = "ssssss";
+                product.Name_Ar = "kkkkk";
                 int ress = inventproductRepo.AddproductInventory(NewProduct.Quantity);
                 if (ress != 0)
                 {

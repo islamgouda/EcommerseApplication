@@ -10,5 +10,6 @@ namespace EcommerseApplication.Repository
         Shopping_Session GetShopping_SessionById(int Id);
 
         List<Shopping_Session> GetByUserId(int Id);
+        void ClearTotal(int SessionId);
     }
 }

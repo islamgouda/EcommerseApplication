@@ -8,11 +8,11 @@ namespace EcommerseApplication.Models
         [Key]
         public int Id { get; set; }
         public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
+        public string? AddressLine2 { get; set; }
         public string City { get; set; }
         public string PostalCode { get; set; }
         public string Country { get; set; }
-        public string telephone { get; set; }
+        public string? telephone { get; set; }
         public string mobile { get; set; }
 
         /**/
@@ -24,7 +24,7 @@ namespace EcommerseApplication.Models
 
 
         [ForeignKey("user")]
-        public int UserId { get; set; }
-        public virtual User user{ get; set; }
+        public int? UserId { get; set; }
+        public virtual User? user{ get; set; }
     }
 }
