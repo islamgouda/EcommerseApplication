@@ -1,5 +1,5 @@
 
-﻿using EcommerseApplication.Repository;
+using EcommerseApplication.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using EcommerseApplication.Models;
@@ -18,22 +18,25 @@ namespace EcommerseApplication.Controllers
         private readonly string BadRequistMSG = "Invalid Input Data";
         private readonly string SuccessMSG = "Data Found Successfuly";
         private readonly IProductRepository productRepo;
+
         private readonly IProductRepository productrepository;
+        private readonly IWebHostEnvironment environment;
         private readonly ConsumerRespons Respons;
         private readonly IProduct_InventoryRepository inventproductRepo;
 
-        public ProductController(IProductRepository _productRepo, IProductRepository productrepository, ConsumerRespons _Response,IProduct_InventoryRepository _inventproductRepo)
+        public ProductController(IProductRepository _productRepo, IWebHostEnvironment _environment , IProductRepository productrepository, ConsumerRespons _Response,IProduct_InventoryRepository _inventproductRepo)
         {
            this. productRepo = _productRepo;
+           environment = _environment;
            this.productrepository = productrepository;
            this. Respons = _Response;
             this.inventproductRepo= _inventproductRepo;
+
         }
         [HttpGet]
         public IActionResult Index()
         {
-            List<ProductResponseDTO> AllProductDTO = new List<ProductResponseDTO>();
-            ProductResponseDTO ProductDTO = new ProductResponseDTO();
+            List<ProductResponseDTO> ProductDTO = new List<ProductResponseDTO>();
             try
             {
                 if(!ModelState.IsValid)
@@ -44,34 +47,54 @@ namespace EcommerseApplication.Controllers
 
                 List<Product> AllProducts = productRepo.GetAllWithInclude();
                 if (AllProducts.Count == 0)
-                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = AllProductDTO });
+                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+
                 if (AllProducts != null)
                 {
+                    string wwwrootPath = environment.WebRootPath;
+
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
-                        ProductDTO.ID = AllProducts[i].ID;
-                        ProductDTO.Name = AllProducts[i].Name;
-                        ProductDTO.Description = AllProducts[i].Description;
-                        ProductDTO.Price = AllProducts[i].Price;
-                        ProductDTO.IsAvailable = AllProducts[i].IsAvailable;
-                        ProductDTO.PartenerName = AllProducts[i].Partener.Name;
-                        ProductDTO.Quantity = AllProducts[i].Product_Inventory.Quantity;
-                        ProductDTO.Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
+                        ProductDTO.Add(new ProductResponseDTO());
+                        ProductDTO[i].ID = AllProducts[i].ID;
+                        ProductDTO[i].Name = AllProducts[i].Name;
+                        ProductDTO[i].Description = AllProducts[i].Description;
+                        ProductDTO[i].Price = AllProducts[i].Price;
+                        ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
+                        ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
+                        ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
                                               DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime,DateTime.Now) < 0 ||
                                               AllProducts[i].Discount.Active == false ?
                                                                 0: 
                                                                 AllProducts[i].Discount.Descount_Persent;
-                        ProductDTO.PartenerName = AllProducts[i].Partener.Name;
-                        ProductDTO.CategoryName = AllProducts[i].Product_Category.Name;
-                        ProductDTO.subcategoryName = AllProducts[i].subcategory.Name;
+                        ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
+                        ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
 
-                        AllProductDTO.Add(ProductDTO);
+                        if(AllProducts[i].Name_Ar != null)
+                            ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
+                        if (AllProducts[i].Description_Ar != null)
+                            ProductDTO[i].Description_Ar = AllProducts[i].Description_Ar;
+
+                        ProductDTO[i].Images = new List<string>();
+                        foreach (var item in AllProducts[i].Product_Images)
+                        {
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            //byte[] imgByte;
+                            if (System.IO.File.Exists(ImageFullPath))
+                            {
+                                //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                                //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                ProductDTO[i].Images.Add(ImageFullPath);
+                            }
+                        }
                     }
-                    return Ok(new { Success= true, Message = SuccessMSG, Data = AllProductDTO });
+                    return Ok(new { Success= true, Message = SuccessMSG, Data = ProductDTO });
                 }
                 else
                 {
-                    return NotFound(new { Success = false, Message = NotFoundMSG, Data = AllProductDTO });
+                    return NotFound(new { Success = false, Message = NotFoundMSG, Data = ProductDTO });
                 }
             }
             catch (Exception ex)
@@ -101,6 +124,8 @@ namespace EcommerseApplication.Controllers
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
+                    string wwwrootPath = environment.WebRootPath;
+
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
                         ProductDTO.Add(new ProductResponseDTO());
@@ -120,6 +145,24 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
 
+
+                        if (AllProducts[i].Name_Ar != null)
+                            ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
+                        if (AllProducts[i].Description_Ar != null)
+                            ProductDTO[i].Description_Ar = AllProducts[i].Description_Ar;
+
+                        ProductDTO[i].Images = new List<string>();
+                        foreach (var item in AllProducts[i].Product_Images)
+                        {
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            //byte[] imgByte;
+                            if (System.IO.File.Exists(ImageFullPath))
+                            {
+                                //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                                //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                ProductDTO[i].Images.Add(ImageFullPath);
+                            }
+                        }
                     }
                     return Ok(new { Success = true, Message = SuccessMSG, Data = ProductDTO });
                 }
@@ -155,6 +198,8 @@ namespace EcommerseApplication.Controllers
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
+                    string wwwrootPath = environment.WebRootPath;
+
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
                         ProductDTO.Add(new ProductResponseDTO());
@@ -174,6 +219,23 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
 
+                        if (AllProducts[i].Name_Ar != null)
+                            ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
+                        if (AllProducts[i].Description_Ar != null)
+                            ProductDTO[i].Description_Ar = AllProducts[i].Description_Ar;
+
+                        ProductDTO[i].Images = new List<string>();
+                        foreach (var item in AllProducts[i].Product_Images)
+                        {
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            //byte[] imgByte;
+                            if (System.IO.File.Exists(ImageFullPath))
+                            {
+                                //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                                //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                ProductDTO[i].Images.Add(ImageFullPath);
+                            }
+                        }
                     }
                     return Ok(new { Success = true, Message = SuccessMSG, Data = ProductDTO });
                 }
@@ -210,6 +272,8 @@ namespace EcommerseApplication.Controllers
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
+                    string wwwrootPath = environment.WebRootPath;
+
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
                         ProductDTO.Add(new ProductResponseDTO());
@@ -229,6 +293,23 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
 
+                        if (AllProducts[i].Name_Ar != null)
+                            ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
+                        if (AllProducts[i].Description_Ar != null)
+                            ProductDTO[i].Description_Ar = AllProducts[i].Description_Ar;
+
+                        ProductDTO[i].Images = new List<string>();
+                        foreach (var item in AllProducts[i].Product_Images)
+                        {
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            //byte[] imgByte;
+                            if (System.IO.File.Exists(ImageFullPath))
+                            {
+                                //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                                //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                ProductDTO[i].Images.Add(ImageFullPath);
+                            }
+                        }
                     }
                     return Ok(new { Success = true, Message = SuccessMSG, Data = ProductDTO });
                 }
@@ -264,6 +345,8 @@ namespace EcommerseApplication.Controllers
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
+                    string wwwrootPath = environment.WebRootPath;
+
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
                         ProductDTO.Add(new ProductResponseDTO());
@@ -283,6 +366,23 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
 
+                        if (AllProducts[i].Name_Ar != null)
+                            ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
+                        if (AllProducts[i].Description_Ar != null)
+                            ProductDTO[i].Description_Ar = AllProducts[i].Description_Ar;
+
+                        ProductDTO[i].Images = new List<string>();
+                        foreach (var item in AllProducts[i].Product_Images)
+                        {
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            //byte[] imgByte;
+                            if (System.IO.File.Exists(ImageFullPath))
+                            {
+                                //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                                //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                ProductDTO[i].Images.Add(ImageFullPath);
+                            }
+                        }
                     }
                     return Ok(new { Success = true, Message = SuccessMSG, Data = ProductDTO });
                 }
@@ -320,6 +420,8 @@ namespace EcommerseApplication.Controllers
                 {
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
+                        string wwwrootPath = environment.WebRootPath;
+
                         ProductDTO.Add(new ProductResponseDTO());
                         ProductDTO[i].ID = AllProducts[i].ID;
                         ProductDTO[i].Name = AllProducts[i].Name;
@@ -336,6 +438,24 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
+
+                        if (AllProducts[i].Name_Ar != null)
+                            ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
+                        if (AllProducts[i].Description_Ar != null)
+                            ProductDTO[i].Description_Ar = AllProducts[i].Description_Ar;
+
+                        ProductDTO[i].Images = new List<string>();
+                        foreach (var item in AllProducts[i].Product_Images)
+                        {
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            //byte[] imgByte;
+                            if (System.IO.File.Exists(ImageFullPath))
+                            {
+                                //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                                //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                ProductDTO[i].Images.Add(ImageFullPath);
+                            }
+                        }
 
                     }
                     return Ok(new { Success = true, Message = SuccessMSG, Data = ProductDTO });

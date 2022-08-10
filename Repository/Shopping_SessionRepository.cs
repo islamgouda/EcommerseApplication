@@ -46,5 +46,10 @@ namespace EcommerseApplication.Repository
             }
             return 0;
         }
+
+        public List<Shopping_Session> GetByUserId(int UserId)
+        {
+            return context.Shopping_Sessions.Where(s => s.UserID == UserId).ToList();
+        }
     }
 }
