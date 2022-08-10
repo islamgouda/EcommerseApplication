@@ -6,8 +6,10 @@ namespace EcommerseApplication.DTO
     {
         [Required]
         public string Name { get; set; }
+        public string Name_Ar { get; set; }
         [Required]
         public string Description { get; set; }
+        public string Description_Ar { get; set; }
         [Required]
         public int Price { get; set; }
         public string? Name_Ar { get; set; }
@@ -25,5 +27,6 @@ namespace EcommerseApplication.DTO
 
         public int Quantity { get; set; }
 
+        public List<IFormFile> ImageFiles { get; set; }
     }
 }
