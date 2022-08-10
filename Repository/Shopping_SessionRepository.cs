@@ -54,7 +54,8 @@ namespace EcommerseApplication.Repository
         
         public void ClearTotal(int SessionId)
         {
-            context.Shopping_Sessions.FirstOrDefault(s => s.Id == SessionId).Total = 0;
+            Shopping_Session sh = context.Shopping_Sessions.FirstOrDefault(s => s.Id == SessionId);
+            sh.Total = 0;
             context.SaveChanges();
         }
 
