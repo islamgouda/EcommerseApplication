@@ -95,7 +95,7 @@ namespace EcommerseApplication.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Success = false, Message = NotFoundMSG, Data = ProductDTO });
+                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
                 }
             }
             catch (Exception ex)
@@ -169,7 +169,7 @@ namespace EcommerseApplication.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Success = false, Message = NotFoundMSG, Data = ProductDTO });
+                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
                 }
             }
             catch (Exception ex)
@@ -242,7 +242,7 @@ namespace EcommerseApplication.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Success = false, Message = NotFoundMSG, Data = ProductDTO });
+                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
                 }
             }
             catch (Exception ex)
@@ -316,7 +316,7 @@ namespace EcommerseApplication.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Success = false, Message = NotFoundMSG, Data = ProductDTO });
+                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
                 }
             }
             catch (Exception ex)
@@ -389,7 +389,7 @@ namespace EcommerseApplication.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Success = false, Message = NotFoundMSG, Data = ProductDTO });
+                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
                 }
             }
             catch (Exception ex)
@@ -463,7 +463,7 @@ namespace EcommerseApplication.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Success = false, Message = NotFoundMSG, Data = ProductDTO });
+                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
                 }
             }
             catch (Exception ex)

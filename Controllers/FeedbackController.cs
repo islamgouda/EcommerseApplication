@@ -3,6 +3,7 @@ using EcommerseApplication.Models;
 using EcommerseApplication.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EcommerseApplication.Controllers
 {
@@ -10,17 +11,23 @@ namespace EcommerseApplication.Controllers
     [ApiController]
     public class FeedbackController : ControllerBase
     {
+        private readonly string NotFoundMSG = "Data Not Found";
+        private readonly string BadRequistMSG = "Invalid Input Data";
+        private readonly string SuccessMSG = "Data Add Successfuly";
+
         private readonly Ifeedback feedbackrepository;
         private readonly IProductRepository productrepository;
         private readonly ConsumerRespons Respons;
         private readonly Ipartener partnerrepository;
+        private readonly IOrder_DetailsRepository order_DetailsRepo;
 
-        public FeedbackController(Ifeedback feedbackrepository,IProductRepository productrepository,ConsumerRespons respons,Ipartener partnerrepository)
+        public FeedbackController(Ifeedback feedbackrepository,IProductRepository productrepository,ConsumerRespons respons,Ipartener partnerrepository,IOrder_DetailsRepository _order_DetailsRepo)
         {
             this.feedbackrepository = feedbackrepository;
             this.productrepository = productrepository;
             this.Respons = respons;
             this.partnerrepository = partnerrepository;
+            order_DetailsRepo = _order_DetailsRepo;
         }
         [HttpGet("getbyproductId")]
         public IActionResult GetFeedbackByProductID(int Id)
@@ -112,6 +119,43 @@ namespace EcommerseApplication.Controllers
             Respons.Data = "";
             return BadRequest(Respons);
         }
+
+        [HttpPost("AddFeedback")]
+        public IActionResult AddFeedbackByProductID(FeedBackDTO feedBackDTO)
+        {
+            try
+            {
+
+                int UserID = int.Parse(User?.FindFirstValue("UserId"));
+                //int UserID = 5;
+                Order_Details Order = order_DetailsRepo.Get(feedBackDTO.OrderID);
+
+                if (Order != null && Order.UserID == UserID)
+                {
+                    Order_Items ProductCheck = Order.Order_Items.FirstOrDefault(o => o.ProductID == feedBackDTO.productID);
+                    if(ProductCheck == null)
+                        return NotFound(new { Success = false, Message = NotFoundMSG, Data = new List<string>() });
+
+                    feedback NewfeedBack = new feedback();
+                    NewfeedBack.OrderID = feedBackDTO.OrderID;
+                    NewfeedBack.UserID = UserID;
+                    NewfeedBack.productID = feedBackDTO.productID;
+                    NewfeedBack.Comment = feedBackDTO.Comment;
+                    NewfeedBack.Rate = feedBackDTO.Rate;
+
+                    feedbackrepository.insert(NewfeedBack);
+
+                    return Ok(new { Success = true, Message = SuccessMSG, Data = new { } });
+                }
+                else
+                {
+                    return NotFound(new { Success = false, Message = NotFoundMSG, Data = new List<string>() });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Success = false, Message = ex.Message });
+            }
+        }
     }
-    
 }
