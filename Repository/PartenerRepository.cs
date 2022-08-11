@@ -1,4 +1,5 @@
 ﻿using EcommerseApplication.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerseApplication.Repository
 {
@@ -26,6 +27,11 @@ namespace EcommerseApplication.Repository
         {
             return context.Parteners.FirstOrDefault(e=>e.Id==id);
         }
+        public User getByIDentity(string id)
+        {
+            return context.users.Include(x => x.Identity).FirstOrDefault(e => e.IdentityId == id);
+        }
+
 
         public Partener getByName(string name)
         {

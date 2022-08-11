@@ -15,12 +15,16 @@ namespace EcommerseApplication.Controllers.AdminScope
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<AppUser> _userManager;
         private readonly Ishipper shiperRepository;
+        private readonly IRequest requestRepository;
+        private readonly Ipartener ipartenerRepository;
 
-        public AdminController(Ishipper ishiper,RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
+        public AdminController(Ipartener _ipartener,IRequest _request,Ishipper ishiper,RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
             shiperRepository = ishiper;
+            requestRepository = _request;
+            ipartenerRepository = _ipartener;
         }
         [HttpPost]
         [Route("AddRoleToUser")]
@@ -90,7 +94,7 @@ namespace EcommerseApplication.Controllers.AdminScope
         
 
         [HttpPost]
-        [Route("Create Shiper")]
+        [Route("CreateShiper")]
         public async Task<IActionResult> CreateShipper([FromBody] shiperDto model)
         {
             if (!ModelState.IsValid)
@@ -99,6 +103,24 @@ namespace EcommerseApplication.Controllers.AdminScope
             }
             shiperRepository.insert(model);
             return Ok(new Response { Status = "Ok", Message = "Created Successfuly,Assigned Successfuly" });
+        }
+        [HttpPost]
+        [Route("CreatePartner")]
+        public IActionResult CreatePartner([FromBody]int id)
+        {
+           Requests request= requestRepository.GetPartnerById(id);
+           User userpartner  = ipartenerRepository.getByIDentity(request.IdentityId);
+            if(request==null)
+            {
+                return Ok(new Response { Status = "Error", Message = "Data is incorect" });
+            }
+            Partener partener = new Partener();
+            partener.Name = request.Name;
+            partener.Type = request.RequestType;
+            partener.numberOfBranches = request.numberOfBranches;
+            partener.userID = userpartner.Id;
+            ipartenerRepository.insert(partener);
+            return Ok(new Response { Status = "oK", Message = "Saved" });
         }
 
     }

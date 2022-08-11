@@ -11,5 +11,6 @@ namespace EcommerseApplication.Repository
         public List<Partener> getAll();
         public void delete(int id);
         public Partener getByUserID(int id);
+        public User getByIDentity(string identityId);
     }
 }
