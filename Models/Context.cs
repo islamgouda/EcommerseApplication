@@ -35,7 +35,11 @@ namespace EcommerseApplication.Models
         public DbSet<Shipper> shippers { get; set; }//
         public DbSet<feedback> feedbacks { get; set; }//
         public DbSet<shippingDetails> shippingDetails { get; set; }//
+
+        public DbSet<Requests> Requests { get; set; }//
+
         public DbSet<ShipperRequest> shipperRequests { get; set; }
+
 
 
 

@@ -4,7 +4,11 @@ using System.Security.Claims;
 
 namespace EcommerseApplication.Controllers
 {
+
+   // [Authorize]
+
     //[Authorize]
+
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase

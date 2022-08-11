@@ -15,6 +15,7 @@ ConfigurationManager configuration = builder.Configuration;
 
 builder.Services.AddScoped<IProductCategory, ProductCategoryRespository>();
 builder.Services.AddScoped<IDiscount, DiscountRepository>();
+builder.Services.AddScoped<IRequest, RequestRepository>();
 //
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

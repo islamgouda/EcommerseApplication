@@ -105,6 +105,7 @@ namespace EcommerseApplication.Controllers.Auth
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Sid, user.Id),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim("UserId", user.Id),
                 };
@@ -125,5 +126,8 @@ namespace EcommerseApplication.Controllers.Auth
             }
             return Unauthorized();
         }
+
+       
+
     }
 }
