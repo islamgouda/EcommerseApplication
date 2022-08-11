@@ -1,7 +1,9 @@
-﻿using EcommerseApplication.Models;
+﻿using EcommerseApplication.DTO;
+using EcommerseApplication.Models;
 using EcommerseApplication.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EcommerseApplication.Controllers
 {
@@ -10,12 +12,15 @@ namespace EcommerseApplication.Controllers
     public class ShipperController : ControllerBase
     {
         Ishipper shipper;
+        IshipperRequest IshipperRequest;
+        
         private readonly string NotFoundMSG = "Data Not Found";
         private readonly string BadRequistMSG = "Invalid Input Data";
         private readonly string SuccessMSG = "Data Found Successfuly";
-        public ShipperController(Ishipper _shipper)
+        public ShipperController(Ishipper _shipper,IshipperRequest _ishipperRequest)
         {
             this.shipper = _shipper;
+            this.IshipperRequest = _ishipperRequest;
         }
         [HttpGet]
         public IActionResult getAllShippers()
@@ -100,6 +105,24 @@ namespace EcommerseApplication.Controllers
             return Ok(new { Success = true, Message = SuccessMSG, Data = "deleted" });
             
            
+        }
+       [HttpPost("IamShipper")] //test string id,
+        public IActionResult shipperRequest(ShipperRequestDTo shipperRequestDTO)
+        {
+            ShipperRequest shipperRequest = new ShipperRequest();
+            shipperRequest.Name=shipperRequestDTO.Name;
+            shipperRequest.officePhone = shipperRequestDTO.officePhone;
+            shipperRequest.arabicName = shipperRequestDTO.arabicName;
+            shipperRequest.AccountID =User?.FindFirstValue("UserId");
+            try {
+                IshipperRequest.Add(shipperRequest);
+            }
+            catch
+            {
+                return BadRequest(new { Success = false, Message = BadRequistMSG, Data = "dontSaved" });
+            }
+
+            return Ok(new { Success = true, Message = SuccessMSG, Data = "dataSaved" });
         }
         /*[HttpGet("{id:int}/{name}")]
         public IActionResult getٍِِall(int id,string name)
