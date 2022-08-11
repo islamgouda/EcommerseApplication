@@ -18,6 +18,7 @@ namespace EcommerseApplication.Controllers
         {
             this.shippingDetails = _shippingDetails;
         }
+        //ShippingDetails/1   --Get
         [HttpGet("{id:int}")]
         public IActionResult getAllShippingByUserID(int id)
         {
@@ -33,8 +34,9 @@ namespace EcommerseApplication.Controllers
             return Ok(new { Success = true, Message = SuccessMSG, Data = shippingDetailsList });
            
         }
-
+        //ShippingDetails/1    --put
         //"shipName" ,"shippingstate","arabicshippingstate"userID": shipperID:
+
         [HttpPut("{id:int}")]
         public IActionResult updateShipingState(int id,[FromBody]shippingDetails shipping)
         {
@@ -51,6 +53,7 @@ namespace EcommerseApplication.Controllers
             
             
         }
+        //ShippingDetails/shipper/1   --Get
         [HttpGet("shipper/{id}")]
         public IActionResult getbyShipperID(int id)
         {
