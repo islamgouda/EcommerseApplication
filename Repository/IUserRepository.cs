@@ -8,6 +8,7 @@ namespace EcommerseApplication.Repository
         int DeleteUser(int Id);
         List<User> GetAllUsers();
         User GetUserById(int Id);
+        User GetUserByIdentityId(string IdentityId);
         int UpdateUser(int Id, User NewUser);
     }
 }

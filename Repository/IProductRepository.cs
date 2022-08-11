@@ -15,6 +15,7 @@ namespace EcommerseApplication.Repository
         void Create(Product Product);
         public void IsDiscountFinish();
         void Update(int Id, Product Product);
+        void ReduseQuantity(int ProductID, int DecreasedQuantity);
         void Delete(int Id);
         int Deletee(int Id);
     }

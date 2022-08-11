@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EcommerseApplication.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
@@ -30,6 +31,12 @@ namespace EcommerseApplication.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+        [HttpGet("asd")]
+        public string GetMe()
+        {
+            string userId = User?.FindFirstValue("UserId");
+            return userId;
         }
     }
 }
