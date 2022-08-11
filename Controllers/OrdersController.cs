@@ -26,8 +26,9 @@ namespace EcommerseApplication.Controllers
         {
             try
             {
+                int UserID = int.Parse(User?.FindFirstValue("UserId"));
 
-                List<Order_Details> Orders = order_DetailsRepo.GetAllByUserID(int.Parse(User?.FindFirstValue("UserId")));
+                List < Order_Details > Orders = order_DetailsRepo.GetAllByUserID(UserID); 
                 //List<Order_Details> Orders = order_DetailsRepo.GetAllByUserID(5);
                 if (Orders.Count == 0)
                     return NotFound(new { Success = true, Message = NotFoundMSG, Data = new List<OrderDetailsDTO>() });
