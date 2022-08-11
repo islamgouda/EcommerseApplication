@@ -19,6 +19,11 @@ namespace EcommerseApplication.Repository
             User user = context.users.FirstOrDefault(u => u.Id == Id);
             return user;
         }
+        public User GetUserByIdentityId(string IdentityId)
+        {
+            User user = context.users.FirstOrDefault(u => u.IdentityId == IdentityId);
+            return user;
+        }
         public int AddUser(User NewUser)
         {
             if (NewUser != null)

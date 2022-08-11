@@ -89,7 +89,7 @@ builder.Services.AddScoped<IProduct_InventoryRepository, Product_InventoryReposi
 builder.Services.AddScoped<IOrder_DetailsRepository, Order_DetailsRepository> ();
 builder.Services.AddScoped<IOrder_ItemsRepository, Order_ItemsRepository> ();
 builder.Services.AddScoped<IProduct_ImageRepository, Product_ImageRepository> ();
-
+builder.Services.AddScoped<IshipperRequest, ShipperRequestRepository> ();
 builder.Services.AddApplicationInsightsTelemetry();
 
 var app = builder.Build();
@@ -105,7 +105,7 @@ app.UseHttpsRedirection();
 
 
 
-//app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
 app.UseStaticFiles();
 app.UseAuthentication();
