@@ -78,5 +78,9 @@ namespace EcommerseApplication.Repository
             return context.shippingDetails.Where(ship => ship.shipperID == id).ToList();
         }
 
+        public shippingDetails getByUserAndOrder(int UserID, int OrderID)
+        {
+            return context.shippingDetails.Where(s => s.orderDetailsID == OrderID).FirstOrDefault(ship => ship.userID == UserID);
+        }
     }
 }

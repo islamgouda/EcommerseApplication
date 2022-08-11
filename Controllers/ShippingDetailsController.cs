@@ -3,6 +3,7 @@ using EcommerseApplication.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using EcommerseApplication.DTO;
+using System.Security.Claims;
 
 namespace EcommerseApplication.Controllers
 {
@@ -11,12 +12,14 @@ namespace EcommerseApplication.Controllers
     public class ShippingDetailsController : ControllerBase
     {
         private IshippingDetails shippingDetails;
+        private readonly IOrder_DetailsRepository order_DetailsRepo;
         private readonly string NotFoundMSG = "Data Not Found";
         private readonly string BadRequistMSG = "Invalid Input Data";
         private readonly string SuccessMSG = "Data Found Successfuly";
-        public ShippingDetailsController(IshippingDetails _shippingDetails)
+        public ShippingDetailsController(IshippingDetails _shippingDetails ,IOrder_DetailsRepository _order_DetailsRepo)
         {
             this.shippingDetails = _shippingDetails;
+            order_DetailsRepo = _order_DetailsRepo;
         }
         [HttpGet("{id:int}")]
         public IActionResult getAllShippingByUserID(int id)
@@ -66,11 +69,44 @@ namespace EcommerseApplication.Controllers
             return Ok(new { Success = true, Message = SuccessMSG, Data = shippingDetailsList });
             
         }
-       /* public IActionResult ADDNewShip([FromBody] AddShippingDTO shipping)
+        /* public IActionResult ADDNewShip([FromBody] AddShippingDTO shipping)
+         {
+             shippingDetails sh = new shippingDetails();
+             sh.
+         }*/
+
+
+        [HttpGet("showShippingProgress/{Orderid:int}")]
+        public IActionResult showShippingProgressState(int Orderid)
         {
-            shippingDetails sh = new shippingDetails();
-            sh.
-        }*/
-       
+            try
+            {
+                int userID = int.Parse(User?.FindFirstValue("UserId"));
+                List<Order_Details> Orders = order_DetailsRepo.GetAllByUserID(userID);
+                //int userID = 5;
+                //List<Order_Details> Orders = order_DetailsRepo.GetAllByUserID(5);
+
+                Order_Details CurntOrder = Orders.FirstOrDefault(o => o.Id == Orderid);
+
+                if (Orders.Count == 0 || CurntOrder == null)
+                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = new List<string>() });
+
+                shippingDetails shippingData = shippingDetails.getByUserAndOrder(userID, Orderid);
+
+                if (shippingData != null)
+                {
+                    return Ok(new { Success = true, Message = SuccessMSG, Data = new { ShippingStatt = shippingData.shippingstate, ShippingStatt_Ar = shippingData.arabicshippingstate } });
+                }
+                else
+                {
+                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = new List<string>() });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Success = false, Message = ex.Message });
+            }
+
+        }
     }
 }
