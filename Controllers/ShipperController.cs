@@ -106,6 +106,7 @@ namespace EcommerseApplication.Controllers
             
            
         }
+        //User requests to be shipper
        [HttpPost("IamShipper")] //test string id,
         public IActionResult shipperRequest(ShipperRequestDTo shipperRequestDTO)
         {
@@ -123,6 +124,29 @@ namespace EcommerseApplication.Controllers
             }
 
             return Ok(new { Success = true, Message = SuccessMSG, Data = "dataSaved" });
+        }
+
+        //Admin Show aLL Shippers Requests
+        [HttpGet("ShowAllRequests")]
+        public IActionResult showShippersRequest()
+        {
+            List<ShipperRequest> requests;
+            try
+            {
+                requests = IshipperRequest.GetAll();
+                if (requests != null)
+                {
+                    return Ok(new { Success = true, Message = SuccessMSG, Data = requests });
+                }
+                else
+                {
+                    return BadRequest(new { Success = false, Message = BadRequistMSG, Data = "notFound" });
+                }
+            }
+            catch
+            {
+                return BadRequest(new { Success = false, Message = BadRequistMSG, Data = "notFound" });
+            }
         }
         /*[HttpGet("{id:int}/{name}")]
         public IActionResult getٍِِall(int id,string name)

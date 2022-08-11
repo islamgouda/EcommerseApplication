@@ -14,5 +14,10 @@ namespace EcommerseApplication.Repository
             context.shipperRequests.Add(shipperRequest);
             context.SaveChanges();
         }
+
+        public List<ShipperRequest> GetAll()
+        {
+            return context.shipperRequests.ToList();
+        }
     }
 }
