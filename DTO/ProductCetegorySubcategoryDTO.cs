@@ -6,10 +6,14 @@ namespace EcommerseApplication.DTO
     {
         [Required]
         public string Name { get; set; }
+      
         [Required]
         public string Description { get; set; }
+     
         [Required]
         public int Price { get; set; }
+        public string? Name_Ar { get; set; }
+        public string? Description_Ar { get; set; }
         [Required]
         public int? CategoryID { get; set; }
         public bool IsAvailable { get; set; }
@@ -21,7 +25,8 @@ namespace EcommerseApplication.DTO
         public int? subcategoryID { get; set; }
         [Required]
 
-        public int? InventoryID { get; set; }
+        public int Quantity { get; set; }
 
+        public List<IFormFile> ImageFiles { get; set; }
     }
 }
