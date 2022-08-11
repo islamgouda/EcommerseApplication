@@ -1,4 +1,6 @@
-﻿using EcommerseApplication.Models;
+﻿using EcommerseApplication.DTO;
+using EcommerseApplication.Models;
+using EcommerseApplication.Repository;
 using EcommerseApplication.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -12,11 +14,13 @@ namespace EcommerseApplication.Controllers.AdminScope
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<AppUser> _userManager;
+        private readonly Ishipper shiperRepository;
 
-        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
+        public AdminController(Ishipper ishiper,RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            shiperRepository = ishiper;
         }
         [HttpPost]
         [Route("AddRoleToUser")]
@@ -83,21 +87,18 @@ namespace EcommerseApplication.Controllers.AdminScope
             return Ok(new Response { Status="Done",Message="Removed Successfuly"});
         }
 
-        [HttpPost]
-        [Route("CreateShiper")]
-        public async Task<IActionResult> CreateShipper([FromBody] string Email)
-        {
-            var user=await _userManager.FindByEmailAsync(Email);
-            if(user==null)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User not Exists" });
-            }
-            else
-            {
+        
 
-                await _userManager.AddToRoleAsync(user, "Shiper");
+        [HttpPost]
+        [Route("Create Shiper")]
+        public async Task<IActionResult> CreateShipper([FromBody] shiperDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Data is incorect" });
             }
-            return Ok(new Response { Status = "Ok", Message = "Assigned Successfuly" });
+            shiperRepository.insert(model);
+            return Ok(new Response { Status = "Ok", Message = "Created Successfuly,Assigned Successfuly" });
         }
 
     }

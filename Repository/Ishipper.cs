@@ -1,4 +1,5 @@
-﻿using EcommerseApplication.Models;
+﻿using EcommerseApplication.DTO;
+using EcommerseApplication.Models;
 
 namespace EcommerseApplication.Repository
 {
@@ -10,6 +11,6 @@ namespace EcommerseApplication.Repository
         public Shipper getByName(string name);
         public List<Shipper> getAll();
         public void delete(int id);
-
+        void insert(shiperDto model);
     }
 }
