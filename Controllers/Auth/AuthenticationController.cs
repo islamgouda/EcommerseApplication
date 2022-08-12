@@ -46,7 +46,10 @@ namespace EcommerseApplication.Controllers.Auth
                 return Ok(new Response { Status = "Error", Message = "we Can not create With current Data" });
 
             await _useManager.AddToRoleAsync(newuser, "User");
-            await _appDbContext.users.AddAsync(new User { IdentityId = newuser.Id, UserName = model.Username });
+            await _appDbContext.users.AddAsync(new User { 
+                IdentityId = newuser.Id, UserName = model.Username, birthDate = model.birthDate,
+                FirstName = model.FirstName, LastName = model.LastName, Phone = model.Phone
+            });
             await _appDbContext.SaveChangesAsync();
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
@@ -102,7 +105,9 @@ namespace EcommerseApplication.Controllers.Auth
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Sid, user.Id),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("UserId", user.Id),
                 };
 
                 foreach (var userRole in userRoles)
@@ -121,5 +126,8 @@ namespace EcommerseApplication.Controllers.Auth
             }
             return Unauthorized();
         }
+
+       
+
     }
 }

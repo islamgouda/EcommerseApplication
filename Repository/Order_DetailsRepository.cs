@@ -1,4 +1,5 @@
 ﻿using EcommerseApplication.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerseApplication.Repository
 {
@@ -14,9 +15,13 @@ namespace EcommerseApplication.Repository
         {
             return context.order_Details.Where(o => o.DeletedAt == null).ToList();
         }
+        public List<Order_Details> GetAllByUserID(int UserID)
+        {
+            return context.order_Details.Include(d=>d.Order_Items).ThenInclude(i=>i.Product).ThenInclude(p => p.Product_Images).Where(o => o.UserID == UserID).ToList();
+        }
         public Order_Details Get(int Id)
         {
-            return context.order_Details.Where(o => o.DeletedAt == null).FirstOrDefault(o=>o.Id == Id);
+            return context.order_Details.Include(d=>d.Order_Items).Where(o => o.DeletedAt == null).FirstOrDefault(or=>or.Id == Id);
         }
 
         public void Create(Order_Details Order_Details)

@@ -1,4 +1,6 @@
-﻿using EcommerseApplication.Models;
+﻿using EcommerseApplication.DTO;
+using EcommerseApplication.Models;
+using EcommerseApplication.Repository;
 using EcommerseApplication.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -12,11 +14,13 @@ namespace EcommerseApplication.Controllers.SubAdminScope
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<AppUser> _userManager;
+        private readonly Ishipper shiperRepository;
 
-        public SubAdminController(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
+        public SubAdminController(Ishipper ishiper, RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            shiperRepository = ishiper;
         }
         [HttpPost]
         [Route("AsignRolesBySubAdmin")]
@@ -72,5 +76,6 @@ namespace EcommerseApplication.Controllers.SubAdminScope
 
             return Ok(new Response { Status = "Ok", Message = "Created Successfuly" });
         }
+       
     }
 }

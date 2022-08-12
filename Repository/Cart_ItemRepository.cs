@@ -47,6 +47,23 @@ namespace EcommerseApplication.Repository
             }
             return 0;
         }
+        public int DeleteCart_Item(Cart_Item cart_Item)
+        {
+            
+            if (cart_Item != null)
+            {
+                try
+                {
+                    context.Cart_Items.Remove(cart_Item);
+                    return context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            return 0;
+        }
         public int UpdateCart_Item(int Id, Cart_Item NewCart_Item)
         {
             Cart_Item oldCart_Item = context.Cart_Items.FirstOrDefault(ci => ci.Id == Id);

@@ -1,4 +1,6 @@
-﻿using EcommerseApplication.Models;
+﻿using EcommerseApplication.DTO;
+using EcommerseApplication.Models;
+using EcommerseApplication.Repository;
 using EcommerseApplication.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -12,11 +14,17 @@ namespace EcommerseApplication.Controllers.AdminScope
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<AppUser> _userManager;
+        private readonly Ishipper shiperRepository;
+        private readonly IRequest requestRepository;
+        private readonly Ipartener ipartenerRepository;
 
-        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
+        public AdminController(Ipartener _ipartener,IRequest _request,Ishipper ishiper,RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            shiperRepository = ishiper;
+            requestRepository = _request;
+            ipartenerRepository = _ipartener;
         }
         [HttpPost]
         [Route("AddRoleToUser")]
@@ -83,21 +91,36 @@ namespace EcommerseApplication.Controllers.AdminScope
             return Ok(new Response { Status="Done",Message="Removed Successfuly"});
         }
 
+        
+
         [HttpPost]
         [Route("CreateShiper")]
-        public async Task<IActionResult> CreateShipper([FromBody] string Email)
+        public async Task<IActionResult> CreateShipper([FromBody] shiperDto model)
         {
-            var user=await _userManager.FindByEmailAsync(Email);
-            if(user==null)
+            if (!ModelState.IsValid)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User not Exists" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Data is incorect" });
             }
-            else
+            shiperRepository.insert(model);
+            return Ok(new Response { Status = "Ok", Message = "Created Successfuly,Assigned Successfuly" });
+        }
+        [HttpPost]
+        [Route("CreatePartner")]
+        public IActionResult CreatePartner([FromBody]int id)
+        {
+           Requests request= requestRepository.GetPartnerById(id);
+           User userpartner  = ipartenerRepository.getByIDentity(request.IdentityId);
+            if(request==null)
             {
-
-                await _userManager.AddToRoleAsync(user, "Shiper");
+                return Ok(new Response { Status = "Error", Message = "Data is incorect" });
             }
-            return Ok(new Response { Status = "Ok", Message = "Assigned Successfuly" });
+            Partener partener = new Partener();
+            partener.Name = request.Name;
+            partener.Type = request.RequestType;
+            partener.numberOfBranches = request.numberOfBranches;
+            partener.userID = userpartner.Id;
+            ipartenerRepository.insert(partener);
+            return Ok(new Response { Status = "oK", Message = "Saved" });
         }
 
     }

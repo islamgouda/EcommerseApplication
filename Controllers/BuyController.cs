@@ -3,6 +3,7 @@ using EcommerseApplication.Models;
 using EcommerseApplication.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EcommerseApplication.Controllers
 {
@@ -22,13 +23,14 @@ namespace EcommerseApplication.Controllers
         private readonly IPayment_DetailsRepository payment_DetailsRepo;
         private readonly IUserAddress userAddress;
         private readonly IshippingDetails shippingDetailsRepo;
+        private readonly IProductRepository productRepo;
         private readonly IUserRepository userRepo;
 
         public BuyController(IShopping_SessionRepository _shopping_SessionRrpo,
                              ICart_ItemRepository _cart_ItemRepo, IOrder_DetailsRepository _order_DetailsRepo,
                              IOrder_ItemsRepository _order_ItemsRepo, IUserPayement _userPayementRepo,
                              IPayment_DetailsRepository _payment_DetailsRepo, IUserRepository _userRepo,
-                             IUserAddress _userAddress, IshippingDetails _shippingDetailsRepo)
+                             IUserAddress _userAddress, IshippingDetails _shippingDetailsRepo,IProductRepository _productRepo)
         {
             shopping_SessionRrpo = _shopping_SessionRrpo;
             cart_ItemRepo = _cart_ItemRepo;
@@ -38,6 +40,7 @@ namespace EcommerseApplication.Controllers
             payment_DetailsRepo = _payment_DetailsRepo;
             userAddress = _userAddress;
             shippingDetailsRepo = _shippingDetailsRepo;
+            productRepo = _productRepo;
             userRepo = _userRepo;
         }
 
@@ -47,6 +50,8 @@ namespace EcommerseApplication.Controllers
         {
             try
             {
+                //User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                //int UserID = user.Id;
                 int UserID = buyDTO.UserID;
                 int PaymentID = buyDTO.PaymentID;
                 int ShipperID = buyDTO.ShipperID;
@@ -72,7 +77,7 @@ namespace EcommerseApplication.Controllers
                 {
                     if (item.Quantity <= item.product.Product_Inventory.Quantity)
                     {
-                        TotalPrice += item.product.Price;
+                        TotalPrice += item.product.Price * item.Quantity;
                     }
                     else
                     {
@@ -115,12 +120,19 @@ namespace EcommerseApplication.Controllers
                     for (int i = 0; i < cart_Items.Count; i++)
                     {
                         //Reduce Quantity From Order
-                        //Remove Orders from Cart_Item
-
+                        productRepo.ReduseQuantity(cart_Items[i].ProductId, cart_Items[i].Quantity);
                     }
+
+                    for (int i = cart_Items.Count - 1; i >= 0; i--)
+                    {
+                        //Remove Orders from Cart_Item
+                        cart_ItemRepo.DeleteCart_Item(cart_Items[i]);
+                    }
+                    
 
                     shopping_SessionRrpo.ClearTotal(Shopping_SessionID);
                     //Add Shipping Details
+
                     User user = userRepo.GetUserById(UserID);
                     User_address userAddresss = userAddress.GetAddress(AddressID);
                     shippingDetails shippingDetails = new shippingDetails();

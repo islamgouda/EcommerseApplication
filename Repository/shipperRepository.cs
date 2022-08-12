@@ -1,4 +1,5 @@
-﻿using EcommerseApplication.Models;
+﻿using EcommerseApplication.DTO;
+using EcommerseApplication.Models;
 
 namespace EcommerseApplication.Repository
 {
@@ -36,6 +37,15 @@ namespace EcommerseApplication.Repository
 
         public void insert(Shipper shipper)
         {
+            context.shippers.Add(shipper);
+            context.SaveChanges();
+        }
+
+        public void insert(shiperDto model)
+        {
+            Shipper shipper = new Shipper();
+            shipper.officePhone = model.officePhone;
+            shipper.Name = model.Name;
             context.shippers.Add(shipper);
             context.SaveChanges();
         }

@@ -15,6 +15,12 @@ namespace EcommerseApplication.Repository
         {
             return context.Products.Where(p => p.DeletedAt == null).ToList();
         }
+        public void ReduseQuantity(int ProductID, int DecreasedQuantity)
+        {
+            Product pro = context.Products.Include(p => p.Product_Inventory).FirstOrDefault(p1 => p1.ID == ProductID);
+            pro.Product_Inventory.Quantity -= DecreasedQuantity;
+            context.SaveChanges();
+        }
 
         public List<Product> GetAllByCategoryID(int id)
         {
