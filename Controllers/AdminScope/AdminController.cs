@@ -14,14 +14,16 @@ namespace EcommerseApplication.Controllers.AdminScope
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IshipperRequest shipperRequest;
         private readonly Ishipper shiperRepository;
         private readonly IRequest requestRepository;
         private readonly Ipartener ipartenerRepository;
-
-        public AdminController(Ipartener _ipartener,IRequest _request,Ishipper ishiper,RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
+      
+        public AdminController(Ipartener _ipartener,IRequest _request,Ishipper ishiper,RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager, IshipperRequest shipperRequest)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            this.shipperRequest = shipperRequest;
             shiperRepository = ishiper;
             requestRepository = _request;
             ipartenerRepository = _ipartener;
@@ -104,6 +106,33 @@ namespace EcommerseApplication.Controllers.AdminScope
             shiperRepository.insert(model);
             return Ok(new Response { Status = "Ok", Message = "Created Successfuly,Assigned Successfuly" });
         }
+
+        /***********/
+        [HttpPost]
+        [Route("CreateShiperFromRequests")]
+        public IActionResult CreateShipperfromRequests(int requestId)
+        {
+            ShipperRequest shipperR = shipperRequest.Get(requestId);
+            if (shipperR != null)
+            {
+                Shipper shipper = new Shipper();
+                shipper.Name = shipperR.Name;
+                shipper.officePhone = shipperR.officePhone;
+                shipper.arabicName = shipperR.arabicName;
+                shipper.IdentityId = shipperR.AccountID;
+                shiperRepository.insert(shipper);
+
+                shipperRequest.remove(requestId);
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Data is incorect" });
+            }
+            return Ok(new Response { Status = "Ok", Message = "Created Successfuly,Assigned Successfuly" });
+        }
+
+
+        /***********/
         [HttpPost]
         [Route("CreatePartner")]
         public IActionResult CreatePartner([FromBody]int id)
