@@ -604,9 +604,9 @@ namespace EcommerseApplication.Controllers
                 }
             }
             Respons.Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)
-                                            .Select(m => m.ErrorMessage));
+                                         .Select(m => m.ErrorMessage));
             Respons.succcess = false;
-            Respons.Data = "";
+            Respons.Data = NewProduct;
             return BadRequest(Respons);
         }
     }
