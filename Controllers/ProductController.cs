@@ -26,11 +26,10 @@ namespace EcommerseApplication.Controllers
         public ProductController(IProductRepository _productRepo, IWebHostEnvironment _environment , IProductRepository productrepository, ConsumerRespons _Response,IProduct_InventoryRepository _inventproductRepo)
         {
            this. productRepo = _productRepo;
-           environment = _environment;
+           this.environment = _environment;
            this.productrepository = productrepository;
            this. Respons = _Response;
-            this.inventproductRepo= _inventproductRepo;
-
+           this.inventproductRepo= _inventproductRepo;
         }
         [HttpGet]
         

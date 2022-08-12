@@ -21,6 +21,8 @@ namespace EcommerseApplication.Respository
         {
             Discount discount = new Discount();
             discount.Name = NewDiscount.Name;
+            discount.Description_Ar=NewDiscount.Description_Ar;
+            discount.Name_Ar = NewDiscount.Name_Ar;
             discount.Description = NewDiscount.Description;
             discount.Descount_Persent = NewDiscount.Descount_Persent;
             discount.CreatedAt = DateTime.Now;
@@ -50,7 +52,6 @@ namespace EcommerseApplication.Respository
        
         public int  AsssignDiscount(DiscountIDPartnerIDProductIDDTO AssignNewDiscount)
         {
-
             Product product = context.Products.FirstOrDefault(p => p.ID == AssignNewDiscount.ProductID && p.PartenerID == 1);
             if (product.DiscountID == null)
             {
@@ -89,6 +90,8 @@ namespace EcommerseApplication.Respository
             {
                 discount.Name = NewDiscount.Name;
                 discount.Description = NewDiscount.Description;
+                discount.Description_Ar = NewDiscount.Description_Ar;
+                discount.Name_Ar = NewDiscount.Name_Ar;
                 discount.Descount_Persent = NewDiscount.Descount_Persent;
                 discount.UpdatedAt = DateTime.Now;
                 discount.EndTime = NewDiscount.EndTime;
