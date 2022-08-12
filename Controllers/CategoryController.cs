@@ -26,13 +26,22 @@ namespace EcommerseApplication.Controllers
         }
         [HttpPost]
         [Route("AddnewCategory")]
-        public void AddnewCategory(ProductCategoryViewModel model)
+        public IActionResult AddnewCategory(ProductCategoryViewModel model)
         {
-            Product_Category newCat = new Product_Category();
-            newCat.Name = model.Name;   
-            newCat.Description = model.Description;
-            newCat.CreatedAt= DateTime.Now;
-            productCategoryRespository.AddCategory(newCat);
+            try
+            {
+                Product_Category newCat = new Product_Category();
+                newCat.Name = model.Name;
+                newCat.Description = model.Description;
+                newCat.Name_Ar = model.Name_Ar;
+                newCat.Description_Ar = model.Description_Ar;
+                newCat.CreatedAt = DateTime.Now;
+                productCategoryRespository.AddCategory(newCat);
+            }
+            catch (Exception ex) {
+                return Ok(new { Success = false, Message = "Failed", Data = "Dontsaved" });
+            }
+            return Ok(new { Success = true, Message = "succeded", Data = "saved" });
         }
 
 

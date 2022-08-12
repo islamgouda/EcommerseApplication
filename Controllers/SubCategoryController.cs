@@ -52,6 +52,8 @@ namespace EcommerseApplication.Controllers
                         AllSubCategoryDTOs[i].Id = AllSubCategorys[i].Id;
                         AllSubCategoryDTOs[i].Name = AllSubCategorys[i].Name;
                         AllSubCategoryDTOs[i].Description = AllSubCategorys[i].Description;
+                        AllSubCategoryDTOs[i].arabicName= AllSubCategorys[i].arabicName;
+                        AllSubCategoryDTOs[i].arabicDescription=AllSubCategorys[i].arabicDescription;
 
                         string fileNameWithPath = Path.Combine(path, AllSubCategorys[i].image);
                         if (System.IO.File.Exists(fileNameWithPath))
@@ -111,12 +113,14 @@ namespace EcommerseApplication.Controllers
                 subCategory NewSubCategory = new subCategory
                 {
                     Name = subCategoryDTO.Name,
+                    arabicName = subCategoryDTO.arabicName,
                     Description = subCategoryDTO.Description,
+                    arabicDescription=subCategoryDTO.arabicDescription,
                     image = ImageName,
                     CategoryId = subCategoryDTO.CategoryId
                 };
                 subCategoryRepo.insert(NewSubCategory);
-                return Created("Data Inserted Successfuly",NewSubCategory);
+                return Ok(new { Success = true, Message = "Data Inserted Successfuly", Data = NewSubCategory });
             }
             catch (Exception ex)
             {
