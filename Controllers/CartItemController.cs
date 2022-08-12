@@ -3,6 +3,7 @@ using EcommerseApplication.Models;
 using EcommerseApplication.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EcommerseApplication.Controllers
 {
@@ -16,12 +17,15 @@ namespace EcommerseApplication.Controllers
         private readonly ICart_ItemRepository cart_ItemRepo;
         private readonly IShopping_SessionRepository shopping_SessionRrpo;
         private readonly IWebHostEnvironment environment;
+        public IUserRepository userRepo;
+        
 
-        public CartItemController(ICart_ItemRepository _cart_ItemRepo, IShopping_SessionRepository _shopping_SessionRrpo, IWebHostEnvironment _environment)
+        public CartItemController(ICart_ItemRepository _cart_ItemRepo, IShopping_SessionRepository _shopping_SessionRrpo, IWebHostEnvironment _environment, IUserRepository _userRepo)
         {
             cart_ItemRepo = _cart_ItemRepo;
             shopping_SessionRrpo = _shopping_SessionRrpo;
             environment = _environment;
+            this.userRepo = _userRepo;
         }
 
 
@@ -109,6 +113,27 @@ namespace EcommerseApplication.Controllers
 
                 return BadRequest(new { Success = false, Message = ex.Message });
             }
+        }
+        //Enter product Id To Remove It From Card Item
+        [HttpDelete("deleteFromCard")]
+
+        public IActionResult deleteFromCard(int id)
+        {
+            User user;int userid=1;
+            try {user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId")); userid = user.Id; }
+            catch { userid = 1;}
+            int Shopping_SessionID;
+            try {
+            Shopping_Session shopping = shopping_SessionRrpo.GetByUserId(userid).First();
+            Cart_Item card = cart_ItemRepo.GetCardItemByproductAndSession(shopping.Id, id);
+            cart_ItemRepo.DeleteCart_Item(card);
+            }
+            catch
+            {
+                return BadRequest(new { Success = false, Message = BadRequistMSG });
+            }
+            return Ok(new { Success = true, Message = SuccessMSG, Data = "deletedCardItem" });
+
         }
     }
 }
