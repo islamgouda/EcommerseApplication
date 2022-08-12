@@ -12,6 +12,9 @@ namespace EcommerseApplication.Models
         public int? numberOfBranches { get; set; }
         
         public int? addressID;
+        [ForeignKey("identity")]
+        public string IdentityId { set; get; }
+        public AppUser identity { get; set; }
         public User? User { get; set; }
         public List<Product>? Products { get; set; }
     }
