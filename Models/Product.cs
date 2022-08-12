@@ -26,14 +26,13 @@ namespace EcommerseApplication.Models
         public int? subcategoryID { get; set; }
 
 
-
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
 
 
         public virtual Product_Category? Product_Category { get; set; }
-        public virtual Product_Inventory? Product_Inventory { get; set; }
+        public virtual Product_Inventory Product_Inventory { get; set; }
         public virtual ICollection<Product_Images>? Product_Images { get; set; }
 
        public virtual Partener? Partener { get; set; }
