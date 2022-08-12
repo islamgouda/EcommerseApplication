@@ -61,5 +61,12 @@ namespace EcommerseApplication.Repository
 
             OldProduct_Inventory.UpdatedAt = DateTime.Now;
         }
+        public void updateproductInventory(int? Id, int NewQuentity)
+        {
+            Product_Inventory productInventory = context.Product_Inventorys.FirstOrDefault(In => In.ID == Id);
+            productInventory.Quantity = NewQuentity;
+            productInventory.UpdatedAt = DateTime.Now;
+            context.SaveChanges();
+        }
     }
 }

@@ -114,7 +114,9 @@ namespace EcommerseApplication.Controllers
             shipperRequest.Name=shipperRequestDTO.Name;
             shipperRequest.officePhone = shipperRequestDTO.officePhone;
             shipperRequest.arabicName = shipperRequestDTO.arabicName;
-            shipperRequest.AccountID =User?.FindFirstValue("UserId");
+            string uid;
+             uid = User?.FindFirstValue("UserId");
+            shipperRequest.AccountID =(uid!=null?uid: "daec1e1e-8b1b-4114-bced-09874df8cd5d");
             try {
                 IshipperRequest.Add(shipperRequest);
             }

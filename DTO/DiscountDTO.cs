@@ -8,8 +8,10 @@ namespace EcommerseApplication.DTO
         public string Name { get; set; }
         [Required]
         public string Description { get; set; }
+        public string? Name_Ar { get; set; }
         [Required]
         public decimal Descount_Persent { get; set; }
+        public string? Description_Ar { get; set; }
         [Required]
         public bool Active { get; set; }
         public DateTime? StartTime { get; set; }

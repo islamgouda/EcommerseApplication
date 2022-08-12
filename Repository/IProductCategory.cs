@@ -11,6 +11,8 @@ namespace EcommerseApplication.Respository
         public void AddCategory(Product_Category newCat);
         public void DeleteCategory(int id);
         public void UpdateCategory(int id, Product_Category _Category);
+        public void UpdateOldCategory(Product_Category _Category);
+        public int DeleteACategory(int Id);
 
     }
 }
