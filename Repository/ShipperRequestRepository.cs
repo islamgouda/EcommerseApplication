@@ -15,9 +15,21 @@ namespace EcommerseApplication.Repository
             context.SaveChanges();
         }
 
+        public ShipperRequest Get(int id)
+        {
+            return context.shipperRequests.FirstOrDefault(e => e.Id == id);
+        }
+
         public List<ShipperRequest> GetAll()
         {
             return context.shipperRequests.ToList();
+        }
+
+        public void remove(int id)
+        {
+          ShipperRequest shipperR=  context.shipperRequests.FirstOrDefault(e => e.Id == id);
+            context.shipperRequests.Remove(shipperR);
+            context.SaveChanges();
         }
     }
 }
