@@ -662,7 +662,7 @@ namespace EcommerseApplication.Controllers
                         
                         try
                         {
-                            inventproductRepo.updateproductInventory(oldproduct.InventoryID, NewProduct.Quantity);
+                            inventproductRepo.updateproductInventory((int)oldproduct.InventoryID, NewProduct.Quantity);
                             productrepository.Update(Id, oldproduct);
 
                             Respons.succcess = true;

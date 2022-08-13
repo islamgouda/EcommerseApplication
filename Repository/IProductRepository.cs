@@ -19,5 +19,7 @@ namespace EcommerseApplication.Repository
         void ReduseQuantity(int ProductID, int DecreasedQuantity);
         void Delete(int Id);
         int Deletee(int Id);
+        public Product GetIncludeById(int Id);
+        
     }
 }

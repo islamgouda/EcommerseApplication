@@ -90,14 +90,15 @@ namespace EcommerseApplication.Repository
                 .Include(p => p.Product_Inventory)
                 .Where(p => p.DeletedAt == null).ToList();
         }
-
         public List<string> GetImages(int id)
         {
             Product _product = context.Products.Include(p => p.Product_Images).FirstOrDefault(p => p.ID == id);
 
-            List<string> _Images = _product.Product_Images.Select(p=>p.ImageFileName).ToList();
+            List<string> _Images = _product.Product_Images.Select(p => p.ImageFileName).ToList();
             return _Images;
         }
+
+        
         public Product Get(int Id)
         {
             return context.Products.FirstOrDefault(p=>p.ID == Id);
@@ -161,6 +162,13 @@ namespace EcommerseApplication.Repository
                     context.SaveChanges();
                 }
             }
+            
+        }
+        public Product GetIncludeById(int Id)
+        {
+            return context.Products.Include(e => e.Product_Category).Include(c => c.subcategory)
+                .Include(r => r.Product_Inventory).Include(pr => pr.Discount)
+                .Include(par => par.Partener).FirstOrDefault(y => y.ID == Id);
         }
     }
 }

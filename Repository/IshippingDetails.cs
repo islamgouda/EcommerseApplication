@@ -1,4 +1,5 @@
 ﻿using EcommerseApplication.Models;
+using EcommerseApplication.DTO;
 
 namespace EcommerseApplication.Repository
 {
@@ -15,7 +16,8 @@ namespace EcommerseApplication.Repository
         public void delete(int id);
         public void updateState(int id, string shippingstate);
         public void updateShippingDetails(int id,shippingDetails shippingDetails);
-        
+        public void updateStatewithDTo(UpdateshippingDTO updateshippingDTO );
+
 
     }
 }

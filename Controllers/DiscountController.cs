@@ -178,21 +178,15 @@ namespace EcommerseApplication.Controllers
             {
                 try
                 {
-                    int res=discountrepository.AsssignDiscount(Discount);
-                    if (res == 1)
+                    int res=discountrepository.AssignDiscount(Discount);
+                    if (res ==2)
                     {
                         Response.Message = "assign discount successflly";
                         Response.succcess = true;
                         Response.Data = "";
                         return Ok(Response);
                     }
-                    else if(res == 2)
-                    {
-                        Response.Message = "cant assign this discount becouse zero percent" ;
-                        Response.succcess = false;
-                        Response.Data = "";
-                        return BadRequest(Response);
-                    }
+                    
                     else
                     {
                         Response.Message = "cant assign discount to this product  becouse ther exists discount on this product not finish until now";

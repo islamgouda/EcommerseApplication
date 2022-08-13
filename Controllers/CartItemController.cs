@@ -22,8 +22,9 @@ namespace EcommerseApplication.Controllers
         private readonly IProductRepository productRepository;
         public IProduct_ImageRepository product_ImageRepository;
         public IDiscount discount;
+        public string baseUrl2;
 
-        public CartItemController(ICart_ItemRepository _cart_ItemRepo, IShopping_SessionRepository _shopping_SessionRrpo, IWebHostEnvironment _environment, IUserRepository _userRepo,IProductRepository _productRepository,IProduct_ImageRepository _product_ImageRepository, IDiscount _discount)
+        public CartItemController(ICart_ItemRepository _cart_ItemRepo, IShopping_SessionRepository _shopping_SessionRrpo, IWebHostEnvironment _environment, IUserRepository _userRepo,IProductRepository _productRepository,IProduct_ImageRepository _product_ImageRepository, IDiscount _discount, IHttpContextAccessor baseUrl)
         {
             cart_ItemRepo = _cart_ItemRepo;
             shopping_SessionRrpo = _shopping_SessionRrpo;
@@ -32,6 +33,7 @@ namespace EcommerseApplication.Controllers
             this.productRepository = _productRepository;
             this.product_ImageRepository = _product_ImageRepository;
             this.discount = _discount;
+            this.baseUrl2 = string.Format("{0}://{1}//", baseUrl.HttpContext.Request.Scheme, baseUrl.HttpContext.Request.Host.Value);
         }
 
         //لازم تبقي عامل log in
@@ -117,7 +119,7 @@ namespace EcommerseApplication.Controllers
             List<ProductCartDTO> product_cart_dtos = new List<ProductCartDTO>();
             foreach(var item in cart_Items)
             {
-              Product product=  productRepository.Get(item.ProductId);
+              Product product=  productRepository.GetIncludeById(item.ProductId);
                 ProductCartDTO productCart = new ProductCartDTO();
                 productCart.ProductId = product.ID;
                 productCart.Name=product.Name;
@@ -126,9 +128,20 @@ namespace EcommerseApplication.Controllers
                 productCart.arabicDiscription = product.Description_Ar;
                 productCart.Price=product.Price;
                 productCart.QuantityOrdered = item.Quantity;
-                // productCart.Image = product_ImageRepository.Get(product.ID);
-                // productCart.categoryName = product.Product_Category.Name;
-               // productCart.Descount_Persent = discount.getDiscountById(product.ID);
+                string img  = productRepository.GetImages(product.ID).FirstOrDefault();
+                if (img == null) { productCart.Image = " "; }
+                else {
+                    productCart.Image = Path.Combine(baseUrl2, "Images", "Product", img);
+                }
+               
+               
+              
+                 productCart.categoryName = product.Product_Category.Name;
+                if (product.Discount != null) {
+                    productCart.Descount_Persent = product.Discount.Descount_Persent;
+                }
+                productCart.subCategoryName = product.subcategory.Name;
+                productCart.QuantityAvailable = product.Product_Inventory.Quantity;
                 product_cart_dtos.Add(productCart);
 
             }

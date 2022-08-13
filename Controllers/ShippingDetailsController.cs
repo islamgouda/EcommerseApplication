@@ -9,17 +9,22 @@ namespace EcommerseApplication.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class ShippingDetailsController : ControllerBase
     {
         private IshippingDetails shippingDetails;
         private readonly IOrder_DetailsRepository order_DetailsRepo;
+        private IUserRepository userRepo;
+        private Ishipper ishipper;
         private readonly string NotFoundMSG = "Data Not Found";
         private readonly string BadRequistMSG = "Invalid Input Data";
         private readonly string SuccessMSG = "Data Found Successfuly";
-        public ShippingDetailsController(IshippingDetails _shippingDetails ,IOrder_DetailsRepository _order_DetailsRepo)
+        public ShippingDetailsController(IshippingDetails _shippingDetails ,IOrder_DetailsRepository _order_DetailsRepo,IUserRepository _userRepo,Ishipper _ishipper)
         {
             this.shippingDetails = _shippingDetails;
             order_DetailsRepo = _order_DetailsRepo;
+            this.userRepo = _userRepo;
+            this.ishipper = _ishipper;
         }
         //ShippingDetails/1   --Get
         [HttpGet("{id:int}")]
@@ -36,6 +41,49 @@ namespace EcommerseApplication.Controllers
             }
             return Ok(new { Success = true, Message = SuccessMSG, Data = shippingDetailsList });
            
+        }
+
+        [HttpGet("GetMyShipping")]
+        public IActionResult getAllShippingByUserID()
+        {
+            User user; int id=3;
+            try { user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));id = user.Id; }
+            catch
+            {
+                id = 3;
+            }
+            
+             
+            List<shippingDetails> shippingDetailsList;
+            try
+            {
+                shippingDetailsList = shippingDetails.getAllbyUserID(id);
+            }
+            catch
+            {
+                return BadRequest(new { Success = true, Message = NotFoundMSG, Data = "notfound" });
+            }
+            List<ShowUserShippingDTO> userShiping = new List<ShowUserShippingDTO>();
+            foreach (var shippD in shippingDetailsList)
+            {
+                ShowUserShippingDTO showUserShippingDTO = new ShowUserShippingDTO();
+                showUserShippingDTO.ID=shippD.ID;
+                showUserShippingDTO.shipName = shippD.shipName;
+                showUserShippingDTO.shippingstate = shippD.shippingstate;
+                showUserShippingDTO.ALLaddress = shippD.ALLaddress;
+                showUserShippingDTO.ALLaddress_Ar = shippD.ALLaddress_Ar;
+                showUserShippingDTO.arabicshippingstate = shippD.arabicshippingstate;
+                Shipper sh = ishipper.getByID(shippD.shipperID);
+                showUserShippingDTO.shipperName = sh.Name;
+                showUserShippingDTO.shipperPhone = sh.officePhone;
+                
+                userShiping.Add(showUserShippingDTO);
+
+
+
+            }
+            return Ok(new { Success = true, Message = SuccessMSG, Data = userShiping });
+
         }
         //ShippingDetails/1    --put
         //"shipName" ,"shippingstate","arabicshippingstate"userID": shipperID:
@@ -55,6 +103,24 @@ namespace EcommerseApplication.Controllers
             //shippingDetails.updateState(id, shippingstate);
             
             
+        }
+
+
+        [HttpPut("updateshippingState")]
+        public IActionResult updateShipingState(UpdateshippingDTO updateshippingDTO)
+        {
+            try
+            {
+                shippingDetails.updateStatewithDTo(updateshippingDTO);
+            }
+            catch
+            {
+                return BadRequest(new { Success = true, Message = BadRequistMSG, Data = "dontsaved" });
+            }
+            return Ok(new { Success = true, Message = SuccessMSG, Data = "saved" });
+            //shippingDetails.updateState(id, shippingstate);
+
+
         }
         //ShippingDetails/shipper/1   --Get
         [HttpGet("shipper/{id}")]

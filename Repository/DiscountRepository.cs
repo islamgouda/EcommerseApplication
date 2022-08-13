@@ -45,31 +45,30 @@ namespace EcommerseApplication.Respository
 
         }
 
-        public void AssignDiscount(DiscountIDPartnerIDProductIDDTO AssignNewDiscount)
-        {
-
-        }
+        
        
-        public int  AsssignDiscount(DiscountIDPartnerIDProductIDDTO AssignNewDiscount)
+        public int  AssignDiscount(DiscountIDPartnerIDProductIDDTO AssignNewDiscount)
         {
-            Product product = context.Products.FirstOrDefault(p => p.ID == AssignNewDiscount.ProductID && p.PartenerID == 1);
-            if (product.DiscountID == null)
-            {
+            Product product = context.Products.FirstOrDefault(p => p.ID == AssignNewDiscount.ProductID);
+               
+           
                 product.DiscountID = AssignNewDiscount.DiscountId;
-                int price = product.Price;
-                Discount discount = context.Discounts.FirstOrDefault(d => d.ID == AssignNewDiscount.DiscountId);
-                decimal DiscountPersent = discount.Descount_Persent;
-                if (DiscountPersent > 0)
-                {
-                    int priceAfetrDiscount = price - (int)((price * DiscountPersent) / 100);
-                    product.Price = priceAfetrDiscount;
-                    context.SaveChanges();
-                    return 1;
-                }
+                //int price = product.Price;
+               // Discount
+               // discount = context.Discounts.FirstOrDefault(d => d.ID == AssignNewDiscount.DiscountId);
+               // decimal DiscountPersent = discount.Descount_Persent;
+               // p
+                //if (DiscountPersent > 0)
+                //{
+                //    int priceAfetrDiscount = price - (int)((price * DiscountPersent) / 100);
+                //    product.Price = priceAfetrDiscount;
+                //    context.SaveChanges();
+                //    return 1;
+                //}
                 context.SaveChanges();
                 return 2; 
-            }
-            return 0; 
+            
+            
         }
         public int DeleteDiscount(int Id)
         {
