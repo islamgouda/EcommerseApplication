@@ -11,5 +11,7 @@ namespace EcommerseApplication.Repository
         public User_Payement GetUserPayment(int id);
         public void updateUserPayement(int id,User_Payement newPaement);
 
+        bool SetPaymentTokenID(int PaymentID, String PaymentToken);
+
     }
 }

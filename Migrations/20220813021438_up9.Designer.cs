@@ -4,6 +4,7 @@ using EcommerseApplication.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcommerseApplication.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220813021438_up9")]
+    partial class up9
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -493,36 +495,6 @@ namespace EcommerseApplication.Migrations
                     b.ToTable("Product_Inventorys");
                 });
 
-            modelBuilder.Entity("EcommerseApplication.Models.Requests", b =>
-                {
-                    b.Property<int>("RequestId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RequestId"), 1L, 1);
-
-                    b.Property<string>("IdentityId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RequestType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("numberOfBranches")
-                        .HasColumnType("int");
-
-                    b.HasKey("RequestId");
-
-                    b.HasIndex("IdentityId");
-
-                    b.ToTable("Requests");
-                });
-
             modelBuilder.Entity("EcommerseApplication.Models.Shipper", b =>
                 {
                     b.Property<int>("ID")
@@ -530,9 +502,6 @@ namespace EcommerseApplication.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
-
-                    b.Property<string>("IdentityId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -550,38 +519,7 @@ namespace EcommerseApplication.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("IdentityId");
-
                     b.ToTable("shippers");
-                });
-
-            modelBuilder.Entity("EcommerseApplication.Models.ShipperRequest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("AccountID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("arabicName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("officePhone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("shipperRequests");
                 });
 
             modelBuilder.Entity("EcommerseApplication.Models.shippingDetails", b =>
@@ -1134,26 +1072,6 @@ namespace EcommerseApplication.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("EcommerseApplication.Models.Requests", b =>
-                {
-                    b.HasOne("EcommerseApplication.Models.AppUser", "identity")
-                        .WithMany()
-                        .HasForeignKey("IdentityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("identity");
-                });
-
-            modelBuilder.Entity("EcommerseApplication.Models.Shipper", b =>
-                {
-                    b.HasOne("EcommerseApplication.Models.AppUser", "Identity")
-                        .WithMany()
-                        .HasForeignKey("IdentityId");
-
-                    b.Navigation("Identity");
                 });
 
             modelBuilder.Entity("EcommerseApplication.Models.shippingDetails", b =>
