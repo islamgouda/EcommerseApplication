@@ -90,6 +90,14 @@ namespace EcommerseApplication.Repository
                 .Include(p => p.Product_Inventory)
                 .Where(p => p.DeletedAt == null).ToList();
         }
+
+        public List<string> GetImages(int id)
+        {
+            Product _product = context.Products.Include(p => p.Product_Images).FirstOrDefault(p => p.ID == id);
+
+            List<string> _Images = _product.Product_Images.Select(p=>p.ImageFileName).ToList();
+            return _Images;
+        }
         public Product Get(int Id)
         {
             return context.Products.FirstOrDefault(p=>p.ID == Id);
@@ -117,8 +125,25 @@ namespace EcommerseApplication.Repository
         }
         public void Update(int Id, Product Product)
         {
+            Product OldProduct = Get(Id);
+
+            OldProduct.Name = Product.Name;
+            OldProduct.Name_Ar = Product.Name_Ar;
+            OldProduct.Description = Product.Description;
+            OldProduct.Description_Ar = Product.Description_Ar;
+            OldProduct.IsAvailable = Product.IsAvailable;
+            OldProduct.Price = Product.Price;
+
+            OldProduct.CategoryID = Product.CategoryID;
+            OldProduct.DiscountID = Product.DiscountID;
+            OldProduct.PartenerID = Product.PartenerID;
+            OldProduct.subcategoryID = Product.subcategoryID;
+            OldProduct.InventoryID = Product.InventoryID;
+
+            OldProduct.UpdatedAt = DateTime.Now;
             context.SaveChanges();
         }
+
         public void IsDiscountFinish()
         {
             List<Discount> discounts = context.Discounts.ToList();
