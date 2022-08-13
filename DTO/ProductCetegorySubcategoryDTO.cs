@@ -21,6 +21,6 @@ namespace EcommerseApplication.DTO
         [Required]
         public int Quantity { get; set; }
 
-        public List<IFormFile> ImageFiles { get; set; }
+        public List<IFormFile>? ImageFiles { get; set; }
     }
 }

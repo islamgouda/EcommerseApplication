@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using EcommerseApplication.Models;
 using EcommerseApplication.DTO;
+using System.Security.Claims;
 
 namespace EcommerseApplication.Controllers
 {
@@ -16,20 +17,35 @@ namespace EcommerseApplication.Controllers
         private readonly string NotFoundMSG = "Data Not Found";
         private readonly string BadRequistMSG = "Invalid Input Data";
         private readonly string SuccessMSG = "Data Found Successfuly";
+        private string baseUrl2;
+
         private readonly IProductRepository productRepo;
 
         private readonly IProductRepository productrepository;
         private readonly IWebHostEnvironment environment;
         private readonly ConsumerRespons Respons;
         private readonly IProduct_InventoryRepository inventproductRepo;
+        private readonly IUserRepository userRepo;
+        private readonly Ipartener partenerRepo;
+        private readonly IHttpContextAccessor baseUrl;
+        private readonly IProduct_ImageRepository productImageRepo;
 
-        public ProductController(IProductRepository _productRepo, IWebHostEnvironment _environment , IProductRepository productrepository, ConsumerRespons _Response,IProduct_InventoryRepository _inventproductRepo)
+        public ProductController(IProductRepository _productRepo, IWebHostEnvironment _environment ,
+                                 IProductRepository productrepository, ConsumerRespons _Response,
+                                 IProduct_InventoryRepository _inventproductRepo, IUserRepository _userRepo,
+                                 Ipartener _partenerRepo, IHttpContextAccessor _baseUrl, 
+                                 IProduct_ImageRepository _productImageRepo)
         {
            this. productRepo = _productRepo;
            this.environment = _environment;
            this.productrepository = productrepository;
            this. Respons = _Response;
            this.inventproductRepo= _inventproductRepo;
+            userRepo = _userRepo;
+            partenerRepo = _partenerRepo;
+            this.baseUrl = _baseUrl;
+            productImageRepo = _productImageRepo;
+            baseUrl2 = string.Format("{0}://{1}//", baseUrl.HttpContext.Request.Scheme, baseUrl.HttpContext.Request.Host.Value);
         }
         [HttpGet]
         
@@ -51,7 +67,7 @@ namespace EcommerseApplication.Controllers
 
                 if (AllProducts != null)
                 {
-                    string wwwrootPath = environment.WebRootPath;
+                    //string wwwrootPath = environment.WebRootPath;
 
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
@@ -80,7 +96,7 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            string ImageFullPath = Path.Combine(baseUrl2, "Images/Product", item.ImageFileName);
                             //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
@@ -124,7 +140,7 @@ namespace EcommerseApplication.Controllers
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
-                    string wwwrootPath = environment.WebRootPath;
+                    //string wwwrootPath = environment.WebRootPath;
 
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
@@ -154,7 +170,7 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            string ImageFullPath = Path.Combine(baseUrl2, "Images/Product", item.ImageFileName);
                             //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
@@ -198,7 +214,7 @@ namespace EcommerseApplication.Controllers
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
-                    string wwwrootPath = environment.WebRootPath;
+                    //string wwwrootPath = environment.WebRootPath;
 
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
@@ -227,7 +243,7 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            string ImageFullPath = Path.Combine(baseUrl2, "Images/Product", item.ImageFileName);
                             //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
@@ -250,12 +266,12 @@ namespace EcommerseApplication.Controllers
             }
         }
 
-        [HttpGet("PartnerProducts/{id:int}")]
-        public IActionResult GetPartnerProducts(int Id)
+        [HttpGet("PartnerProducts")]
+        public IActionResult GetPartnerProducts()
         {
-            List<ProductResponseDTO> ProductDTO = new List<ProductResponseDTO>();
             try
             {
+                List<ProductResponseDTO> ProductDTO = new List<ProductResponseDTO>();
                 if (!ModelState.IsValid)
                     return BadRequest(new
                     {
@@ -265,14 +281,24 @@ namespace EcommerseApplication.Controllers
                         Data = new List<ProductResponseDTO>()
                     });
 
-                List<Product> AllProducts = productRepo.GetPartnerProducts(Id);
+                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                if (user == null)
+                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+
+                Partener partener = partenerRepo.getByUserID(user.Id);
+                if (partener == null)
+                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+
+                int PartnerID = partener.Id;
+
+                List<Product> AllProducts = productRepo.GetPartnerProducts(PartnerID);
 
                 if (AllProducts.Count == 0)
                     return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
-                    string wwwrootPath = environment.WebRootPath;
+                    //string wwwrootPath = environment.WebRootPath;
 
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
@@ -301,7 +327,7 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            string ImageFullPath = Path.Combine(baseUrl2, "Images/Product", item.ImageFileName);
                             //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
@@ -324,8 +350,8 @@ namespace EcommerseApplication.Controllers
             }
         }
 
-        [HttpGet("PartnerProductsByCategory/{PartnerID:int}/{CategoryID:int}")]
-        public IActionResult GetPartnerProductsByCategory(int PartnerID, int CategoryID)
+        [HttpGet("PartnerProductsByCategory/{CategoryID:int}")]
+        public IActionResult GetPartnerProductsByCategory(int CategoryID)
         {
             List<ProductResponseDTO> ProductDTO = new List<ProductResponseDTO>();
             try
@@ -338,6 +364,16 @@ namespace EcommerseApplication.Controllers
                                             .Select(m => m.ErrorMessage)),
                         Data = new List<ProductResponseDTO>()
                     });
+
+                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                if (user == null)
+                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+
+                Partener partener = partenerRepo.getByUserID(user.Id);
+                if (partener == null)
+                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+
+                int PartnerID = partener.Id;
 
                 List<Product> AllProducts = productRepo.GetPartnerProductsByCategoryID(PartnerID, CategoryID);
                 if (AllProducts.Count == 0)
@@ -345,7 +381,7 @@ namespace EcommerseApplication.Controllers
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
-                    string wwwrootPath = environment.WebRootPath;
+                    //string wwwrootPath = environment.WebRootPath;
 
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
@@ -374,7 +410,7 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            string ImageFullPath = Path.Combine(baseUrl2, "Images/Product", item.ImageFileName);
                             //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
@@ -397,8 +433,8 @@ namespace EcommerseApplication.Controllers
             }
         }
 
-        [HttpGet("PartnerProductsBySubCategory/{PartnerID:int}/{SubCategoryID:int}")]
-        public IActionResult GetPartnerProductsBySubCategory(int PartnerID, int SubCategoryID)
+        [HttpGet("PartnerProductsBySubCategory/{SubCategoryID:int}")]
+        public IActionResult GetPartnerProductsBySubCategory(int SubCategoryID)
         {
             List<ProductResponseDTO> ProductDTO = new List<ProductResponseDTO>();
             try
@@ -411,6 +447,16 @@ namespace EcommerseApplication.Controllers
                                             .Select(m => m.ErrorMessage)),
                         Data = new List<ProductResponseDTO>()
                     });
+
+                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                if (user == null)
+                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+
+                Partener partener = partenerRepo.getByUserID(user.Id);
+                if (partener == null)
+                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+
+                int PartnerID = partener.Id;
 
                 List<Product> AllProducts = productRepo.GetPartnerProductsBySubCategoryID(PartnerID, SubCategoryID);
                 if (AllProducts.Count == 0)
@@ -420,7 +466,7 @@ namespace EcommerseApplication.Controllers
                 {
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
-                        string wwwrootPath = environment.WebRootPath;
+                        //string wwwrootPath = environment.WebRootPath;
 
                         ProductDTO.Add(new ProductResponseDTO());
                         ProductDTO[i].ID = AllProducts[i].ID;
@@ -447,7 +493,7 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(wwwrootPath, "Images/Product", item.ImageFileName);
+                            string ImageFullPath = Path.Combine(baseUrl2, "Images/Product", item.ImageFileName);
                             //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
@@ -556,58 +602,102 @@ namespace EcommerseApplication.Controllers
             }
         }
         [HttpPut("updateProduct/{Id:int}")]
-        public IActionResult UpdateProduct(int Id, ProductCetegorySubcategoryDTO NewProduct)
+        public IActionResult UpdateProduct(int Id,[FromForm] ProductCetegorySubcategoryDTO NewProduct)
         {
-
-            if (ModelState.IsValid == true)
+            try
             {
-                Product oldproduct = productrepository.Get(Id);
-                if (oldproduct != null)
+                if (ModelState.IsValid == true)
                 {
-                    oldproduct.CategoryID = NewProduct.CategoryID;
-                    oldproduct.Name_Ar = NewProduct.Name_Ar;
-                    oldproduct.Description_Ar = NewProduct.Description_Ar;
-                    oldproduct.Description = NewProduct.Description;
-                    oldproduct.Name = NewProduct.Name;
-                    oldproduct.Price = NewProduct.Price;
-                    oldproduct.IsAvailable = NewProduct.IsAvailable;
-                    oldproduct.subcategoryID = NewProduct.subcategoryID;
-                    oldproduct.PartenerID = 1;
-                    oldproduct.UpdatedAt = DateTime.Now;
-                    try
-                    {
-                        inventproductRepo.updateproductInventory(oldproduct.InventoryID, NewProduct.Quantity);
-                        productrepository.Update(Id, oldproduct);
-                        Respons.succcess = true;
-                        Respons.Message = "product updated successfuly";
-                        Respons.Data = "";
-                        return Ok(Respons);
+                    User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                    if(user == null)
+                        return BadRequest(new { Success = false, Message = BadRequistMSG });
 
-                    }
-                    catch (Exception ex)
+                    Partener partener = partenerRepo.getByUserID(user.Id);
+                    if (partener == null)
+                        return BadRequest(new { Success = false, Message = BadRequistMSG });
+
+                    int PartnerID = partener.Id;
+
+                
+                    Product oldproduct = productrepository.Get(Id);
+                    if (oldproduct != null)
                     {
-                        Respons.Message = ex.InnerException.Message;
+                        oldproduct.CategoryID = NewProduct.CategoryID;
+                        oldproduct.Name_Ar = NewProduct.Name_Ar;
+                        oldproduct.Description_Ar = NewProduct.Description_Ar;
+                        oldproduct.Description = NewProduct.Description;
+                        oldproduct.Name = NewProduct.Name;
+                        oldproduct.Price = NewProduct.Price;
+                        oldproduct.IsAvailable = NewProduct.IsAvailable;
+                        oldproduct.subcategoryID = NewProduct.subcategoryID;
+                        oldproduct.PartenerID = PartnerID;
+
+                        if (NewProduct.ImageFiles.Count > 0 && NewProduct.ImageFiles != null)
+                        {
+                            string wwwrootPath = environment.WebRootPath;
+                            foreach (var item in NewProduct.ImageFiles)
+                            {
+                                string ImageName = Guid.NewGuid() + "_" + item.FileName;
+                                string path = Path.Combine(wwwrootPath, "Images/Product");
+                                string fileNameWithPath = Path.Combine(path, ImageName);
+                                if (!Directory.Exists(path))
+                                {
+                                    Directory.CreateDirectory(path);
+                                }
+                                using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
+                                {
+                                    item.CopyTo(stream);
+                                }
+                                Product_Images NewImage = new Product_Images();
+                                NewImage.ProductID = Id;
+                                NewImage.ImageFileName = ImageName;
+                                productImageRepo.Create(NewImage);
+                            }
+                            List<string> OldImages = productRepo.GetImages(Id);
+                            foreach (var image in OldImages)
+                            {
+                                System.IO.File.Delete(Path.Combine("wwwroot", "Images", "SubCategory", image));
+                            }
+                        }
+                        
+                        try
+                        {
+                            inventproductRepo.updateproductInventory(oldproduct.InventoryID, NewProduct.Quantity);
+                            productrepository.Update(Id, oldproduct);
+
+                            Respons.succcess = true;
+                            Respons.Message = "product updated successfuly";
+                            Respons.Data = oldproduct;
+                            return Ok(Respons);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Respons.Message = ex.InnerException.Message;
+                            Respons.succcess = false;
+                            Respons.Data = new List<string>();
+                            return BadRequest(Respons);
+                        }
+                    }
+                    else
+                    {
+                        Respons.Message = "product Not Found";
                         Respons.succcess = false;
-                        Respons.Data = "";
+                        Respons.Data = new List<string>();
                         return BadRequest(Respons);
-
                     }
                 }
-                else
-                {
-                    Respons.Message = "product Not Found";
-                    Respons.succcess = false;
-                    Respons.Data = "";
-                    return BadRequest(Respons);
-
-
-                }
+                Respons.Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)
+                                             .Select(m => m.ErrorMessage));
+                Respons.succcess = false;
+                Respons.Data = NewProduct;
+                return BadRequest(Respons);
             }
-            Respons.Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)
-                                         .Select(m => m.ErrorMessage));
-            Respons.succcess = false;
-            Respons.Data = NewProduct;
-            return BadRequest(Respons);
+            catch (Exception ex)
+            {
+                return BadRequest(new { Success = false, Message = ex.Message});
+            }
+            
         }
     }
 }
