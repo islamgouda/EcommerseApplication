@@ -1,6 +1,7 @@
 ﻿using EcommerseApplication.DTO;
 using EcommerseApplication.Models;
 using EcommerseApplication.Repository;
+using EcommerseApplication.Respository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -18,30 +19,43 @@ namespace EcommerseApplication.Controllers
         private readonly IShopping_SessionRepository shopping_SessionRrpo;
         private readonly IWebHostEnvironment environment;
         public IUserRepository userRepo;
-        
+        private readonly IProductRepository productRepository;
+        public IProduct_ImageRepository product_ImageRepository;
+        public IDiscount discount;
 
-        public CartItemController(ICart_ItemRepository _cart_ItemRepo, IShopping_SessionRepository _shopping_SessionRrpo, IWebHostEnvironment _environment, IUserRepository _userRepo)
+        public CartItemController(ICart_ItemRepository _cart_ItemRepo, IShopping_SessionRepository _shopping_SessionRrpo, IWebHostEnvironment _environment, IUserRepository _userRepo,IProductRepository _productRepository,IProduct_ImageRepository _product_ImageRepository, IDiscount _discount)
         {
             cart_ItemRepo = _cart_ItemRepo;
             shopping_SessionRrpo = _shopping_SessionRrpo;
             environment = _environment;
             this.userRepo = _userRepo;
+            this.productRepository = _productRepository;
+            this.product_ImageRepository = _product_ImageRepository;
+            this.discount = _discount;
         }
 
-
+        //لازم تبقي عامل log in
         [HttpPost("AddToCart")]
         public IActionResult AddToCart(CartItemRequestDTO NewCartItemDTO)
         {
+            User user; int userid = 1; Shopping_Session shopping;
+            try { user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId")); userid = user.Id;
+               //  shopping = shopping_SessionRrpo.GetByUserId(userid).First();
+            }
+            catch { userid = 1; //shopping = shopping_SessionRrpo.GetByUserId(1).First();
+                                //
+                                
+            }
             try
             {
                 if (ModelState.IsValid && NewCartItemDTO != null)
                 {
                     int Shopping_SessionID;
-                    List<Shopping_Session> UserSessions = shopping_SessionRrpo.GetByUserId((int)NewCartItemDTO.UserId);
+                    List<Shopping_Session> UserSessions = shopping_SessionRrpo.GetByUserId((int)userid);
                     if (UserSessions.Count == 0 || UserSessions == null)
                     {
                         Shopping_Session NewShopping_Session = new Shopping_Session();
-                        NewShopping_Session.UserID = NewCartItemDTO.UserId;
+                        NewShopping_Session.UserID = userid;
                         NewShopping_Session.Total = 0;
                         shopping_SessionRrpo.AddShopping_Session(NewShopping_Session);
                         Shopping_SessionID = NewShopping_Session.Id;
@@ -69,6 +83,59 @@ namespace EcommerseApplication.Controllers
             }
         }
 
+        /************/
+        [HttpGet("howMyCartItems")]
+        public IActionResult ShowMyCartItems()
+        {
+            User user; int userid = 1; Shopping_Session shopping;
+            try
+            {
+                user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId")); userid = user.Id;
+                //  shopping = shopping_SessionRrpo.GetByUserId(userid).First();
+            }
+            catch
+            {
+                userid = 1; //shopping = shopping_SessionRrpo.GetByUserId(1).First();
+                            //
+
+            }
+
+            int Shopping_SessionID;
+            List<Shopping_Session> UserSessions = shopping_SessionRrpo.GetByUserId((int)userid);
+            if (UserSessions.Count == 0 || UserSessions == null)
+            {
+                Shopping_Session NewShopping_Session = new Shopping_Session();
+                NewShopping_Session.UserID = userid;
+                NewShopping_Session.Total = 0;
+                shopping_SessionRrpo.AddShopping_Session(NewShopping_Session);
+                Shopping_SessionID = NewShopping_Session.Id;
+            }
+            else { Shopping_SessionID = UserSessions[UserSessions.Count - 1].Id; }
+
+            //get All cart_Items by sesion ID
+            List<Cart_Item> cart_Items = cart_ItemRepo.GetAllCart_ItemsBySession(Shopping_SessionID);
+            List<ProductCartDTO> product_cart_dtos = new List<ProductCartDTO>();
+            foreach(var item in cart_Items)
+            {
+              Product product=  productRepository.Get(item.ProductId);
+                ProductCartDTO productCart = new ProductCartDTO();
+                productCart.ProductId = product.ID;
+                productCart.Name=product.Name;
+                productCart.arabicName = product.Name_Ar;
+                productCart.Discription = product.Description;
+                productCart.arabicDiscription = product.Description_Ar;
+                productCart.Price=product.Price;
+                productCart.QuantityOrdered = item.Quantity;
+                // productCart.Image = product_ImageRepository.Get(product.ID);
+                // productCart.categoryName = product.Product_Category.Name;
+               // productCart.Descount_Persent = discount.getDiscountById(product.ID);
+                product_cart_dtos.Add(productCart);
+
+            }
+
+            return Ok(new { Success = true, Message = product_cart_dtos });
+        }
+        /********/
         [HttpGet("CartItemsByUser/{UserID:int}")]
         public IActionResult GetCartItemsByUserID(int UserID)
         {
@@ -81,7 +148,7 @@ namespace EcommerseApplication.Controllers
                     List<Shopping_Session> UserSessions = shopping_SessionRrpo.GetByUserId((int)UserID);
                     if (UserSessions.Count == 0 || UserSessions == null)
                     {
-                        return Ok(new { Success = true, Message = NotFoundMSG, Data = new List<CartItemResponseDTO>() });
+                        return Ok(new { Success = false, Message = NotFoundMSG, Data = "notfound" });
                     }
                     else { Shopping_SessionID = UserSessions[UserSessions.Count - 1].Id; }
 

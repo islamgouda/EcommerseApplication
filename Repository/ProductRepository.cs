@@ -92,7 +92,7 @@ namespace EcommerseApplication.Repository
         }
         public Product Get(int Id)
         {
-            return context.Products.Where(p => p.DeletedAt == null).FirstOrDefault(p=>p.ID == Id);
+            return context.Products.FirstOrDefault(p=>p.ID == Id);
         } 
         public void Create(Product Product)
         {
