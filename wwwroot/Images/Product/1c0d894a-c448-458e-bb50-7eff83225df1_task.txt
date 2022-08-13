@@ -1,0 +1,98 @@
+1-user (customer)                                           ///class+conroler
+        Register
+        login=>startSession
+        AddNewAddress//                       -------//Hussen
+        AddNewPaymentMethod		      -------//Hussen
+        show_All_Products                     //ok 
+        show_All_Partener                     -------
+       show_All_Category		      //ok
+       show_All_Products_by-Category	      //ok
+       show_All_subCategory		      //ok
+        show_All_Products_by-subCategory      //ok
+        show_Partener_Proucts                 //ok
+	AddNewSubCategory		      //ok
+       Add-to-Chart			      //ok
+                  =>//startSessionBeforeAddToChart
+                  =>AddTo Card_item=>CheckAmountofProductsQuantity(inventory)
+      showCardItems			      //ok
+                  
+       buy=>   1-checkBankAccountMony=>Json("name","amont")-CheckAmountofProducts
+               calclaute net cost with Discount if Exists
+               2- DeductMoney From CustomerBank Account to website Bank Account=>then Add to PartenerAccount
+               3- ADD Order_Details=>Add_order_items with Card_item products =>>add Payment Method
+               4- create Shipping_Details for order_details
+               5-show shipping progress state
+
+    show Order_Details         			//ok
+    showShipping progress state			//ok
+    AddFeedBackfororder-Details			//ok
+ //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+2-partener              ////////AhmedHussin
+       Register
+       login
+       showDashboard//front
+       AddNewAdress //					     //Hussen
+       AddPaymentWithdrawelMethod			     //Hussen
+       showpartenerProducts                                  //ok
+       ShowpartenerProductsByCategory			     //ok
+       ShowpartenerproductsBysubCategory		     //ok
+       AddNewProduct=>>assingSubcategory=>>assignCategory    //Hussen
+       update-Product
+       Delete-Product
+       AddnewDiscount
+       AssignDiscountToProduct
+       showFeedBackbyProduct
+       showFeedBackforPartener
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+3-shipper    ///Islam
+   
+   login
+   changepassword
+   showDasboard
+   showHisShippingDetails
+   updateShippingDetailsStates
+//////////////////
+4-Admin            //Amr+AcoountReegisterLoginRoles
+     login
+      createRole Admin subAdmin Shipper partener
+      createShipper 
+      disableAccount
+      AssignRole Admin subAdmin Shipper partener
+      Delete subAdmin
+      create Category
+      Create SubCategor
+
+///////////////////////////
+5-subAdmin
+         AssignRole  Shipper partener
+         create Category
+         Create SubCategor
+
+
+/////////////////////////
+       ControlersName
+       ClassName+Controller
+CardItemController
+DiscountController
+FeedBackController
+OrderDetails
+
+
+       
+      
+   
+
+    
+
+
+       
+       
+       
+    
+
+ 
+
+               
+            
+
+   

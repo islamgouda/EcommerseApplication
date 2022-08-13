@@ -67,7 +67,7 @@ namespace EcommerseApplication.Controllers
                 int AddressID = buyDTO.AddressID;
 
                 int Shopping_SessionID;
-                int TotalPrice = 0;
+                double TotalPrice = 0;
                 List<Shopping_Session> UserSessions = shopping_SessionRrpo.GetByUserId(UserID);
                 if (UserSessions.Count == 0 || UserSessions == null)
                 {
@@ -86,7 +86,10 @@ namespace EcommerseApplication.Controllers
                 {
                     if (item.Quantity <= item.product.Product_Inventory.Quantity)
                     {
-                        TotalPrice += item.product.Price * item.Quantity;
+                        double PriceDiscont = 0;
+                        if (item.product.Discount != null)
+                            PriceDiscont = item.product.Price * (double)item.product.Discount.Descount_Persent / 100;
+                        TotalPrice += (item.product.Price - PriceDiscont) * item.Quantity;
                     }
                     else
                     {
@@ -96,7 +99,7 @@ namespace EcommerseApplication.Controllers
                 //Payment Chech
                 CheckoutDTO checkoutDTO = new CheckoutDTO
                 {
-                    Amount = TotalPrice,
+                    Amount = (decimal)TotalPrice,
                     PaymentID = PaymentID,
                 };
                 PaymentStatus PaymentStatus = Checkout(checkoutDTO);  //User User
