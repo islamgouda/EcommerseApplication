@@ -14,16 +14,23 @@ namespace EcommerseApplication.Controllers
         private readonly string NotFoundMSG = "Data Not Found";
         private readonly string BadRequistMSG = "Invalid Input Data";
         private readonly string SuccessMSG = "Data Found Successfuly";
+        private string baseUrl2 ;
 
         private readonly IsubCategory subCategoryRepo;
         private readonly IWebHostEnvironment environment;
         private readonly ConsumerRespons Respons;
+        private readonly IHttpContextAccessor baseUrl;
 
-        public SubCategoryController(IsubCategory _subCategoryRepo, IWebHostEnvironment _environment, ConsumerRespons _Response)
+        public SubCategoryController(IsubCategory _subCategoryRepo, IWebHostEnvironment _environment,
+                                    ConsumerRespons _Response, IHttpContextAccessor _baseUrl)
         {
             subCategoryRepo = _subCategoryRepo;
             environment = _environment;
             Respons = _Response;
+            baseUrl = _baseUrl;
+
+            baseUrl2 = string.Format("{0}://{1}//", baseUrl.HttpContext.Request.Scheme, baseUrl.HttpContext.Request.Host.Value);
+
         }
 
         [HttpGet("SubCategorysByCategoryID/{CategoryID:int}")]
@@ -46,7 +53,7 @@ namespace EcommerseApplication.Controllers
                     return NotFound(new { Success = true, Message = NotFoundMSG, Data = AllSubCategoryDTOs });
                 if (AllSubCategorys != null)
                 {
-                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/SubCategory");
+                    string path = Path.Combine(baseUrl2, "Images/SubCategory");
 
                     for (int i = 0; i < AllSubCategorys.Count; i++)
                     {
@@ -186,15 +193,6 @@ namespace EcommerseApplication.Controllers
                 string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/SubCategory");
                 string fileNameWithPath = Path.Combine(path, ImageName);
 
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
-                {
-                    subCategoryDTO.image.CopyTo(stream);
-                }
-
                 subCategory OldSubCategory = subCategoryRepo.getByID(Id);
 
                 OldSubCategory.Name = subCategoryDTO.Name;
@@ -205,6 +203,17 @@ namespace EcommerseApplication.Controllers
                 OldSubCategory.CategoryId = subCategoryDTO.CategoryId;
                 
                 subCategoryRepo.updateSubCategory(OldSubCategory);
+
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
+                {
+                    subCategoryDTO.image.CopyTo(stream);
+                }
+                System.IO.File.Delete(Path.Combine("wwwroot", "Images", "SubCategory", OldSubCategory.image));
+
                 return Ok(new { Success = true, Message = "Data updated Successfuly", Data = "" });
             }
             catch (Exception ex)
