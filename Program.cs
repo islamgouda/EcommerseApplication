@@ -2,11 +2,13 @@ using EcommerseApplication.DTO;
 using EcommerseApplication.Models;
 using EcommerseApplication.Repository;
 using EcommerseApplication.Respository;
+using EcommerseApplication.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -22,6 +24,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 
+//For Stripe Payment Getway
+builder.Services.Configure<StripeSettings>(configuration.GetSection("Stripe"));
 
 // For Entity Framework
 
@@ -106,6 +110,8 @@ app.UseHttpsRedirection();
 
 app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
+//StripeConfiguration.ApiKey = "sk_test_51LViyELU6Z3GuMBNmd97CSIEuWwRwxZIHdD6Z3wwldONp2dcWVFFb6vsY3ZFqEgRSKfJIzWX9exMoEalgqbM6Zq900Fm7uEUiQ";
+StripeConfiguration.SetApiKey(configuration.GetSection("Stripe")["SecretKey"]);
 app.UseStaticFiles();
 app.UseAuthentication();
 

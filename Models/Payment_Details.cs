@@ -6,6 +6,7 @@
         public int Amount { get; set; }
         public string Provider { get; set; }
         public string? Status { get; set; }
+        public string? TransactionID { get; set; }
 
 
         public DateTime? CreatedAt { get; set; }

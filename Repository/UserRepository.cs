@@ -1,4 +1,5 @@
 ﻿using EcommerseApplication.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerseApplication.Repository
 {
@@ -16,12 +17,12 @@ namespace EcommerseApplication.Repository
         }
         public User GetUserById(int Id)
         {
-            User user = context.users.FirstOrDefault(u => u.Id == Id);
+            User user = context.users.Include(u2 => u2.Identity).Include(us => us.User_Pyment).FirstOrDefault(u => u.Id == Id);
             return user;
         }
         public User GetUserByIdentityId(string IdentityId)
         {
-            User user = context.users.FirstOrDefault(u => u.IdentityId == IdentityId);
+            User user = context.users.Include(us=>us.User_Pyment).Include(u2 => u2.Identity).FirstOrDefault(u => u.IdentityId == IdentityId);
             return user;
         }
         public int AddUser(User NewUser)
@@ -61,6 +62,17 @@ namespace EcommerseApplication.Repository
                 return context.SaveChanges();
             }
             return 0;
+        }
+        public bool SetStripeTokenID(int UserID, string StripeToken)
+        {
+            User user = context.users.FirstOrDefault(u => u.Id == UserID);
+            if (user != null)
+            {
+                user.StripeTokenID = StripeToken;
+                context.SaveChanges();
+                return true;
+            }
+            else { return false; }
         }
     }
 }

@@ -1,5 +1,7 @@
+using EcommerseApplication.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mail;
 using System.Security.Claims;
 
 namespace EcommerseApplication.Controllers
@@ -39,6 +41,12 @@ namespace EcommerseApplication.Controllers
         {
             string userId = User?.FindFirstValue("UserId");
             var baseUrl2 = string.Format("{0}://{1}//", baseUrl.HttpContext.Request.Scheme, baseUrl.HttpContext.Request.Host.Value);
+
+            //CheckoutDTO dd = new CheckoutDTO();
+            //dd.Email = "aaaaa";
+            //MailAddress m;
+            //bool x = MailAddress.TryCreate(dd.Email,out m);
+            //bool y = MailAddress.TryCreate("asd@asd.com",out m);
 
             //List<string> asf = new List<string>();
             //asf.Add( baseUrl.HttpContext.Request.Host.Value);

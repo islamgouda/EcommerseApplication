@@ -17,6 +17,10 @@ namespace EcommerseApplication.Repository
             context.User_Payements.Add(newPaement);
             context.SaveChanges();
         }
+
+
+
+
         public void AddUSerPaymentt(UserPaymentDTO newpayement)
         {
             User_Payement userpayment = new User_Payement();
@@ -36,6 +40,17 @@ namespace EcommerseApplication.Repository
         {
             context.User_Payements.Remove(GetUserPayment(id));
         }
+        public bool SetPaymentTokenID(int PaymentID, String PaymentToken)
+        {
+            User_Payement user_Payement = context.User_Payements.FirstOrDefault(p=>p.Id == PaymentID);
+            if(user_Payement != null)
+            {
+                user_Payement.StripePaymentToken = PaymentToken;
+                context.SaveChanges();
+                return true;
+            }
+            else { return false; }
+        }
 
         public User_Payement GetUserPayment(int id)
         {
@@ -47,9 +62,22 @@ namespace EcommerseApplication.Repository
             User_Payement user_Payementold =GetUserPayment(id);
             user_Payementold.Id =newPaement.Id;
             user_Payementold.PayementType = newPaement.PayementType;
-            user_Payementold.AccountNo = newPaement.AccountNo;
-            user_Payementold.Expiry = newPaement.Expiry;
             user_Payementold.Provider = newPaement.Provider;
+
+            user_Payementold.HolderName = newPaement.HolderName;
+            user_Payementold.CardNumber = newPaement.CardNumber;
+            user_Payementold.ExpYear = newPaement.ExpYear;
+            user_Payementold.ExpMonth = newPaement.ExpMonth;
+            user_Payementold.Cvc = newPaement.Cvc;
+
+            if (newPaement.StripePaymentToken != null)
+                user_Payementold.StripePaymentToken = newPaement.StripePaymentToken;
+
+
+            if (newPaement.AccountNo != 0)
+                user_Payementold.AccountNo = newPaement.AccountNo;
+            if (newPaement.Expiry != null)
+                user_Payementold.Expiry = newPaement.Expiry;
             context.SaveChanges();
         }
     }

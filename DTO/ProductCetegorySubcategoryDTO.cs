@@ -6,9 +6,11 @@ namespace EcommerseApplication.DTO
     {
         [Required]
         public string Name { get; set; }
+        public string? Name_Ar { get; set; }
       
         [Required]
         public string Description { get; set; }
+        public string? Description_Ar { get; set; }
      
         [Required]
         public int Price { get; set; }
