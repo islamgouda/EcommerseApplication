@@ -134,7 +134,7 @@ namespace EcommerseApplication.Controllers.AdminScope
 
         /***********/
         [HttpPost]
-        [Route("CreatePartner")]
+        [Route("CreatePartner")]//take request id
         public IActionResult CreatePartner([FromBody]int id)
         {
            Requests request= requestRepository.GetPartnerById(id);
@@ -147,6 +147,7 @@ namespace EcommerseApplication.Controllers.AdminScope
             partener.Name = request.Name;
             partener.Type = request.RequestType;
             partener.numberOfBranches = request.numberOfBranches;
+            partener.IdentityId = request.IdentityId;
             partener.userID = userpartner.Id;
             ipartenerRepository.insert(partener);
             return Ok(new Response { Status = "oK", Message = "Saved" });
