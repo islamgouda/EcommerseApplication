@@ -118,6 +118,24 @@ namespace EcommerseApplication.Controllers
                 return BadRequest(Respons);
             }
         }
+        [HttpGet("GetCategoryById")]
+        public IActionResult GetCategoryById(int Id)
+        {
+            try
+            {
+                Respons.Data = productCategoryRespository.GetCategoryByID(Id);
+                Respons.succcess = true;
+                Respons.Message = " this is Category  successfuly";
+                return Ok(Respons);
+            }
+            catch(Exception ex)
+            {
+                Respons.Message = ex.InnerException.Message;
+                Respons.succcess = false;
+                Respons.Data = "";
+                return BadRequest(Respons);
+            }
+        }
 
     }
 }

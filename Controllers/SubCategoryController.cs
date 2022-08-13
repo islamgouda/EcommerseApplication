@@ -213,5 +213,113 @@ namespace EcommerseApplication.Controllers
                 return BadRequest(new { Success = false, Message = ex.Message, Data= subCategoryDTO });
             }
         }
+
+        [HttpGet("GetsubCategoryByID/{Id:int}")]
+        public IActionResult GetsubCategoryByID(int Id)
+        {
+            try
+            {
+                SubCategoryResponseDTO SubCategoryDTOs = new SubCategoryResponseDTO();
+                if (!ModelState.IsValid)
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)
+                                            .Select(m => m.ErrorMessage)),
+                        Data = new List<SubCategoryResponseDTO>()
+                    });
+
+                subCategory SubCategory = subCategoryRepo.getByID(Id);
+                if (SubCategory != null)
+                {
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/SubCategory");
+
+
+
+
+                    SubCategoryDTOs.Id = SubCategory.Id;
+                    SubCategoryDTOs.Name = SubCategory.Name;
+                    SubCategoryDTOs.Description = SubCategory.Description;
+                    SubCategoryDTOs.arabicName = SubCategory.arabicName;
+                    SubCategoryDTOs.arabicDescription = SubCategory.arabicDescription;
+
+                    string fileNameWithPath = Path.Combine(path, SubCategory.image);
+                    if (System.IO.File.Exists(fileNameWithPath))
+                    {
+                        //byte[] imgByte = System.IO.File.ReadAllBytes(fileNameWithPath);
+                        //AllSubCategoryDTOs[i].Image = Convert.ToBase64String(imgByte);
+                        SubCategoryDTOs.Image = fileNameWithPath;
+                    }
+                    SubCategoryDTOs.CategoryName = SubCategory.category.Name;
+
+                    return Ok(new { Success = true, Message = SuccessMSG, Data = SubCategoryDTOs });
+                }
+
+                else
+                {
+                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = SubCategoryDTOs });
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new { Success = false, Message = ex.Message });
+            }
+        }
+        [HttpGet("getAllSubcategory")]
+        public IActionResult GetAllBysubCategory()
+        {
+            try
+            {
+                List<SubCategoryResponseDTO> AllSubCategoryDTOs = new List<SubCategoryResponseDTO>();
+                if (!ModelState.IsValid)
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)
+                                            .Select(m => m.ErrorMessage)),
+                        Data = new List<SubCategoryResponseDTO>()
+                    });
+
+                List<subCategory> AllSubCategorys = subCategoryRepo.getAll();
+                if (AllSubCategorys.Count == 0)
+                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = AllSubCategoryDTOs });
+                if (AllSubCategorys != null)
+                {
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/SubCategory");
+
+                    for (int i = 0; i < AllSubCategorys.Count; i++)
+                    {
+                        AllSubCategoryDTOs.Add(new SubCategoryResponseDTO());
+                        AllSubCategoryDTOs[i].Id = AllSubCategorys[i].Id;
+                        AllSubCategoryDTOs[i].Name = AllSubCategorys[i].Name;
+                        AllSubCategoryDTOs[i].Description = AllSubCategorys[i].Description;
+                        AllSubCategoryDTOs[i].arabicName = AllSubCategorys[i].arabicName;
+                        AllSubCategoryDTOs[i].arabicDescription = AllSubCategorys[i].arabicDescription;
+
+                        string fileNameWithPath = Path.Combine(path, AllSubCategorys[i].image);
+                        if (System.IO.File.Exists(fileNameWithPath))
+                        {
+                            //byte[] imgByte = System.IO.File.ReadAllBytes(fileNameWithPath);
+                            //AllSubCategoryDTOs[i].Image = Convert.ToBase64String(imgByte);
+                            AllSubCategoryDTOs[i].Image = fileNameWithPath;
+                        }
+
+                        AllSubCategoryDTOs[i].CategoryName = AllSubCategorys[i].category.Name;
+                    }
+                    return Ok(new { Success = true, Message = SuccessMSG, Data = AllSubCategoryDTOs });
+                }
+                else
+                {
+                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = AllSubCategoryDTOs });
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new { Success = false, Message = ex.Message });
+            }
+        }
+
     }
 }

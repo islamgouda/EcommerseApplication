@@ -19,7 +19,7 @@ namespace EcommerseApplication.Repository
 
         public List<subCategory> getAll()
         {
-            return context.subCategories.ToList();
+            return context.subCategories.Include(s=>s.category).ToList();
         }
 
         public List<subCategory> getAllByCategoryID(int categoryID)
@@ -29,7 +29,7 @@ namespace EcommerseApplication.Repository
 
         public subCategory getByID(int id)
         {
-            return context.subCategories.FirstOrDefault(sub => sub.Id == id);
+            return context.subCategories.Include(s=>s.category).FirstOrDefault(sub => sub.Id == id);
         }
 
         public subCategory getByName(string name)
