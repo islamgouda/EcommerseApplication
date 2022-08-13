@@ -12,7 +12,7 @@ namespace EcommerseApplication.Migrations
                 name: "IdentityId",
                 table: "Parteners",
                 type: "nvarchar(450)",
-                nullable: false,
+                nullable: true,
                 defaultValue: "");
 
             migrationBuilder.CreateIndex(

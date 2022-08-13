@@ -38,7 +38,7 @@ namespace EcommerseApplication.Controllers
             List<ProductResponseDTO> ProductDTO = new List<ProductResponseDTO>();
             try
             {
-                productRepo.IsDiscountFinish();
+              // productRepo.IsDiscountFinish();
                 if(!ModelState.IsValid)
                     return BadRequest(new { Success = false,
                                             Message = String.Join("; ",ModelState.Values.SelectMany(n=>n.Errors)
@@ -487,7 +487,7 @@ namespace EcommerseApplication.Controllers
                 product.Price = NewProduct.Price;
                 product.IsAvailable=NewProduct.IsAvailable;
                 product.subcategoryID = NewProduct.subcategoryID;
-                product.PartenerID = 1;
+                product.PartenerID = 1;//from parteenerID
                 int ress = inventproductRepo.AddproductInventory(NewProduct.Quantity);
                 if (ress != 0)
                 {
