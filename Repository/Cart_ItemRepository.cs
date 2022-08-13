@@ -20,6 +20,10 @@ namespace EcommerseApplication.Repository
             Cart_Item cart_Item = context.Cart_Items.FirstOrDefault(x => x.Id == Id);
             return cart_Item;
         }
+        public Cart_Item GetCardItemByproductAndSession(int sessionID,int productId)
+        {
+          return  context.Cart_Items.Where(e => e.SessionId == sessionID).FirstOrDefault(pd => pd.ProductId == productId);
+        }
         public int AddCart_Item(Cart_Item NewCart_Item)
         {
             if (NewCart_Item != null)

@@ -1,5 +1,6 @@
 ﻿using EcommerseApplication.Models;
 using EcommerseApplication.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -113,6 +114,7 @@ namespace EcommerseApplication.Controllers.Auth
                 foreach (var userRole in userRoles)
                 {
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+
                 }
 
                 var token = GetToken(authClaims);
@@ -121,11 +123,27 @@ namespace EcommerseApplication.Controllers.Auth
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
                     expiration = token.ValidTo
-                    
                 });
             }
             return Unauthorized();
         }
+        [HttpGet]
+        [Route("GetLoginsData")]
+        [Authorize]
+        public async Task<IActionResult> GetUserData()
+        {
+            var userName = User?.Identity?.Name;
+            var userId = User?.FindFirstValue(ClaimTypes.Sid);
+            List<Claim> roleClaims = User?.FindAll(ClaimTypes.Role).ToList();
+            var roles = new List<string>();
+
+            foreach (var role in roleClaims)
+            {
+                roles.Add(role.Value);
+            }
+            return Ok(new { roles,userName,userId });
+        }
+        
 
        
 

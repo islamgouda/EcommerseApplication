@@ -10,5 +10,6 @@ namespace EcommerseApplication.Repository
         User GetUserById(int Id);
         User GetUserByIdentityId(string IdentityId);
         int UpdateUser(int Id, User NewUser);
+        bool SetStripeTokenID(int UserID, string StripeToken);
     }
 }
