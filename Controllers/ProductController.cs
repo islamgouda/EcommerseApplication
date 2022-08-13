@@ -159,11 +159,15 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
-                        ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
-                                              DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
-                                              AllProducts[i].Discount.Active == false ?
+                        if (AllProducts[i].Discount != null)
+                        {
+                            ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
+                                                DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
+                                                 AllProducts[i].Discount.Active == false ?
                                                                 0 :
                                                                 AllProducts[i].Discount.Descount_Persent;
+                        }
+                        else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
@@ -233,11 +237,15 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
-                        ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
-                                                 DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
+                        if (AllProducts[i].Discount != null)
+                        {
+                            ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
+                                                DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
                                                  AllProducts[i].Discount.Active == false ?
                                                                 0 :
                                                                 AllProducts[i].Discount.Descount_Persent;
+                        }
+                        else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
@@ -317,11 +325,15 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
-                        ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
-                                                 DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
+                        if (AllProducts[i].Discount != null)
+                        {
+                            ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
+                                                DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
                                                  AllProducts[i].Discount.Active == false ?
                                                                 0 :
                                                                 AllProducts[i].Discount.Descount_Persent;
+                        }
+                        else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
@@ -400,11 +412,15 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
-                        ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
-                                                 DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
+                        if (AllProducts[i].Discount != null)
+                        {
+                            ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
+                                                DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
                                                  AllProducts[i].Discount.Active == false ?
                                                                 0 :
                                                                 AllProducts[i].Discount.Descount_Persent;
+                        }
+                        else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
@@ -483,11 +499,15 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
-                        ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
-                                              DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
-                                              AllProducts[i].Discount.Active == false ?
+                        if (AllProducts[i].Discount != null)
+                        {
+                            ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
+                                                DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
+                                                 AllProducts[i].Discount.Active == false ?
                                                                 0 :
                                                                 AllProducts[i].Discount.Descount_Persent;
+                        }
+                        else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
