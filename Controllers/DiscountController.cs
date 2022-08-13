@@ -111,12 +111,16 @@ namespace EcommerseApplication.Controllers
             try
             {
                 List<Discount> ListDiscount = discountrepository.getDiscount();
-                List<AssignDiscountToProduct> DiscountList=new List<AssignDiscountToProduct>();
+                List<DiscountDTO> DiscountList=new List<DiscountDTO>();
                
                 foreach(Discount discount in ListDiscount)
                 {
-                    AssignDiscountToProduct discountDTO = new AssignDiscountToProduct();
-                    discountDTO.ID = discount.ID;
+                    DiscountDTO discountDTO = new DiscountDTO();
+                    discountDTO.Id = discount.ID;
+                    discountDTO.Name_Ar = discount.Name_Ar;
+                    discountDTO.Description_Ar = discount.Description_Ar;
+                    discountDTO.Description= discount.Description;
+                    discountDTO.Active = discount.Active;
                     discountDTO.StartTime = discount.StartTime;
                     discountDTO.EndTime = discount.EndTime;
                     discountDTO.Descount_Persent = discount.Descount_Persent;
@@ -143,12 +147,16 @@ namespace EcommerseApplication.Controllers
             try
             {
                Discount discount = discountrepository.getDiscountById(Id);
-                    AssignDiscountToProduct discountDTO = new AssignDiscountToProduct();
-                    discountDTO.ID = discount.ID;
-                    discountDTO.StartTime = discount.StartTime;
-                    discountDTO.EndTime = discount.EndTime;
-                    discountDTO.Descount_Persent = discount.Descount_Persent;
-                    discountDTO.Name = discount.Name;
+                DiscountDTO discountDTO = new DiscountDTO();
+                discountDTO.Id = discount.ID;
+                discountDTO.Name_Ar = discount.Name_Ar;
+                discountDTO.Description_Ar = discount.Description_Ar;
+                discountDTO.Description = discount.Description;
+                discountDTO.Active = discount.Active;
+                discountDTO.StartTime = discount.StartTime;
+                discountDTO.EndTime = discount.EndTime;
+                discountDTO.Descount_Persent = discount.Descount_Persent;
+                discountDTO.Name = discount.Name;
                 Response.Message = "this is the Discount";
                 Response.succcess = true;
                 Response.Data = discountDTO;
