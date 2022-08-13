@@ -135,8 +135,51 @@ namespace EcommerseApplication.Controllers
             {
                 return BadRequest(new { Success = true, Message = NotFoundMSG, Data = "notfound" });
             }
+            
             return Ok(new { Success = true, Message = SuccessMSG, Data = shippingDetailsList });
             
+        }
+
+        /****/
+        [HttpGet("shipper/getmyShipping")]
+        public IActionResult getbyShipperID()
+        {
+            User user; int id = 1;
+            try { user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId")); id = user.Id; }
+            catch
+            {
+                id = 1;
+            }
+            List<shippingDetails> shippingDetailsList;
+            try
+            {
+                shippingDetailsList = shippingDetails.getAllbyShipperID(id);
+            }
+            catch
+            {
+                return BadRequest(new { Success = true, Message = NotFoundMSG, Data = "notfound" });
+            }
+            List <ShowShippingtoshipperDTO> userShiping = new List<ShowShippingtoshipperDTO>();
+            foreach (var shippD in shippingDetailsList)
+            {
+                ShowShippingtoshipperDTO showUserShippingDTO = new ShowShippingtoshipperDTO();
+                showUserShippingDTO.ID = shippD.ID;
+                showUserShippingDTO.shipName = shippD.shipName;
+                showUserShippingDTO.shippingstate = shippD.shippingstate;
+                showUserShippingDTO.ALLaddress = shippD.ALLaddress;
+                showUserShippingDTO.ALLaddress_Ar = shippD.ALLaddress_Ar;
+                showUserShippingDTO.arabicshippingstate = shippD.arabicshippingstate;
+                showUserShippingDTO.customerPhone = shippD.CustomerMobile;
+
+
+
+                userShiping.Add(showUserShippingDTO);
+
+
+
+            }
+            return Ok(new { Success = true, Message = SuccessMSG, Data = userShiping });
+
         }
         /* public IActionResult ADDNewShip([FromBody] AddShippingDTO shipping)
          {
