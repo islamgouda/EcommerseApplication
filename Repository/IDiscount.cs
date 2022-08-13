@@ -8,11 +8,11 @@ namespace EcommerseApplication.Respository
         public void AddnewDiscount(Discount newdiscount);
         public void AddnewDiscountt(DiscountDTO NewDiscount);
         public List<Discount> getDiscount();
-        public void AssignDiscount(DiscountIDPartnerIDProductIDDTO AssignNewDiscount);
+       
         public int DeleteDiscount(int Id);
         public int UpdateDiscount(int Id, DiscountDTO NewDiscount);
         public Discount getDiscountById(int Id);
-        public int AsssignDiscount(DiscountIDPartnerIDProductIDDTO AssignNewDiscount);
+        public int AssignDiscount(DiscountIDPartnerIDProductIDDTO AssignNewDiscount);
        
 
     }

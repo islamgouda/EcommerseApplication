@@ -13,5 +13,6 @@ namespace EcommerseApplication.Repository
 
         int DeleteCart_Item(Cart_Item cart_Item);
         List<Cart_Item> GetAllBySessionID(int ShoppingSessionID);
+        public List<Cart_Item> GetAllCart_ItemsBySession(int id);
     }
 }

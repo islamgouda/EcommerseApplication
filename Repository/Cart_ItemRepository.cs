@@ -15,6 +15,12 @@ namespace EcommerseApplication.Repository
             List<Cart_Item> cart_Item = context.Cart_Items.ToList();
             return cart_Item;
         }
+
+        public List<Cart_Item> GetAllCart_ItemsBySession(int id)
+        {
+            List<Cart_Item> cart_Item = context.Cart_Items.Where(e=>e.SessionId == id).ToList();
+            return cart_Item;
+        }
         public Cart_Item GetCart_ItemById(int Id)
         {
             Cart_Item cart_Item = context.Cart_Items.FirstOrDefault(x => x.Id == Id);

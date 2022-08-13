@@ -29,7 +29,34 @@ namespace EcommerseApplication.Controllers
             this.partnerrepository = partnerrepository;
             order_DetailsRepo = _order_DetailsRepo;
         }
-        [HttpGet("getbyproductId")]
+        [HttpGet("getFeedBackbyproduct")]
+        public IActionResult getFeedBackbyproductId(int Id)
+        {
+            List<FeedBackDTO> feedbackListdto = new List<FeedBackDTO>();
+            try { 
+            List<feedback> feedbackList = feedbackrepository.getByfeedbackProductID(Id);
+           
+            foreach (feedback feedback in feedbackList)
+            {
+                FeedBackDTO feed = new FeedBackDTO();
+                    feed.productID = feedback.productID;
+                //feed.UserID=feedback.UserID;
+                feed.Comment = feedback.Comment;
+                feed.OrderID = feedback.OrderID;
+                feed.Rate = feedback.Rate;
+                feedbackListdto.Add(feed);
+            }
+            }
+            catch
+            {
+                return NotFound(new { Success = false, Message = NotFoundMSG, Data = "notfound" });
+            }
+            return Ok(new { Success = true, Message = SuccessMSG, Data = feedbackListdto });
+
+        }
+
+
+            [HttpGet("getbyproductId")]
         public IActionResult GetFeedbackByProductID(int Id)
         {
             Product product = productrepository.Get(Id);
@@ -41,10 +68,16 @@ namespace EcommerseApplication.Controllers
                     if (feedbackList.Count>0)
                     {
                         List<FeedBackDTO> feedbackListdto = new List<FeedBackDTO>();
-                        foreach(feedback feedback in feedbackList)
+                        int UserID;
+                        try { UserID = int.Parse(User?.FindFirstValue("UserId")); }
+                        catch
+                        {
+                            UserID = 3;
+                        }
+                        foreach (feedback feedback in feedbackList)
                         {
                             FeedBackDTO feed = new FeedBackDTO();
-                            feed.UserID=feedback.UserID;
+                            //feed.UserID=feedback.UserID;
                             feed.Comment=feedback.Comment;
                             feed.OrderID=feedback.OrderID;
                             feed.Rate=feedback.Rate;
@@ -126,7 +159,13 @@ namespace EcommerseApplication.Controllers
             try
             {
 
-                int UserID = int.Parse(User?.FindFirstValue("UserId"));
+                int UserID;
+                try { UserID = int.Parse(User?.FindFirstValue("UserId")); }
+                catch
+                {
+                    UserID = 3;
+                }
+                
                 //int UserID = 5;
                 Order_Details Order = order_DetailsRepo.Get(feedBackDTO.OrderID);
 

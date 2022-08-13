@@ -1,4 +1,5 @@
 ﻿using EcommerseApplication.Models;
+using EcommerseApplication.DTO;
 
 namespace EcommerseApplication.Repository
 {
@@ -81,6 +82,13 @@ namespace EcommerseApplication.Repository
         public shippingDetails getByUserAndOrder(int UserID, int OrderID)
         {
             return context.shippingDetails.Where(s => s.orderDetailsID == OrderID).FirstOrDefault(ship => ship.userID == UserID);
+        }
+        public void updateStatewithDTo(UpdateshippingDTO updateshippingDTO)
+        {
+           shippingDetails shippingDetails =context.shippingDetails.FirstOrDefault(e => e.ID == updateshippingDTO.shipID);
+            shippingDetails.shippingstate= updateshippingDTO.shippingState;
+            shippingDetails.arabicshippingstate = updateshippingDTO.arabicshippingState;
+            context.SaveChanges();
         }
     }
 }

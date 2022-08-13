@@ -55,7 +55,9 @@ namespace EcommerseApplication.Controllers
             List<ProductResponseDTO> ProductDTO = new List<ProductResponseDTO>();
             try
             {
+
                 //productRepo.IsDiscountFinish();
+
                 if(!ModelState.IsValid)
                     return BadRequest(new { Success = false,
                                             Message = String.Join("; ",ModelState.Values.SelectMany(n=>n.Errors)
@@ -557,6 +559,7 @@ namespace EcommerseApplication.Controllers
                 product.IsAvailable = NewProduct.IsAvailable;
                 product.subcategoryID = NewProduct.subcategoryID;
                 product.PartenerID = PartnerID;
+
 
                 int ress = inventproductRepo.AddproductInventory(NewProduct.Quantity);
                 if (ress == 0)

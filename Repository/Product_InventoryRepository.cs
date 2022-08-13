@@ -68,5 +68,7 @@ namespace EcommerseApplication.Repository
             productInventory.UpdatedAt = DateTime.Now;
             context.SaveChanges();
         }
+
+       
     }
 }
