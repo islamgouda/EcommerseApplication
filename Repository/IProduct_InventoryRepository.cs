@@ -10,5 +10,6 @@ namespace EcommerseApplication.Repository
         void Update(int Id, Product_Inventory Product_Inventory);
         void Delete(int Id);
         public int AddproductInventory(int Quentity);
+        public void updateproductInventory(int? Id, int NewQuentity);
     }
 }

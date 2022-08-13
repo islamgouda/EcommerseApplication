@@ -60,5 +60,20 @@ namespace EcommerseApplication.Repository
         {
             return context.subCategories.Include(s => s.category).Where(s=>s.CategoryId == CategoryID).ToList();
         }
+        public int DeletesubCategory(int Id)
+        {
+            subCategory productsubCategory = getByID(Id);
+            if (productsubCategory != null)
+            {
+                context.subCategories.Remove(productsubCategory);
+                return context.SaveChanges();
+            }
+            return 0;
+
+        }
+        public void updateSubCategory(subCategory scategory)
+        {
+            context.SaveChanges();
+        }
     }
 }

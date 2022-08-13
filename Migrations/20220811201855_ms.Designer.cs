@@ -4,6 +4,7 @@ using EcommerseApplication.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcommerseApplication.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220811201855_ms")]
+    partial class ms
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -323,9 +325,6 @@ namespace EcommerseApplication.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TransactionID")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -493,36 +492,6 @@ namespace EcommerseApplication.Migrations
                     b.ToTable("Product_Inventorys");
                 });
 
-            modelBuilder.Entity("EcommerseApplication.Models.Requests", b =>
-                {
-                    b.Property<int>("RequestId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RequestId"), 1L, 1);
-
-                    b.Property<string>("IdentityId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RequestType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("numberOfBranches")
-                        .HasColumnType("int");
-
-                    b.HasKey("RequestId");
-
-                    b.HasIndex("IdentityId");
-
-                    b.ToTable("Requests");
-                });
-
             modelBuilder.Entity("EcommerseApplication.Models.Shipper", b =>
                 {
                     b.Property<int>("ID")
@@ -530,9 +499,6 @@ namespace EcommerseApplication.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
-
-                    b.Property<string>("IdentityId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -549,8 +515,6 @@ namespace EcommerseApplication.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("IdentityId");
 
                     b.ToTable("shippers");
                 });
@@ -750,9 +714,6 @@ namespace EcommerseApplication.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StripeTokenID")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -837,31 +798,11 @@ namespace EcommerseApplication.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("AccountNo")
+                    b.Property<int>("AccountNo")
                         .HasColumnType("int");
 
-                    b.Property<string>("CardNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cvc")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ExpMonth")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ExpYear")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Expiry")
+                    b.Property<DateTime>("Expiry")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("HolderName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PayementType")
                         .IsRequired()
@@ -869,9 +810,6 @@ namespace EcommerseApplication.Migrations
 
                     b.Property<string>("Provider")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StripePaymentToken")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
@@ -1134,26 +1072,6 @@ namespace EcommerseApplication.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("EcommerseApplication.Models.Requests", b =>
-                {
-                    b.HasOne("EcommerseApplication.Models.AppUser", "identity")
-                        .WithMany()
-                        .HasForeignKey("IdentityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("identity");
-                });
-
-            modelBuilder.Entity("EcommerseApplication.Models.Shipper", b =>
-                {
-                    b.HasOne("EcommerseApplication.Models.AppUser", "Identity")
-                        .WithMany()
-                        .HasForeignKey("IdentityId");
-
-                    b.Navigation("Identity");
                 });
 
             modelBuilder.Entity("EcommerseApplication.Models.shippingDetails", b =>

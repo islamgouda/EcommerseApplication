@@ -49,7 +49,17 @@ namespace EcommerseApplication.Respository
         {
            return context.Product_Categorys.FirstOrDefault(i => i.Name == name);
         }
+        public int DeleteACategory(int Id)
+        {
+            Product_Category productCategory = GetCategoryByID(Id);
+            if (productCategory != null)
+            {
+                context.Product_Categorys.Remove(productCategory);
+                return context.SaveChanges();
+            }
+            return 0;
 
+        }
         public void UpdateCategory(int id,Product_Category _Category)
         {
             Product_Category old = context.Product_Categorys.FirstOrDefault(i => i.ID == id);
@@ -58,6 +68,11 @@ namespace EcommerseApplication.Respository
             old.Description=_Category.Description;
             context.SaveChanges();
         }
+        public void UpdateOldCategory( Product_Category _Category)
+        {
+            context.SaveChanges();
+        }
+
 
 
         public List<Product_Category> GetAllWithSubCategory()

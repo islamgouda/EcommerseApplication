@@ -11,5 +11,7 @@ namespace EcommerseApplication.Repository
         public List<subCategory> getAllByCategoryID(int categoryID);
         public void delete(int id);
         public List<subCategory> GetAllWithIncludeByCategoryID(int categoryID);
+        public int DeletesubCategory(int Id);
+        public void updateSubCategory(subCategory scategory);
     }
 }

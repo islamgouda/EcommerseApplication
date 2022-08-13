@@ -26,11 +26,10 @@ namespace EcommerseApplication.Controllers
         public ProductController(IProductRepository _productRepo, IWebHostEnvironment _environment , IProductRepository productrepository, ConsumerRespons _Response,IProduct_InventoryRepository _inventproductRepo)
         {
            this. productRepo = _productRepo;
-           environment = _environment;
+           this.environment = _environment;
            this.productrepository = productrepository;
            this. Respons = _Response;
-            this.inventproductRepo= _inventproductRepo;
-
+           this.inventproductRepo= _inventproductRepo;
         }
         [HttpGet]
         
@@ -486,10 +485,9 @@ namespace EcommerseApplication.Controllers
                 product.Description = NewProduct.Description;
                 product.Name = NewProduct.Name;
                 product.Price = NewProduct.Price;
+                product.IsAvailable=NewProduct.IsAvailable;
                 product.subcategoryID = NewProduct.subcategoryID;
-                product.PartenerID = NewProduct.PartenerID;
-                product.Description_Ar = "ssssss";
-                product.Name_Ar = "kkkkk";
+                product.PartenerID = 1;
                 int ress = inventproductRepo.AddproductInventory(NewProduct.Quantity);
                 if (ress != 0)
                 {
@@ -567,17 +565,18 @@ namespace EcommerseApplication.Controllers
                 if (oldproduct != null)
                 {
                     oldproduct.CategoryID = NewProduct.CategoryID;
-                    oldproduct.CreatedAt = DateTime.Now;
-                    oldproduct.DiscountID = NewProduct.DiscountID;
+                    oldproduct.Name_Ar = NewProduct.Name_Ar;
+                    oldproduct.Description_Ar = NewProduct.Description_Ar;
                     oldproduct.Description = NewProduct.Description;
                     oldproduct.Name = NewProduct.Name;
                     oldproduct.Price = NewProduct.Price;
-                    //oldproduct.InventoryID = NewProduct.InventoryID;
+                    oldproduct.IsAvailable = NewProduct.IsAvailable;
                     oldproduct.subcategoryID = NewProduct.subcategoryID;
-                    oldproduct.PartenerID = NewProduct.PartenerID;
+                    oldproduct.PartenerID = 1;
                     oldproduct.UpdatedAt = DateTime.Now;
                     try
                     {
+                        inventproductRepo.updateproductInventory(oldproduct.InventoryID, NewProduct.Quantity);
                         productrepository.Update(Id, oldproduct);
                         Respons.succcess = true;
                         Respons.Message = "product updated successfuly";
@@ -605,9 +604,9 @@ namespace EcommerseApplication.Controllers
                 }
             }
             Respons.Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)
-                                            .Select(m => m.ErrorMessage));
+                                         .Select(m => m.ErrorMessage));
             Respons.succcess = false;
-            Respons.Data = "";
+            Respons.Data = NewProduct;
             return BadRequest(Respons);
         }
     }

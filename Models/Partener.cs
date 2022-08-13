@@ -12,7 +12,8 @@ namespace EcommerseApplication.Models
         public int? numberOfBranches { get; set; }
         
         public int? addressID;
-        public User? User { get; set; }
+        public string? UserIDentityID { get; set; }
+       // public User? User { get; set; }
         public List<Product>? Products { get; set; }
     }
 }
