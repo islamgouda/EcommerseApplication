@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using EcommerseApplication.CustomValidation;
+using System.ComponentModel.DataAnnotations;
 
 namespace EcommerseApplication.DTO
 {
@@ -21,6 +22,7 @@ namespace EcommerseApplication.DTO
         [Required]
         public int Quantity { get; set; }
 
+        [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png" })]
         public List<IFormFile>? ImageFiles { get; set; }
     }
 }

@@ -47,14 +47,17 @@ namespace EcommerseApplication.Controllers
             productImageRepo = _productImageRepo;
             baseUrl2 = string.Format("{0}://{1}//", baseUrl.HttpContext.Request.Scheme, baseUrl.HttpContext.Request.Host.Value);
         }
+
+
         [HttpGet]
-        
         public IActionResult Index()
         {
             List<ProductResponseDTO> ProductDTO = new List<ProductResponseDTO>();
             try
             {
-              // productRepo.IsDiscountFinish();
+
+                //productRepo.IsDiscountFinish();
+
                 if(!ModelState.IsValid)
                     return BadRequest(new { Success = false,
                                             Message = String.Join("; ",ModelState.Values.SelectMany(n=>n.Errors)
@@ -67,7 +70,7 @@ namespace EcommerseApplication.Controllers
 
                 if (AllProducts != null)
                 {
-                    //string wwwrootPath = environment.WebRootPath;
+                    string wwwrootPath = environment.WebRootPath;
 
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
@@ -79,11 +82,15 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
-                        ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
-                                              DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime,DateTime.Now) < 0 ||
-                                              AllProducts[i].Discount.Active == false ?
-                                                                0: 
+                        if(AllProducts[i].Discount != null)
+                        {
+                            ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
+                                                DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
+                                                 AllProducts[i].Discount.Active == false ?
+                                                                0 :
                                                                 AllProducts[i].Discount.Descount_Persent;
+                        }
+                        else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
@@ -96,13 +103,13 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(baseUrl2, "Images/Product", item.ImageFileName);
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images","Product", item.ImageFileName);
                             //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
                                 //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
                                 //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
-                                ProductDTO[i].Images.Add(ImageFullPath);
+                                ProductDTO[i].Images.Add(Path.Combine(baseUrl2, "Images", "Product", item.ImageFileName));
                             }
                         }
                     }
@@ -140,7 +147,7 @@ namespace EcommerseApplication.Controllers
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
-                    //string wwwrootPath = environment.WebRootPath;
+                    string wwwrootPath = environment.WebRootPath;
 
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
@@ -152,11 +159,15 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
-                        ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
-                                              DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
-                                              AllProducts[i].Discount.Active == false ?
+                        if (AllProducts[i].Discount != null)
+                        {
+                            ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
+                                                DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
+                                                 AllProducts[i].Discount.Active == false ?
                                                                 0 :
                                                                 AllProducts[i].Discount.Descount_Persent;
+                        }
+                        else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
@@ -170,13 +181,13 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(baseUrl2, "Images/Product", item.ImageFileName);
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images", "Product", item.ImageFileName);
                             //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
                                 //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
                                 //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
-                                ProductDTO[i].Images.Add(ImageFullPath);
+                                ProductDTO[i].Images.Add(Path.Combine(baseUrl2, "Images", "Product", item.ImageFileName));
                             }
                         }
                     }
@@ -214,7 +225,7 @@ namespace EcommerseApplication.Controllers
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
-                    //string wwwrootPath = environment.WebRootPath;
+                    string wwwrootPath = environment.WebRootPath;
 
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
@@ -226,11 +237,15 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
-                        ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
-                                                 DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
+                        if (AllProducts[i].Discount != null)
+                        {
+                            ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
+                                                DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
                                                  AllProducts[i].Discount.Active == false ?
                                                                 0 :
                                                                 AllProducts[i].Discount.Descount_Persent;
+                        }
+                        else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
@@ -243,13 +258,13 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(baseUrl2, "Images/Product", item.ImageFileName);
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images", "Product", item.ImageFileName);
                             //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
                                 //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
                                 //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
-                                ProductDTO[i].Images.Add(ImageFullPath);
+                                ProductDTO[i].Images.Add(Path.Combine(baseUrl2, "Images", "Product", item.ImageFileName));
                             }
                         }
                     }
@@ -298,7 +313,7 @@ namespace EcommerseApplication.Controllers
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
-                    //string wwwrootPath = environment.WebRootPath;
+                    string wwwrootPath = environment.WebRootPath;
 
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
@@ -310,11 +325,15 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
-                        ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
-                                                 DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
+                        if (AllProducts[i].Discount != null)
+                        {
+                            ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
+                                                DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
                                                  AllProducts[i].Discount.Active == false ?
                                                                 0 :
                                                                 AllProducts[i].Discount.Descount_Persent;
+                        }
+                        else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
@@ -327,13 +346,13 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(baseUrl2, "Images/Product", item.ImageFileName);
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images", "Product", item.ImageFileName);
                             //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
                                 //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
                                 //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
-                                ProductDTO[i].Images.Add(ImageFullPath);
+                                ProductDTO[i].Images.Add(Path.Combine(baseUrl2, "Images", "Product", item.ImageFileName));
                             }
                         }
                     }
@@ -381,7 +400,7 @@ namespace EcommerseApplication.Controllers
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
-                    //string wwwrootPath = environment.WebRootPath;
+                    string wwwrootPath = environment.WebRootPath;
 
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
@@ -393,11 +412,15 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
-                        ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
-                                                 DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
+                        if (AllProducts[i].Discount != null)
+                        {
+                            ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
+                                                DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
                                                  AllProducts[i].Discount.Active == false ?
                                                                 0 :
                                                                 AllProducts[i].Discount.Descount_Persent;
+                        }
+                        else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
@@ -410,13 +433,13 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(baseUrl2, "Images/Product", item.ImageFileName);
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images", "Product", item.ImageFileName);
                             //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
                                 //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
                                 //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
-                                ProductDTO[i].Images.Add(ImageFullPath);
+                                ProductDTO[i].Images.Add(Path.Combine(baseUrl2, "Images", "Product", item.ImageFileName));
                             }
                         }
                     }
@@ -466,7 +489,7 @@ namespace EcommerseApplication.Controllers
                 {
                     for (int i = 0; i < AllProducts.Count; i++)
                     {
-                        //string wwwrootPath = environment.WebRootPath;
+                        string wwwrootPath = environment.WebRootPath;
 
                         ProductDTO.Add(new ProductResponseDTO());
                         ProductDTO[i].ID = AllProducts[i].ID;
@@ -476,11 +499,15 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
-                        ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
-                                              DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
-                                              AllProducts[i].Discount.Active == false ?
+                        if (AllProducts[i].Discount != null)
+                        {
+                            ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
+                                                DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
+                                                 AllProducts[i].Discount.Active == false ?
                                                                 0 :
                                                                 AllProducts[i].Discount.Descount_Persent;
+                        }
+                        else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
@@ -493,13 +520,13 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].Images = new List<string>();
                         foreach (var item in AllProducts[i].Product_Images)
                         {
-                            string ImageFullPath = Path.Combine(baseUrl2, "Images/Product", item.ImageFileName);
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images", "Product", item.ImageFileName);
                             //byte[] imgByte;
                             if (System.IO.File.Exists(ImageFullPath))
                             {
                                 //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
                                 //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
-                                ProductDTO[i].Images.Add(ImageFullPath);
+                                ProductDTO[i].Images.Add(Path.Combine(baseUrl2, "Images", "Product", item.ImageFileName));
                             }
                         }
 
@@ -520,9 +547,27 @@ namespace EcommerseApplication.Controllers
         [HttpPost]
         public IActionResult AddNewProduct([FromForm] ProductCetegorySubcategoryDTO NewProduct)
         {
-
-            if (ModelState.IsValid == true)
+            try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)
+                                            .Select(m => m.ErrorMessage)),
+                        Data = new List<ProductResponseDTO>()
+                    });
+
+                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                if (user == null)
+                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+
+                Partener partener = partenerRepo.getByUserID(user.Id);
+                if (partener == null)
+                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+
+                int PartnerID = partener.Id;
+
                 Product product = new Product();
                 product.CategoryID = NewProduct.CategoryID;
                 product.CreatedAt = DateTime.Now;
@@ -531,44 +576,61 @@ namespace EcommerseApplication.Controllers
                 product.Description = NewProduct.Description;
                 product.Name = NewProduct.Name;
                 product.Price = NewProduct.Price;
-                product.IsAvailable=NewProduct.IsAvailable;
+                product.IsAvailable = NewProduct.IsAvailable;
                 product.subcategoryID = NewProduct.subcategoryID;
-                product.PartenerID = 1;//from parteenerID
-                int ress = inventproductRepo.AddproductInventory(NewProduct.Quantity);
-                if (ress != 0)
-                {
+                product.PartenerID = PartnerID;
 
-                    try
-                    {
-                        product.InventoryID = ress;
-                        productRepo.Create(product);
-                        Respons.succcess = true;
-                        Respons.Message = "product Added successfuly";
-                        Respons.Data = "";
-                        return Ok(Respons);
-                    }
-                    catch (Exception ex)
-                    {
-                        inventproductRepo.Delete(ress);
-                        Respons.Message = ex.InnerException.Message;
-                        Respons.succcess = false;
-                        Respons.Data = "";
-                        return BadRequest(Respons);
-                    }
-                }
-                else
+
+                int ress = inventproductRepo.AddproductInventory(NewProduct.Quantity);
+                if (ress == 0)
+                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+                try
                 {
-                    Respons.Message = "error when add Quenitiy";
+                    product.InventoryID = ress;
+                    productRepo.Create(product);
+                    //add images
+                    if (NewProduct.ImageFiles.Count > 0 && NewProduct.ImageFiles != null)
+                    {
+                        string wwwrootPath = environment.WebRootPath;
+                        foreach (var item in NewProduct.ImageFiles)
+                        {
+                            string ImageName = Guid.NewGuid() + "_" + item.FileName;
+                            string path = Path.Combine(wwwrootPath, "Images/Product");
+                            string fileNameWithPath = Path.Combine(path, ImageName);
+                            if (!Directory.Exists(path))
+                            {
+                                Directory.CreateDirectory(path);
+                            }
+                            using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
+                            {
+                                item.CopyTo(stream);
+                            }
+                            Product_Images NewImage = new Product_Images();
+                            NewImage.ProductID = product.ID;
+                            NewImage.ImageFileName = ImageName;
+                            productImageRepo.Create(NewImage);
+                        }
+                    }
+                    Respons.succcess = true;
+                    Respons.Message = "product Added successfuly";
+                    Respons.Data = "";
+                    return Ok(Respons);
+                }
+                catch (Exception ex)
+                {
+                    inventproductRepo.Delete(ress);
+                    Respons.Message = ex.InnerException.Message;
                     Respons.succcess = false;
                     Respons.Data = "";
                     return BadRequest(Respons);
                 }
+
             }
-            Respons.Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)
-                                            .Select(m => m.ErrorMessage));
-            Respons.succcess = false;
-            Respons.Data = "";
-            return BadRequest(Respons);
+            catch (Exception ex)
+            {
+                return BadRequest(new { Success = false, Message = ex.Message});
+            }
+            
         }
 
         [HttpDelete("DeleteProductById/{Id:int}")]
