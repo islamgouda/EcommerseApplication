@@ -46,7 +46,9 @@ namespace EcommerseApplication.Controllers
                         AllCategoryDTOs.Add(new CategoryResponseDTO());
                         AllCategoryDTOs[i].ID = AllCategorys[i].ID;
                         AllCategoryDTOs[i].Name = AllCategorys[i].Name;
+                        AllCategoryDTOs[i].Name_Ar = AllCategorys[i].Name_Ar;
                         AllCategoryDTOs[i].Description = AllCategorys[i].Description;
+                        AllCategoryDTOs[i].Description_Ar = AllCategorys[i].Description_Ar;
                         AllCategoryDTOs[i].SubCategories = new List<SubCategoryResponseDTO>();
                         for (int j = 0; j < AllCategorys[i].SubCategories.Count; j++)
                         {

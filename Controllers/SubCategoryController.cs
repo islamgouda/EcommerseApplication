@@ -3,7 +3,7 @@ using EcommerseApplication.Models;
 using EcommerseApplication.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Net.Http.Headers;
 
 namespace EcommerseApplication.Controllers
 {
@@ -103,21 +103,38 @@ namespace EcommerseApplication.Controllers
                     });
 
                 if (subCategoryDTO == null)
-                    return NotFound(new { Success = false, Message = BadRequistMSG });
+                    return BadRequest(new { Success = false, Message = BadRequistMSG });
 
 
-                string ImageName = Guid.NewGuid() + "_" + subCategoryDTO.image.FileName;
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/SubCategory");
-                string fileNameWithPath = Path.Combine(path, ImageName);
 
+                var files = Request.Form.Files;
+                if (files == null || files.Count == 0)
+                    return BadRequest(new { Success = false, Message = "You Must Add Image/s" });
+
+                string path = Path.Combine(environment.WebRootPath, "Images", "SubCategory");
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
                 }
-                using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
-                {
-                    subCategoryDTO.image.CopyTo(stream);
-                }
+
+                //string ImageName = Guid.NewGuid() + "_" + subCategoryDTO.image.FileName;
+                //string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/SubCategory");
+                //string fileNameWithPath = Path.Combine(path, ImageName);
+
+                //if (!Directory.Exists(path))
+                //{
+                //    Directory.CreateDirectory(path);
+                //}
+                //using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
+                //{
+                //    subCategoryDTO.image.CopyTo(stream);
+                //}
+
+                var file = files[0];
+                if (file == null)
+                    return BadRequest(new { Success = false, Message = "You Must Add Image/s" });
+
+                string ImageName = Guid.NewGuid() + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
 
                 subCategory NewSubCategory = new subCategory
                 {
@@ -128,6 +145,21 @@ namespace EcommerseApplication.Controllers
                     image = ImageName,
                     CategoryId = subCategoryDTO.CategoryId
                 };
+
+                //for (int i = 0; i < files.Count; i++)
+                //{
+                    //var file = files[0];
+
+                    //string ImageName = Guid.NewGuid() + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    string fileNameWithPath = Path.Combine(path, ImageName);
+                    var extension = Path.GetExtension(file.FileName);
+                    var size = file.Length;
+                    using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                //}
+
                 subCategoryRepo.insert(NewSubCategory);
                 return Ok(new { Success = true, Message = "Data Inserted Successfuly", Data = NewSubCategory });
             }
@@ -188,12 +220,29 @@ namespace EcommerseApplication.Controllers
                 if (subCategoryDTO == null)
                     return NotFound(new { Success = false, Message = BadRequistMSG });
 
+                var files = Request.Form.Files;
+                if (files == null || files.Count == 0)
+                    return BadRequest(new { Success = false, Message = "You Must Add Image/s" });
 
-                string ImageName = Guid.NewGuid() + "_" + subCategoryDTO.image.FileName;
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/SubCategory");
-                string fileNameWithPath = Path.Combine(path, ImageName);
+                string path = Path.Combine(environment.WebRootPath, "Images", "SubCategory");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                var file = files[0];
+                if (file == null)
+                    return BadRequest(new { Success = false, Message = "You Must Add Image/s" });
+
+                string ImageName = Guid.NewGuid() + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+
+                //string ImageName = Guid.NewGuid() + "_" + subCategoryDTO.image.FileName;
+                //string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/SubCategory");
+                //string fileNameWithPath = Path.Combine(path, ImageName);
 
                 subCategory OldSubCategory = subCategoryRepo.getByID(Id);
+
+                string OldImage = OldSubCategory.image;
 
                 OldSubCategory.Name = subCategoryDTO.Name;
                 OldSubCategory.arabicName = subCategoryDTO.arabicName;
@@ -201,25 +250,35 @@ namespace EcommerseApplication.Controllers
                 OldSubCategory.arabicDescription = subCategoryDTO.arabicDescription;
                 OldSubCategory.image = ImageName;
                 OldSubCategory.CategoryId = subCategoryDTO.CategoryId;
-                
+
+                ////add image
+                //for (int i = 0; i < files.Count; i++)
+                //{
+                    //var file = files[i];
+
+                    //string ImageName = Guid.NewGuid() + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    string fileNameWithPath = Path.Combine(path, ImageName);
+                    var extension = Path.GetExtension(file.FileName);
+                    var size = file.Length;
+                    using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                //}
+                if (System.IO.File.Exists(Path.Combine(path, OldImage)))
+                { 
+                    System.IO.File.Delete(Path.Combine("wwwroot", "Images", "SubCategory", OldImage));
+
+                }
+
                 subCategoryRepo.updateSubCategory(OldSubCategory);
 
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
-                {
-                    subCategoryDTO.image.CopyTo(stream);
-                }
-                System.IO.File.Delete(Path.Combine("wwwroot", "Images", "SubCategory", OldSubCategory.image));
 
                 return Ok(new { Success = true, Message = "Data updated Successfuly", Data = "" });
             }
             catch (Exception ex)
             {
-
-                return BadRequest(new { Success = false, Message = ex.Message, Data= subCategoryDTO });
+               return BadRequest(new { Success = false, Message = ex.Message, Data= subCategoryDTO });
             }
         }
 

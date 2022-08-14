@@ -1,6 +1,7 @@
 using EcommerseApplication.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
 using System.Net.Mail;
 using System.Security.Claims;
 
@@ -22,11 +23,13 @@ namespace EcommerseApplication.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly IHttpContextAccessor baseUrl;
+        private readonly IWebHostEnvironment env;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IHttpContextAccessor baseUrl)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IHttpContextAccessor baseUrl,IWebHostEnvironment _env)
         {
             _logger = logger;
             this.baseUrl = baseUrl;
+            env = _env;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
@@ -60,6 +63,33 @@ namespace EcommerseApplication.Controllers
             //asf.Add( baseUrl.HttpContext.Request.Scheme);
             //asf.Add( baseUrl.HttpContext.Request.Protocol);
             return baseUrl2;
+        }
+
+        [HttpPost("file")]
+        public bool GetFile([FromForm] string test) //[FromBody] testDTO test  //byte[] test
+        {
+            var files = Request.Form.Files;
+            if (files == null || files.Count == 0)
+                return false;
+            string path = Path.Combine(env.WebRootPath, "Images", "SubCategory");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            for (int i = 0; i < files.Count; i++)
+            {
+                var file = files[i];
+                
+                string ImageName = Guid.NewGuid() + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                string fileNameWithPath = Path.Combine(path, ImageName);
+                var extension = Path.GetExtension(file.FileName);
+                var size = file.Length;
+                using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+            }
+            return true;
         }
     }
 }
