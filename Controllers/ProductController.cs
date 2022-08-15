@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using EcommerseApplication.Models;
 using EcommerseApplication.DTO;
 using System.Security.Claims;
+using System.Net.Http.Headers;
 
 namespace EcommerseApplication.Controllers
 {
@@ -568,6 +569,18 @@ namespace EcommerseApplication.Controllers
 
                 int PartnerID = partener.Id;
 
+
+                //Images
+                var files = Request.Form.Files;
+                if (files == null || files.Count == 0)
+                    return BadRequest(new { Success = false, Message = "You Must Add Image/s" });
+
+                string path = Path.Combine(environment.WebRootPath, "Images", "Product");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
                 Product product = new Product();
                 product.CategoryID = NewProduct.CategoryID;
                 product.CreatedAt = DateTime.Now;
@@ -587,30 +600,28 @@ namespace EcommerseApplication.Controllers
                 try
                 {
                     product.InventoryID = ress;
-                    productRepo.Create(product);
+                    
                     //add images
-                    if (NewProduct.ImageFiles.Count > 0 && NewProduct.ImageFiles != null)
+
+                    for (int i = 0; i < files.Count; i++)
                     {
-                        string wwwrootPath = environment.WebRootPath;
-                        foreach (var item in NewProduct.ImageFiles)
+                        var file = files[i];
+
+                        string ImageName = Guid.NewGuid() + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                        string fileNameWithPath = Path.Combine(path, ImageName);
+                        var extension = Path.GetExtension(file.FileName);
+                        var size = file.Length;
+                        using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
                         {
-                            string ImageName = Guid.NewGuid() + "_" + item.FileName;
-                            string path = Path.Combine(wwwrootPath, "Images/Product");
-                            string fileNameWithPath = Path.Combine(path, ImageName);
-                            if (!Directory.Exists(path))
-                            {
-                                Directory.CreateDirectory(path);
-                            }
-                            using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
-                            {
-                                item.CopyTo(stream);
-                            }
-                            Product_Images NewImage = new Product_Images();
-                            NewImage.ProductID = product.ID;
-                            NewImage.ImageFileName = ImageName;
-                            productImageRepo.Create(NewImage);
+                            file.CopyTo(stream);
                         }
+                        Product_Images NewImage = new Product_Images();
+                        NewImage.ProductID = product.ID;
+                        NewImage.ImageFileName = ImageName;
+                        productImageRepo.Create(NewImage);
                     }
+                    productRepo.Create(product);
+
                     Respons.succcess = true;
                     Respons.Message = "product Added successfuly";
                     Respons.Data = "";
@@ -680,7 +691,17 @@ namespace EcommerseApplication.Controllers
 
                     int PartnerID = partener.Id;
 
-                
+                    //Images
+                    var files = Request.Form.Files;
+                    if (files == null || files.Count == 0)
+                        return BadRequest(new { Success = false, Message = "You Must Add Image/s" });
+
+                    string path = Path.Combine(environment.WebRootPath, "Images", "Product");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
                     Product oldproduct = productrepository.Get(Id);
                     if (oldproduct != null)
                     {
@@ -694,33 +715,32 @@ namespace EcommerseApplication.Controllers
                         oldproduct.subcategoryID = NewProduct.subcategoryID;
                         oldproduct.PartenerID = PartnerID;
 
-                        if (NewProduct.ImageFiles.Count > 0 && NewProduct.ImageFiles != null)
+                        //Old Images to remove later
+                        //List<string> OldImages = productRepo.GetImages(Id);
+                        List<Product_Images> OldImages = productRepo.GetImagesByProductID(Id);
+                        for (int i = 0; i < files.Count; i++)
                         {
-                            string wwwrootPath = environment.WebRootPath;
-                            foreach (var item in NewProduct.ImageFiles)
+                            var file = files[i];
+
+                            string ImageName = Guid.NewGuid() + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                            string fileNameWithPath = Path.Combine(path, ImageName);
+                            var extension = Path.GetExtension(file.FileName);
+                            var size = file.Length;
+                            using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
                             {
-                                string ImageName = Guid.NewGuid() + "_" + item.FileName;
-                                string path = Path.Combine(wwwrootPath, "Images/Product");
-                                string fileNameWithPath = Path.Combine(path, ImageName);
-                                if (!Directory.Exists(path))
-                                {
-                                    Directory.CreateDirectory(path);
-                                }
-                                using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
-                                {
-                                    item.CopyTo(stream);
-                                }
-                                Product_Images NewImage = new Product_Images();
-                                NewImage.ProductID = Id;
-                                NewImage.ImageFileName = ImageName;
-                                productImageRepo.Create(NewImage);
+                                file.CopyTo(stream);
                             }
-                            List<string> OldImages = productRepo.GetImages(Id);
-                            foreach (var image in OldImages)
-                            {
-                                System.IO.File.Delete(Path.Combine("wwwroot", "Images", "SubCategory", image));
-                            }
+                            Product_Images NewImage = new Product_Images();
+                            NewImage.ProductID = Id;
+                            NewImage.ImageFileName = ImageName;
+                            productImageRepo.Create(NewImage);
                         }
+                        foreach (var image in OldImages)
+                        {
+                            productImageRepo.Delete(image.Id);
+                            System.IO.File.Delete(Path.Combine("wwwroot", "Images", "Product", image.ImageFileName));
+                        }
+                        
                         
                         try
                         {
@@ -729,7 +749,7 @@ namespace EcommerseApplication.Controllers
 
                             Respons.succcess = true;
                             Respons.Message = "product updated successfuly";
-                            Respons.Data = oldproduct;
+                            Respons.Data = "";
                             return Ok(Respons);
 
                         }

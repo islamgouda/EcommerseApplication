@@ -9,8 +9,8 @@ namespace EcommerseApplication.DTO
         public string Description { get; set; }
         public string? arabicDescription { get; set; }
 
-        [AllowedExtensionsOneFile(new string[] { ".jpg", ".jpeg", ".png" })]
-        public IFormFile image { get; set; }
+        //[AllowedExtensionsOneFile(new string[] { ".jpg", ".jpeg", ".png" })]
+        //public IFormFile image { get; set; }
         public int CategoryId { get; set; }
     }
 }

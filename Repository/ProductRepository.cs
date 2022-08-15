@@ -97,11 +97,16 @@ namespace EcommerseApplication.Repository
             List<string> _Images = _product.Product_Images.Select(p => p.ImageFileName).ToList();
             return _Images;
         }
+        public List<Product_Images> GetImagesByProductID(int id)
+        {
+            List<Product_Images> AllImages = context.product_Images.Where(p=>p.ProductID == id).ToList();
+            return AllImages;
+        }
 
         
         public Product Get(int Id)
         {
-            return context.Products.FirstOrDefault(p=>p.ID == Id);
+            return context.Products.Include(p => p.Product_Images).FirstOrDefault(p=>p.ID == Id);
         } 
         public void Create(Product Product)
         {
