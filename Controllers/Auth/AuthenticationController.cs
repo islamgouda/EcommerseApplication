@@ -71,8 +71,16 @@ namespace EcommerseApplication.Controllers.Auth
                 return Ok(new Response { Status = "Error", Message = "we Can not create With current Data" });
 
             await _useManager.AddToRoleAsync(newuser, "User");
-            await _useManager.AddToRoleAsync(newuser, "Admin");
-            await _appDbContext.users.AddAsync(new User { IdentityId = newuser.Id, UserName = model.Username });
+            await _useManager.AddToRoleAsync(newuser, "Admin");//tarek
+            await _appDbContext.users.AddAsync(new User
+            {
+                IdentityId = newuser.Id,
+                UserName = model.Username,
+                birthDate = model.birthDate,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Phone = model.Phone
+            });
             await _appDbContext.SaveChangesAsync();
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
 
