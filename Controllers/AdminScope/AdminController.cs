@@ -37,15 +37,15 @@ namespace EcommerseApplication.Controllers.AdminScope
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user == null)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Email Does not Exist" });
+                    return Ok(new Response { Status = "Error", Message = "Email Does not Exist" });
                 }
                 if (!await _roleManager.RoleExistsAsync(model.RoleName))
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Role Does not Exist" });
+                    return Ok(new Response { Status = "Error", Message = "Role Does not Exist" });
                 }
                 if (await _userManager.IsInRoleAsync(user, model.RoleName))
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = $"User already assigned to {model.RoleName} Role" });
+                    return Ok(new Response  { Status = "Error", Message = $"User already assigned to {model.RoleName} Role" });
 
                 }
                 await _userManager.AddToRoleAsync(user, model.RoleName);
@@ -110,7 +110,7 @@ namespace EcommerseApplication.Controllers.AdminScope
         /***********/
         [HttpPost]
         [Route("CreateShiperFromRequests")]
-        public IActionResult CreateShipperfromRequests(int requestId)
+        public IActionResult CreateShipperfromRequests([FromBody] int requestId)
         {
             ShipperRequest shipperR = shipperRequest.Get(requestId);
             if (shipperR != null)
@@ -119,7 +119,7 @@ namespace EcommerseApplication.Controllers.AdminScope
                 shipper.Name = shipperR.Name;
                 shipper.officePhone = shipperR.officePhone;
                 shipper.arabicName = shipperR.arabicName;
-                shipper.IdentityId = shipperR.AccountID;
+                //shipper.IdentityId = shipperR.AccountID;
                 shiperRepository.insert(shipper);
 
                 shipperRequest.remove(requestId);
@@ -138,11 +138,12 @@ namespace EcommerseApplication.Controllers.AdminScope
         public IActionResult CreatePartner([FromBody]int id)
         {
            Requests request= requestRepository.GetPartnerById(id);
-           User userpartner  = ipartenerRepository.getByIDentity(request.IdentityId);
+          
             if(request==null)
             {
                 return Ok(new Response { Status = "Error", Message = "Data is incorect" });
             }
+            User userpartner = ipartenerRepository.getByIDentity(request.IdentityId);
             Partener partener = new Partener();
             partener.Name = request.Name;
             partener.Type = request.RequestType;
@@ -151,6 +152,31 @@ namespace EcommerseApplication.Controllers.AdminScope
             partener.userID = userpartner.Id;
             ipartenerRepository.insert(partener);
             return Ok(new Response { Status = "oK", Message = "Saved" });
+        }
+        /******************/
+        [HttpGet]
+        [Route("GetAllUsersAssignedToRoles")]
+        public async Task<ResponseRoles> GetUsersRoles()
+        {
+            List<AppUser> Admins = (List<AppUser>)await _userManager.GetUsersInRoleAsync("Admin");
+            List<AppUser> SubAdmins = (List<AppUser>)await _userManager.GetUsersInRoleAsync("SubAdmin");
+            List<AppUser> Shippers = (List<AppUser>)await _userManager.GetUsersInRoleAsync("Shiper");
+            List<AppUser> Partners = (List<AppUser>)await _userManager.GetUsersInRoleAsync("Partener");
+            ResponseRoles model = new ResponseRoles();
+            model.Admins = Admins;
+            model.SAdmins = SubAdmins;
+            model.Shippers = Shippers;
+            model.Partners = Partners;
+            return model;
+        }
+        [HttpPost]
+        [Route("RemoveUserFromrole")]
+        public async Task<IActionResult> RemoveUserFromrole([FromBody]RemoveFromRoleDto model)
+        {
+
+            var user=await _userManager.FindByIdAsync(model.id);
+            await _userManager.RemoveFromRoleAsync(user,model.role);
+            return Ok(new Response { Status = "Ok", Message="Successfully Removed" });
         }
 
     }

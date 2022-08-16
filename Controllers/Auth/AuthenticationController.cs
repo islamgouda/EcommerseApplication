@@ -84,8 +84,6 @@ namespace EcommerseApplication.Controllers.Auth
             await _appDbContext.SaveChangesAsync();
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
 
-
-
         }
         private JwtSecurityToken GetToken(List<Claim> authClaims)
         {

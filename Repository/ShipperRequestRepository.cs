@@ -19,6 +19,10 @@ namespace EcommerseApplication.Repository
         {
             return context.shipperRequests.FirstOrDefault(e => e.Id == id);
         }
+        public ShipperRequest GetByIntityId(string id)
+        {
+            return context.shipperRequests.FirstOrDefault(e => e.AccountID == id);
+        }
 
         public List<ShipperRequest> GetAll()
         {
@@ -27,9 +31,14 @@ namespace EcommerseApplication.Repository
 
         public void remove(int id)
         {
-          ShipperRequest shipperR=  context.shipperRequests.FirstOrDefault(e => e.Id == id);
+            ShipperRequest shipperR=  context.shipperRequests.FirstOrDefault(e => e.Id == id);
             context.shipperRequests.Remove(shipperR);
             context.SaveChanges();
+        }
+
+        public ShipperRequest Get(string id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
