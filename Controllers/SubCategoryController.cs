@@ -53,7 +53,9 @@ namespace EcommerseApplication.Controllers
                     return NotFound(new { Success = true, Message = NotFoundMSG, Data = AllSubCategoryDTOs });
                 if (AllSubCategorys != null)
                 {
-                    string path = Path.Combine(baseUrl2, "Images/SubCategory");
+                    // string path = Path.Combine(baseUrl2, "Images/SubCategory");
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/SubCategory");
+                    string domainName = HttpContext.Request.Host.ToString();
 
                     for (int i = 0; i < AllSubCategorys.Count; i++)
                     {
@@ -63,13 +65,13 @@ namespace EcommerseApplication.Controllers
                         AllSubCategoryDTOs[i].Description = AllSubCategorys[i].Description;
                         AllSubCategoryDTOs[i].arabicName = AllSubCategorys[i].arabicName;
                         AllSubCategoryDTOs[i].arabicDescription = AllSubCategorys[i].arabicDescription;
-
+                       
                         string fileNameWithPath = Path.Combine(path, AllSubCategorys[i].image);
                         if (System.IO.File.Exists(fileNameWithPath))
                         {
                             //byte[] imgByte = System.IO.File.ReadAllBytes(fileNameWithPath);
                             //AllSubCategoryDTOs[i].Image = Convert.ToBase64String(imgByte);
-                            AllSubCategoryDTOs[i].Image = fileNameWithPath;
+                            AllSubCategoryDTOs[i].Image = domainName + "//Images/SubCategory/" + AllSubCategorys[i].image; //fileNameWithPath;
                         }
 
                         AllSubCategoryDTOs[i].CategoryName = AllSubCategorys[i].category.Name;
@@ -310,13 +312,13 @@ namespace EcommerseApplication.Controllers
                     SubCategoryDTOs.Description = SubCategory.Description;
                     SubCategoryDTOs.arabicName = SubCategory.arabicName;
                     SubCategoryDTOs.arabicDescription = SubCategory.arabicDescription;
-
+                    string domainName = HttpContext.Request.Host.ToString();
                     string fileNameWithPath = Path.Combine(path, SubCategory.image);
                     if (System.IO.File.Exists(fileNameWithPath))
                     {
                         //byte[] imgByte = System.IO.File.ReadAllBytes(fileNameWithPath);
                         //AllSubCategoryDTOs[i].Image = Convert.ToBase64String(imgByte);
-                        SubCategoryDTOs.Image = fileNameWithPath;
+                        SubCategoryDTOs.Image = domainName + "//Images/SubCategory/" + SubCategory.image; //fileNameWithPath;
                     }
                     SubCategoryDTOs.CategoryName = SubCategory.category.Name;
 
@@ -355,7 +357,7 @@ namespace EcommerseApplication.Controllers
                 if (AllSubCategorys != null)
                 {
                     string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/SubCategory");
-
+                    
                     for (int i = 0; i < AllSubCategorys.Count; i++)
                     {
                         AllSubCategoryDTOs.Add(new SubCategoryResponseDTO());
@@ -368,9 +370,11 @@ namespace EcommerseApplication.Controllers
                         string fileNameWithPath = Path.Combine(path, AllSubCategorys[i].image);
                         if (System.IO.File.Exists(fileNameWithPath))
                         {
-                            //byte[] imgByte = System.IO.File.ReadAllBytes(fileNameWithPath);
-                            //AllSubCategoryDTOs[i].Image = Convert.ToBase64String(imgByte);
-                            AllSubCategoryDTOs[i].Image = fileNameWithPath;
+                        //byte[] imgByte = System.IO.File.ReadAllBytes(fileNameWithPath);
+                        //AllSubCategoryDTOs[i].Image = Convert.ToBase64String(imgByte);
+                       // http://localhost:5092
+                            string domainName = HttpContext.Request.Host.ToString();
+                            AllSubCategoryDTOs[i].Image = domainName+"//Images/SubCategory/" + AllSubCategorys[i].image; //fileNameWithPath;
                         }
 
                         AllSubCategoryDTOs[i].CategoryName = AllSubCategorys[i].category.Name;
