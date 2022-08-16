@@ -1,4 +1,5 @@
 ﻿using EcommerseApplication.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerseApplication.Repository
 {
@@ -13,7 +14,7 @@ namespace EcommerseApplication.Repository
 
         public List<Requests> GetAllRequests()
         {
-            List<Requests> All=context.Requests.ToList();
+            List<Requests> All=context.Requests.Include(data=>data.identity).ToList();
             return All;
         }
 

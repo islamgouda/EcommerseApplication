@@ -41,6 +41,7 @@ namespace EcommerseApplication.Controllers
                         AllPartenersDTO[i].Name = AllParteners[i].Name;
                         AllPartenersDTO[i].Type = AllParteners[i].Type;
                         AllPartenersDTO[i].numberOfBranches = AllParteners[i].numberOfBranches;
+                        AllPartenersDTO[i].Ownername = AllParteners[i].identity.UserName;
                     }
                     return Ok(new { Success = true, Message = SuccessMSG, Data = AllPartenersDTO });
                 }
