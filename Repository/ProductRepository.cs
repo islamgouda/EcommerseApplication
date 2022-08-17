@@ -176,5 +176,18 @@ namespace EcommerseApplication.Repository
                 .Include(r => r.Product_Inventory).Include(pr => pr.Discount).Include(im=>im.Product_Images)
                 .Include(par => par.Partener).FirstOrDefault(y => y.ID == Id);
         }
+
+        public List<Product> GetAllwithCategoryID(int id)
+        {
+            return context.Products.Where(e => e.CategoryID == id).ToList();
+        }
+        //List<Product> GetAllwithCategoryID(int id)
+        //{
+
+        //}
+
+
+
+
     }
 }

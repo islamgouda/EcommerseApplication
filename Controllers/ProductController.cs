@@ -205,10 +205,10 @@ namespace EcommerseApplication.Controllers
             }
         }
 
-        [HttpGet("myCategoryproduct/{id::int}")]
+        [HttpGet("mycategoryproduct/{id::int}")]
         public IActionResult getbyCatID(int Id)
         {
-            List<Product> AllProducts = productRepo.GetAllByCategoryID(Id);
+            List<Product> AllProducts = productRepo.GetAllwithCategoryID(Id);
             return Ok(AllProducts);
         }
         [HttpGet("SubCategoryProducts/{id:int}")]
