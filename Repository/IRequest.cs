@@ -7,5 +7,6 @@ namespace EcommerseApplication.Repository
         public void RequestTobePartner(Requests request);
         public List<Requests> GetAllRequests();
         public Requests GetPartnerById(int id);
+        public Requests GetRequestByIdentityId(string id);
     }
 }

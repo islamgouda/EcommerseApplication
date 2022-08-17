@@ -28,14 +28,17 @@ namespace EcommerseApplication.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,new Response { Status = "Error", Message = "Enter Correct Data" });
+                return Ok(new Response { Status = "Error", Message = "Enter Correct Data" });
             }
             Requests model = new Requests();
-            var UserId = User?.FindFirstValue(ClaimTypes.Sid);
+            var UserId= User?.FindFirstValue("UserId");
             if (UserId == null)
             {
-               
                 return Ok(new Response { Status = "Error", Message = "Login first" });
+            }
+            if(request.GetRequestByIdentityId(UserId)!=null)
+            {
+                return Ok(new Response { Status = "Error", Message = "You Already Have A request" });
             }
             model.IdentityId = UserId;
             model.Name = requestmodel.Name;
