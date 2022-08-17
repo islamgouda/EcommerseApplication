@@ -28,6 +28,10 @@ namespace EcommerseApplication.Repository
             return context.Requests.FirstOrDefault(i => i.RequestId == id);
             
         }
+        public Requests GetRequestByIdentityId(string id)
+        {
+            return context.Requests.FirstOrDefault(i => i.IdentityId==id);
+        }
 
 
     }
