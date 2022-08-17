@@ -87,8 +87,10 @@ namespace EcommerseApplication.Controllers
                     if (item.Quantity <= item.product.Product_Inventory.Quantity)
                     {
                         double PriceDiscont = 0;
-                        if (item.product.Discount != null)
-                            PriceDiscont = item.product.Price * (double)item.product.Discount.Descount_Persent / 100;
+                        if (item.product.Discount != null )
+                            PriceDiscont = item.product.Price * (double)item.product.Discount.Descount_Persent;
+                        //if (item.product.Discount.Descount_Persent > 1)
+                            //PriceDiscont = item.product.Price * (double)item.product.Discount.Descount_Persent / 100;
                         TotalPrice += (item.product.Price - PriceDiscont) * item.Quantity;
                     }
                     else

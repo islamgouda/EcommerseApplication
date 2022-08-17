@@ -596,6 +596,105 @@ namespace EcommerseApplication.Controllers
             }
         }
 
+        //[HttpPost]
+        //public IActionResult AddNewProduct([FromForm] ProductCetegorySubcategoryDTO NewProduct)
+        //{
+        //    try
+        //    {
+        //        if (!ModelState.IsValid)
+        //            return BadRequest(new
+        //            {
+        //                Success = false,
+        //                Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)
+        //                                    .Select(m => m.ErrorMessage)),
+        //                Data = new List<ProductResponseDTO>()
+        //            });
+        //        string ss = User?.FindFirstValue("UserId");
+        //        var ss2 = User?.Claims;
+        //        User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+        //        if (user == null)
+        //            return BadRequest(new { Success = false, Message = BadRequistMSG });
+
+        //        Partener partener = partenerRepo.getByUserID(user.Id);
+        //        if (partener == null)
+        //            return BadRequest(new { Success = false, Message = BadRequistMSG });
+
+        //        int PartnerID = partener.Id;
+
+
+        //        //Images
+        //        var files = Request.Form.Files;
+        //        if (files == null || files.Count == 0)
+        //            return BadRequest(new { Success = false, Message = "You Must Add Image/s" });
+
+        //        string path = Path.Combine(environment.WebRootPath, "Images", "Product");
+        //        if (!Directory.Exists(path))
+        //        {
+        //            Directory.CreateDirectory(path);
+        //        }
+
+        //        Product product = new Product();
+        //        product.CategoryID = NewProduct.CategoryID;
+        //        product.CreatedAt = DateTime.Now;
+        //        product.Name_Ar = NewProduct.Name_Ar;
+        //        product.Description_Ar = NewProduct.Description_Ar;
+        //        product.Description = NewProduct.Description;
+        //        product.Name = NewProduct.Name;
+        //        product.Price = NewProduct.Price;
+        //        product.IsAvailable = NewProduct.IsAvailable;
+        //        product.subcategoryID = NewProduct.subcategoryID;
+        //        product.PartenerID = PartnerID;
+
+
+        //        int ress = inventproductRepo.AddproductInventory(NewProduct.Quantity);
+        //        if (ress == 0)
+        //            return BadRequest(new { Success = false, Message = BadRequistMSG });
+        //        try
+        //        {
+        //            product.InventoryID = ress;
+
+        //            //add images
+
+        //            for (int i = 0; i < files.Count; i++)
+        //            {
+        //                var file = files[i];
+
+        //                string ImageName = Guid.NewGuid() + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+        //                string fileNameWithPath = Path.Combine(path, ImageName);
+        //                var extension = Path.GetExtension(file.FileName);
+        //                var size = file.Length;
+        //                using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
+        //                {
+        //                    file.CopyTo(stream);
+        //                }
+        //                Product_Images NewImage = new Product_Images();
+        //                NewImage.ProductID = product.ID;
+        //                NewImage.ImageFileName = ImageName;
+        //                productImageRepo.Create(NewImage);
+        //            }
+        //            productRepo.Create(product);
+
+        //            Respons.succcess = true;
+        //            Respons.Message = "product Added successfuly";
+        //            Respons.Data = "";
+        //            return Ok(Respons);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            inventproductRepo.Delete(ress);
+        //            Respons.Message = ex.InnerException.Message;
+        //            Respons.succcess = false;
+        //            Respons.Data = "";
+        //            return BadRequest(Respons);
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(new { Success = false, Message = ex.Message});
+        //    }
+
+        //}
         [HttpPost]
         public IActionResult AddNewProduct([FromForm] ProductCetegorySubcategoryDTO NewProduct)
         {
@@ -609,22 +708,23 @@ namespace EcommerseApplication.Controllers
                                             .Select(m => m.ErrorMessage)),
                         Data = new List<ProductResponseDTO>()
                     });
+                string ss = User?.FindFirstValue("UserId");
+                var ss2 = User?.Claims;
+                //User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("userid"));
+                //if (user == null)
+                //    return BadRequest(new { success = false, message = BadRequistMSG });
 
-                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
-                if (user == null)
-                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+                //Partener partener = partenerRepo.getByUserID(user.Id);
+                //if (partener == null)
+                //    return BadRequest(new { success = false, message = BadRequistMSG });
 
-                Partener partener = partenerRepo.getByUserID(user.Id);
-                if (partener == null)
-                    return BadRequest(new { Success = false, Message = BadRequistMSG });
-
-                int PartnerID = partener.Id;
+                //int partnerid = partener.Id;
 
 
                 //Images
                 var files = Request.Form.Files;
                 if (files == null || files.Count == 0)
-                    return BadRequest(new { Success = false, Message = "You Must Add Image/s" });
+                    return Ok(new { Success = false, Message = "You Must Add Image/s" });
 
                 string path = Path.Combine(environment.WebRootPath, "Images", "Product");
                 if (!Directory.Exists(path))
@@ -642,7 +742,7 @@ namespace EcommerseApplication.Controllers
                 product.Price = NewProduct.Price;
                 product.IsAvailable = NewProduct.IsAvailable;
                 product.subcategoryID = NewProduct.subcategoryID;
-                product.PartenerID = PartnerID;
+                //product.PartenerID = PartnerID;
 
 
                 int ress = inventproductRepo.AddproductInventory(NewProduct.Quantity);
@@ -651,7 +751,7 @@ namespace EcommerseApplication.Controllers
                 try
                 {
                     product.InventoryID = ress;
-                    
+                    productRepo.Create(product);
                     //add images
 
                     for (int i = 0; i < files.Count; i++)
@@ -671,11 +771,11 @@ namespace EcommerseApplication.Controllers
                         NewImage.ImageFileName = ImageName;
                         productImageRepo.Create(NewImage);
                     }
-                    productRepo.Create(product);
+                    
 
                     Respons.succcess = true;
                     Respons.Message = "product Added successfuly";
-                    Respons.Data = "";
+                    Respons.Data = product.ID;
                     return Ok(Respons);
                 }
                 catch (Exception ex)
@@ -690,9 +790,29 @@ namespace EcommerseApplication.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message});
+                return BadRequest(new { Success = false, Message = ex.Message });
             }
-            
+
+        }
+        [HttpGet("AssignPartner/{ProductID:int}")]
+        public IActionResult AssignPartner(int ProductID)
+        {
+            User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("userid"));
+            if (user == null)
+                return BadRequest(new { success = false, message = BadRequistMSG });
+
+            Partener partener = partenerRepo.getByUserID(user.Id);
+            if (partener == null)
+                return BadRequest(new { success = false, message = BadRequistMSG });
+
+            int partnerid = partener.Id;
+
+            Product product = productRepo.Get(ProductID);
+            if (product == null)
+                return BadRequest(new { Success = false, Message = "You Must Add Product First" });
+            product.PartenerID = partnerid;
+            productRepo.Update(ProductID, product);
+            return Ok(new { Success = true, Message = SuccessMSG });
         }
 
         [HttpDelete("DeleteProductById/{Id:int}")]
