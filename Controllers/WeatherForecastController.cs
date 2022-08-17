@@ -1,3 +1,4 @@
+using EcommerseApplication.Data;
 using EcommerseApplication.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +50,7 @@ namespace EcommerseApplication.Controllers
             string userId = User?.FindFirstValue("UserId");
             var baseUrl2 = string.Format("{0}://{1}//", baseUrl.HttpContext.Request.Scheme, baseUrl.HttpContext.Request.Host.Value);
 
+            string ss = ProductApprovelEnum.Approved.ToString();
             //CheckoutDTO dd = new CheckoutDTO();
             //dd.Email = "aaaaa";
             //MailAddress m;

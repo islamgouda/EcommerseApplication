@@ -1,4 +1,5 @@
-﻿using EcommerseApplication.Models;
+﻿using EcommerseApplication.Data;
+using EcommerseApplication.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerseApplication.Repository
@@ -13,7 +14,19 @@ namespace EcommerseApplication.Repository
         }
         public List<Product> GetAll()
         {
-            return context.Products.Where(p => p.DeletedAt == null).ToList();
+            return context.Products.Where(p => p.DeletedAt == null)
+                                   .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString()).ToList();
+        }
+        public List<Product> GetAllNotApproved()
+        {
+            return context.Products.Include(p => p.Discount)
+                .Include(p => p.Partener)
+                .Include(p => p.Product_Images)
+                .Include(p => p.subcategory)
+                .Include(p => p.Product_Category)
+                .Include(p => p.Product_Inventory)
+                .Where(p => p.DeletedAt == null)
+                .Where(p2=>p2.StatusApproval != ProductApprovelEnum.Approved.ToString()).ToList();
         }
         public void ReduseQuantity(int ProductID, int DecreasedQuantity)
         {
@@ -31,6 +44,7 @@ namespace EcommerseApplication.Repository
                 .Include(p => p.Product_Category)
                 .Include(p => p.Product_Inventory)
                 .Where(p => p.CategoryID == id)
+                .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString())
                 .Where(p => p.DeletedAt == null).ToList();
         }
         
@@ -43,6 +57,7 @@ namespace EcommerseApplication.Repository
                 .Include(p => p.Product_Category)
                 .Include(p => p.Product_Inventory)
                 .Where(p => p.subcategoryID == id)
+                .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString())
                 .Where(p => p.DeletedAt == null).ToList();
         }
         public List<Product> GetPartnerProducts(int PartnerID)
@@ -64,6 +79,7 @@ namespace EcommerseApplication.Repository
                 .Include(p => p.subcategory)
                 .Include(p => p.Product_Category)
                 .Include(p => p.Product_Inventory)
+                //.Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString())
                 .Where(p => p.PartenerID == PartnerID)
                 .Where(p => p.CategoryID == CategoryID)
                 .Where(p => p.DeletedAt == null).ToList();
@@ -76,6 +92,7 @@ namespace EcommerseApplication.Repository
                 .Include(p => p.subcategory)
                 .Include(p => p.Product_Category)
                 .Include(p => p.Product_Inventory)
+                //.Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString())
                 .Where(p => p.PartenerID == PartnerID)
                 .Where(p => p.subcategoryID == SubCategoryID)
                 .Where(p => p.DeletedAt == null).ToList();
@@ -88,6 +105,7 @@ namespace EcommerseApplication.Repository
                 .Include(p => p.subcategory)
                 .Include(p => p.Product_Category)
                 .Include(p => p.Product_Inventory)
+                .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString())
                 .Where(p => p.DeletedAt == null).ToList();
         }
         public List<string> GetImages(int id)
@@ -110,6 +128,7 @@ namespace EcommerseApplication.Repository
         } 
         public void Create(Product Product)
         {
+            Product.CreatedAt = DateTime.Now;
             context.Products.Add(Product);
             context.SaveChanges();
         }
@@ -139,6 +158,7 @@ namespace EcommerseApplication.Repository
             OldProduct.Description_Ar = Product.Description_Ar;
             OldProduct.IsAvailable = Product.IsAvailable;
             OldProduct.Price = Product.Price;
+            OldProduct.StatusApproval = Product.StatusApproval;
 
             OldProduct.CategoryID = Product.CategoryID;
             OldProduct.DiscountID = Product.DiscountID;
@@ -173,7 +193,9 @@ namespace EcommerseApplication.Repository
         {
             return context.Products.Include(e => e.Product_Category).Include(c => c.subcategory)
                 .Include(r => r.Product_Inventory).Include(pr => pr.Discount).Include(im=>im.Product_Images)
-                .Include(par => par.Partener).FirstOrDefault(y => y.ID == Id);
+                .Include(par => par.Partener)
+                .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString())
+                .FirstOrDefault(y => y.ID == Id);
         }
     }
 }
