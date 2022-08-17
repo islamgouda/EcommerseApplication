@@ -24,5 +24,6 @@ namespace EcommerseApplication.DTO
 
         //[AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png" })]
         //public List<IFormFile>? ImageFiles { get; set; }
+        //public byte[]? ImageFiles { get; set; }
     }
 }
