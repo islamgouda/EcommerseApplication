@@ -37,7 +37,8 @@ namespace EcommerseApplication.Repository
 
         public List<Product> GetAllByCategoryID(int id)
         {
-            return context.Products.Include(p => p.Discount)
+            return context.Products
+                .Include(p => p.Discount)
                 .Include(p => p.Partener)
                 .Include(p => p.Product_Images)
                 .Include(p => p.subcategory)
@@ -45,7 +46,8 @@ namespace EcommerseApplication.Repository
                 .Include(p => p.Product_Inventory)
                 .Where(p => p.CategoryID == id)
                 .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString())
-                .Where(p => p.DeletedAt == null).ToList();
+                .ToList();
+
         }
         
         public List<Product> GetAllBySubCategoryID(int id)
@@ -58,7 +60,8 @@ namespace EcommerseApplication.Repository
                 .Include(p => p.Product_Inventory)
                 .Where(p => p.subcategoryID == id)
                 .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString())
-                .Where(p => p.DeletedAt == null).ToList();
+                .ToList();
+
         }
         public List<Product> GetPartnerProducts(int PartnerID)
         {
@@ -69,7 +72,7 @@ namespace EcommerseApplication.Repository
                 .Include(p => p.Product_Category)
                 .Include(p => p.Product_Inventory)
                 .Where(p => p.PartenerID == PartnerID)
-                .Where(p => p.DeletedAt == null).ToList();
+                .ToList();
         }
         public List<Product> GetPartnerProductsByCategoryID(int PartnerID, int CategoryID)
         {

@@ -218,14 +218,14 @@ namespace EcommerseApplication.Controllers
             List<ProductResponseDTO> ProductDTO = new List<ProductResponseDTO>();
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(new
-                    {
-                        Success = false,
-                        Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)
-                                            .Select(m => m.ErrorMessage)),
-                        Data = new List<ProductResponseDTO>()
-                    });
+                //if (!ModelState.IsValid)
+                //    return BadRequest(new
+                //    {
+                //        Success = false,
+                //        Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)
+                //                            .Select(m => m.ErrorMessage)),
+                //        Data = new List<ProductResponseDTO>()
+                //    });
 
                 List<Product> AllProducts = productRepo.GetAllByCategoryID(Id);
                 if (AllProducts.Count == 0)
@@ -291,6 +291,12 @@ namespace EcommerseApplication.Controllers
             }
         }
 
+        [HttpGet("myCategoryproduct/{id::int}")]
+        public IActionResult getbyCatID(int Id)
+        {
+            List<Product> AllProducts = productRepo.GetAllByCategoryID(Id);
+            return Ok(AllProducts);
+        }
         [HttpGet("SubCategoryProducts/{id:int}")]
         public IActionResult GetAllBySubCategory(int Id)
         {
