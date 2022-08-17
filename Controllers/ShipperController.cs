@@ -106,6 +106,8 @@ namespace EcommerseApplication.Controllers
             
            
         }
+
+       
         //User requests to be shipper
        [HttpPost("IamShipper")] //test string id,
         public IActionResult shipperRequest(ShipperRequestDTo shipperRequestDTO)
@@ -116,13 +118,19 @@ namespace EcommerseApplication.Controllers
             shipperRequest.arabicName = shipperRequestDTO.arabicName;
             string uid;
              uid = User?.FindFirstValue("UserId");
+            ShipperRequest shipperRequest2 = IshipperRequest.GetByIntityId(uid);
+
+            if(shipperRequest2 != null)
+            {
+                return Ok(new { Success = false, Message = BadRequistMSG, Data = "You Already Have A request" });
+            }
             shipperRequest.AccountID =(uid!=null?uid: "daec1e1e-8b1b-4114-bced-09874df8cd5d");
             try {
                 IshipperRequest.Add(shipperRequest);
             }
             catch
             {
-                return BadRequest(new { Success = false, Message = BadRequistMSG, Data = "dontSaved" });
+                return Ok(new { Success = false, Message = BadRequistMSG, Data = "dontSaved" });
             }
 
             return Ok(new { Success = true, Message = SuccessMSG, Data = "dataSaved" });

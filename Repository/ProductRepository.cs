@@ -172,7 +172,7 @@ namespace EcommerseApplication.Repository
         public Product GetIncludeById(int Id)
         {
             return context.Products.Include(e => e.Product_Category).Include(c => c.subcategory)
-                .Include(r => r.Product_Inventory).Include(pr => pr.Discount)
+                .Include(r => r.Product_Inventory).Include(pr => pr.Discount).Include(im=>im.Product_Images)
                 .Include(par => par.Partener).FirstOrDefault(y => y.ID == Id);
         }
     }

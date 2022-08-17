@@ -20,7 +20,7 @@ namespace EcommerseApplication.Repository
 
         public List<Partener> getAll()
         {
-         return  context.Parteners.ToList();
+         return  context.Parteners.Include(data=>data.identity).ToList();
         }
 
         public Partener getByID(int id)

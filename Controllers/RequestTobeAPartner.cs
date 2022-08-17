@@ -26,6 +26,10 @@ namespace EcommerseApplication.Controllers
         [Route("BePartner")]
         public async Task<IActionResult> BePartner([FromBody] RequestDto requestmodel)
         {
+            if(!ModelState.IsValid)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,new Response { Status = "Error", Message = "Enter Correct Data" });
+            }
             Requests model = new Requests();
             var UserId = User?.FindFirstValue(ClaimTypes.Sid);
             if (UserId == null)
@@ -41,8 +45,8 @@ namespace EcommerseApplication.Controllers
             return Ok(new Response { Status = "Ok", Message = "Request under Review" });
         }
         [HttpGet]
-        [Authorize(Roles ="Admin")]
-        [Route("AllParteners")]
+        //[Authorize(Roles ="Admin")]
+        [Route("AllPartRequest")]
         public List<Requests> AllPartenersRequests()
         {
             List<Requests> Allrequests = request.GetAllRequests();
