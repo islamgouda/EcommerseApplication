@@ -40,14 +40,15 @@ namespace EcommerseApplication.Controllers
         [HttpPost("AddToCart")]
         public IActionResult AddToCart(CartItemRequestDTO NewCartItemDTO)
         {
-            User user; int userid = 1; Shopping_Session shopping;
-            try { user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId")); userid = user.Id;
-               //  shopping = shopping_SessionRrpo.GetByUserId(userid).First();
-            }
-            catch { userid = 1; //shopping = shopping_SessionRrpo.GetByUserId(1).First();
-                                //
-                                
-            }
+            //int userid; Shopping_Session shopping;
+            //  shopping = shopping_SessionRrpo.GetByUserId(userid).First();
+            if (NewCartItemDTO.Quantity <= 0)
+                return BadRequest(new { success = false, message = "Invalid Quantity" });
+
+            User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("userid"));
+            if (user == null)
+                return BadRequest(new { success = false, message = BadRequistMSG });
+            int userid = user.Id;
             try
             {
                 if (ModelState.IsValid && NewCartItemDTO != null)
@@ -64,6 +65,12 @@ namespace EcommerseApplication.Controllers
                     }
                     else { Shopping_SessionID = UserSessions[UserSessions.Count - 1].Id; }
 
+                    Cart_Item cart_ItemCheck = cart_ItemRepo.GetCardItemByproductAndSession(Shopping_SessionID, NewCartItemDTO.ProductId);
+                    if (cart_ItemCheck != null)
+                    {
+                        return Ok(new { Success = false, Message = "Product Is Already In Your Cart" });
+                    }
+
                     Cart_Item cart_Item = new Cart_Item();
                     cart_Item.SessionId = Shopping_SessionID;
                     cart_Item.ProductId = NewCartItemDTO.ProductId;
@@ -75,7 +82,7 @@ namespace EcommerseApplication.Controllers
                 }
                 else
                 {
-                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+                    return Ok(new { Success = false, Message = BadRequistMSG });
                 }
             }
             catch (Exception ex)
