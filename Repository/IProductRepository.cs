@@ -5,6 +5,7 @@ namespace EcommerseApplication.Repository
     public interface IProductRepository
     {
         List<Product> GetAll();
+        List<Product> GetAllNotApproved();
         List<string> GetImages(int id);
         List<Product_Images> GetImagesByProductID(int id);
         List<Product> GetPartnerProducts(int PartnerID);

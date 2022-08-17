@@ -15,6 +15,7 @@ namespace EcommerseApplication.DTO
         public int Price { get; set; }
         public decimal? Discount { get; set; }
         public bool IsAvailable { get; set; }
+        public string StatusApproval { get; set; }
 
         public List<string> Images { get; set; }
         public string PartenerName { get; set; }

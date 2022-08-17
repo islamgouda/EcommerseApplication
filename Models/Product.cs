@@ -13,6 +13,7 @@ namespace EcommerseApplication.Models
         public int Price { get; set; }
         public bool IsAvailable { get; set; }
 
+        public string StatusApproval { get; set; }
 
         [ForeignKey("Product_Category")]
         public int? CategoryID { get; set; }
