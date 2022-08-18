@@ -187,7 +187,7 @@ namespace EcommerseApplication.Controllers
 
                     shippingDetailsRepo.insert(shippingDetails);
                     return Ok(new { Success = true, Message = "Order Purched Successfuly",Amount = PaymentStatus.Amount,
-                                    TransactionID = PaymentStatus.BalanceTransaction,ShippingID = shippingDetails.ID });
+                                    TransactionID = PaymentStatus.BalanceTransaction,ShippingID = shippingDetails.ID ,OrderID = newOrder.Id});
                 }
                 else { return BadRequest(new { Success = false, Message = PaymentStatus.Message }); }
             }
