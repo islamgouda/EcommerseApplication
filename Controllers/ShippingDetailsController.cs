@@ -193,7 +193,10 @@ namespace EcommerseApplication.Controllers
         {
             try
             {
-                int userID = int.Parse(User?.FindFirstValue("UserId"));
+                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                if (user == null)
+                    return BadRequest(new { Success = false, Message = "You Must Login First" });
+                int userID = user.Id;
                 List<Order_Details> Orders = order_DetailsRepo.GetAllByUserID(userID);
                 //int userID = 5;
                 //List<Order_Details> Orders = order_DetailsRepo.GetAllByUserID(5);

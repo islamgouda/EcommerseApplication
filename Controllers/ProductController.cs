@@ -75,7 +75,7 @@ namespace EcommerseApplication.Controllers
                 //List<Product> AllProducts = productRepo.GetAllWithInclude().Where(p2 => p2.StatusApproval == ProductApprovelEnum.Declined.ToString()).ToList();
                 //List<Product> AllProducts = productRepo.GetAllWithInclude().Where(p2 => p2.StatusApproval != ProductApprovelEnum.Approved.ToString()).ToList();
                 if (AllProducts.Count == 0)
-                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
 
                 if (AllProducts != null)
                 {
@@ -153,7 +153,7 @@ namespace EcommerseApplication.Controllers
 
                 List<Product> AllProducts = productRepo.GetAllNotApproved();
                 if (AllProducts.Count == 0)
-                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
@@ -232,7 +232,7 @@ namespace EcommerseApplication.Controllers
 
                 List<Product> AllProducts = productRepo.GetAllByCategoryID(Id);
                 if (AllProducts.Count == 0)
-                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
@@ -317,7 +317,7 @@ namespace EcommerseApplication.Controllers
 
                 List<Product> AllProducts = productRepo.GetAllBySubCategoryID(Id);
                 if (AllProducts.Count == 0)
-                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
@@ -385,7 +385,7 @@ namespace EcommerseApplication.Controllers
            
             catch(Exception ex) { return NotFound(new { Success = false, Message = NotFoundMSG, Data = ex.Message }); }
             if (product == null) 
-            { return NotFound(new { Success = false, Message = NotFoundMSG, Data = "notfound" }); }
+            { return Ok(new { Success = true, Message = NotFoundMSG, Data = "notfound" }); }
             try
             {
                 ProductResponseDTO productResponseDTO = new ProductResponseDTO();
@@ -469,7 +469,7 @@ namespace EcommerseApplication.Controllers
                 List<Product> AllProducts = productRepo.GetPartnerProducts(PartnerID);
 
                 if (AllProducts.Count == 0)
-                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
@@ -557,7 +557,7 @@ namespace EcommerseApplication.Controllers
 
                 List<Product> AllProducts = productRepo.GetPartnerProductsByCategoryID(PartnerID, CategoryID);
                 if (AllProducts.Count == 0)
-                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
@@ -645,7 +645,7 @@ namespace EcommerseApplication.Controllers
 
                 List<Product> AllProducts = productRepo.GetPartnerProductsBySubCategoryID(PartnerID, SubCategoryID);
                 if (AllProducts.Count == 0)
-                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
