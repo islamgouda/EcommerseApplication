@@ -30,6 +30,7 @@ namespace EcommerseApplication.Controllers
         private readonly IshippingDetails shippingDetailsRepo;
         private readonly IProductRepository productRepo;
         private readonly IOptions<StripeSettings> configuration;
+        private readonly Ishipper shipperRepo;
         private readonly IUserRepository userRepo;
 
         //IConfiguration _configuration
@@ -38,7 +39,8 @@ namespace EcommerseApplication.Controllers
                              IOrder_ItemsRepository _order_ItemsRepo, IUserPayement _userPayementRepo,
                              IPayment_DetailsRepository _payment_DetailsRepo, IUserRepository _userRepo,
                              IUserAddress _userAddress, IshippingDetails _shippingDetailsRepo,
-                             IProductRepository _productRepo, IOptions<StripeSettings> _configuration)
+                             IProductRepository _productRepo, IOptions<StripeSettings> _configuration,
+                              Ishipper _shipperRepo)
         {
             shopping_SessionRrpo = _shopping_SessionRrpo;
             cart_ItemRepo = _cart_ItemRepo;
@@ -50,6 +52,7 @@ namespace EcommerseApplication.Controllers
             shippingDetailsRepo = _shippingDetailsRepo;
             productRepo = _productRepo;
             configuration = _configuration;
+            shipperRepo = _shipperRepo;
             userRepo = _userRepo;
         }
 
@@ -60,11 +63,25 @@ namespace EcommerseApplication.Controllers
             try
             {
                 User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                if (user == null)
+                    return BadRequest(new { Success = false, Message = "You Must Login First" });
                 int UserID = user.Id;
                 //int UserID = 5;
                 int PaymentID = buyDTO.PaymentID;
                 int ShipperID = buyDTO.ShipperID;
                 int AddressID = buyDTO.AddressID;
+
+                User_address userAddresssCheck = userAddress.GetAddress(AddressID);
+                if (userAddresssCheck == null)
+                    return BadRequest(new { Success = false, Message = "You Must Add Address First" });
+
+                Payment_Details payment_DetailsCheck = payment_DetailsRepo.GetPayment_Details(PaymentID);
+                if (payment_DetailsCheck == null)
+                    return BadRequest(new { Success = false, Message = "You Must Add Payment Method First" });
+
+                Shipper shipperCheck = shipperRepo.getByID(ShipperID);
+                if (shipperCheck == null)
+                    return BadRequest(new { Success = false, Message = "There Is No Available Shipper Now" });
 
                 int Shopping_SessionID;
                 double TotalPrice = 0;
@@ -113,12 +130,12 @@ namespace EcommerseApplication.Controllers
                     User_Payement user_Payement = userPayementRepo.GetUserPayment(PaymentID);
 
                     Order_Details newOrder = new Order_Details();
-                    newOrder.Total = (int)PaymentStatus.Amount * 100;
+                    newOrder.Total = (int)PaymentStatus.Amount;
                     newOrder.UserID = UserID;
 
                     Payment_Details newPayment = new Payment_Details();
                     newPayment.Provider = user_Payement.Provider;
-                    newPayment.Amount = (int)PaymentStatus.Amount * 100;
+                    newPayment.Amount = (int)PaymentStatus.Amount;
                     newPayment.TransactionID = PaymentStatus.BalanceTransaction;
                     payment_DetailsRepo.AddPayment_Details(newPayment);
 

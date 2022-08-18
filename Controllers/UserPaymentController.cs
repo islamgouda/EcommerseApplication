@@ -96,14 +96,15 @@ namespace EcommerseApplication.Controllers
                         return BadRequest(new { success = false, message = "You Must Login First" });
                     int UserID = user.Id;
 
-                    List<UserPaymentDTO> userPaymentsDTO = new List<UserPaymentDTO>();
+                    List<UserPaymentResponseDTO> userPaymentsDTO = new List<UserPaymentResponseDTO>();
 
                     List<User_Payement> user_Payements = userpaymentrepo.GetAllByUser(UserID);
                     if(user_Payements.Count == 0 || user_Payements == null)
                         return Ok(new { Success = true, Message = "Data Not Found", Data = userPaymentsDTO });
                     for (int i = 0; i < user_Payements.Count; i++)
                     {
-                        userPaymentsDTO.Add(new UserPaymentDTO());
+                        userPaymentsDTO.Add(new UserPaymentResponseDTO());
+                        userPaymentsDTO[i].Id = user_Payements[i].Id;
                         userPaymentsDTO[i].PayementType = user_Payements[i].PayementType;
                         userPaymentsDTO[i].Provider = user_Payements[i].Provider;
                         userPaymentsDTO[i].arabicProvider = user_Payements[i].arabicProvider;
@@ -114,8 +115,6 @@ namespace EcommerseApplication.Controllers
                         userPaymentsDTO[i].ExpMonth = user_Payements[i].ExpMonth;
                         userPaymentsDTO[i].Cvc = user_Payements[i].Cvc;
 
-                        userPaymentsDTO[i].AccountNo = user_Payements[i].AccountNo;
-                        userPaymentsDTO[i].Expiry = user_Payements[i].Expiry;
                     }
                     
 
