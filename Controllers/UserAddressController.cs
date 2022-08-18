@@ -30,9 +30,13 @@ namespace EcommerseApplication.Controllers
         {
            if(ModelState.IsValid==true)
             {
+                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("userid"));
+                if (user == null)
+                    return BadRequest(new { success = false, message = "You Must Login First" });
+                int UserID = user.Id;
                 try
                 {
-                    userAddressrepo.AddNewAddresss(NewAdress);
+                    userAddressrepo.AddNewAddresss(UserID,NewAdress);
                     Respons.succcess = true;
                     Respons.Message = "User Address Added";
                     Respons.Data = "";
