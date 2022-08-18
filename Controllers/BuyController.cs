@@ -75,7 +75,7 @@ namespace EcommerseApplication.Controllers
                 if (userAddresssCheck == null)
                     return BadRequest(new { Success = false, Message = "You Must Add Address First" });
 
-                Payment_Details payment_DetailsCheck = payment_DetailsRepo.GetPayment_Details(PaymentID);
+                User_Payement payment_DetailsCheck = userPayementRepo.GetUserPayment(PaymentID);
                 if (payment_DetailsCheck == null)
                     return BadRequest(new { Success = false, Message = "You Must Add Payment Method First" });
 
@@ -187,7 +187,7 @@ namespace EcommerseApplication.Controllers
 
                     shippingDetailsRepo.insert(shippingDetails);
                     return Ok(new { Success = true, Message = "Order Purched Successfuly",Amount = PaymentStatus.Amount,
-                                    TransactionID = PaymentStatus.BalanceTransaction });
+                                    TransactionID = PaymentStatus.BalanceTransaction,ShippingID = shippingDetails.ID });
                 }
                 else { return BadRequest(new { Success = false, Message = PaymentStatus.Message }); }
             }
