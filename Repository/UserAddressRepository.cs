@@ -54,5 +54,10 @@ namespace EcommerseApplication.Repository
             user_Addressold.mobile=user_Address.mobile;
             context.SaveChanges();
         }
+
+        public List<User_address> GetAllAddress(int id)
+        {
+            return context.User_Addresses.Where(a => a.UserId==id).ToList();
+        }
     }
 }
