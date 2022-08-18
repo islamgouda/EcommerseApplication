@@ -200,5 +200,18 @@ namespace EcommerseApplication.Repository
                 .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString())
                 .FirstOrDefault(y => y.ID == Id);
         }
+
+        public List<Product> GetAllwithCategoryID(int id)
+        {
+            return context.Products.Where(e => e.CategoryID == id).ToList();
+        }
+        //List<Product> GetAllwithCategoryID(int id)
+        //{
+
+        //}
+
+
+
+
     }
 }

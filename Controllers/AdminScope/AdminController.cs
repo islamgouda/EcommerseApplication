@@ -135,7 +135,7 @@ namespace EcommerseApplication.Controllers.AdminScope
         /***********/
         [HttpPost]
         [Route("CreatePartner")]//take request id
-        public IActionResult CreatePartner([FromBody]int id)
+        public async Task<IActionResult> CreatePartner([FromBody]int id)
         {
            Requests request= requestRepository.GetPartnerById(id);
           
@@ -151,6 +151,8 @@ namespace EcommerseApplication.Controllers.AdminScope
             partener.IdentityId = request.IdentityId;
             partener.userID = userpartner.Id;
             ipartenerRepository.insert(partener);
+            var user=await _userManager.FindByIdAsync(request.IdentityId);
+            await _userManager.AddToRoleAsync(user, "Partener");
             return Ok(new Response { Status = "oK", Message = "Saved" });
         }
         /******************/

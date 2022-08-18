@@ -11,6 +11,7 @@ namespace EcommerseApplication.Controllers
     [ApiController]
     public class UserPaymentController : ControllerBase
     {
+
         private readonly IUserPayement userpaymentrepo;
         private readonly ConsumerRespons Respons;
         private readonly IUserRepository userRepo;
@@ -22,14 +23,17 @@ namespace EcommerseApplication.Controllers
             userRepo = _userRepo;
         }
 
+
         [HttpPost]
         public IActionResult AddNewUserPayment([FromBody] UserPaymentDTO NewUserPayment)
         {
-            if(ModelState.IsValid==true)
+            if (ModelState.IsValid == true)
             {
                 try
                 {
+
                     //int UserID = int.Parse(User?.FindFirstValue("UserId"));
+
                     //int UserID =5;
                     User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("userid"));
                     if (user == null)
@@ -56,21 +60,21 @@ namespace EcommerseApplication.Controllers
 
                     ///
                     userpaymentrepo.AddUSerPayment(user_Payement);
-                    Respons.succcess=true;
+                    Respons.succcess = true;
                     Respons.Message = "User Payment Added";
                     Respons.Data = "";
                     return Ok(Respons);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    ModelState.AddModelError("",ex.InnerException.Message);
+                    ModelState.AddModelError("", ex.InnerException.Message);
                     Respons.succcess = false;
                     Respons.Message = ex.InnerException.Message;
                     Respons.Data = "";
                     return BadRequest(Respons);
                 }
 
-               
+
             }
             Respons.succcess = false;
             Respons.Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)

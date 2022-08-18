@@ -13,6 +13,7 @@ namespace EcommerseApplication.Repository
         List<Product> GetPartnerProductsBySubCategoryID(int PartnerID, int SubCategoryID);
         List<Product> GetAllWithInclude();
         List<Product> GetAllByCategoryID(int id);
+        List<Product> GetAllwithCategoryID(int id);
         List<Product> GetAllBySubCategoryID(int id);
         Product Get(int Id);
         void Create(Product Product);
