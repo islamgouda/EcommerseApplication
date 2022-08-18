@@ -7,6 +7,7 @@ using EcommerseApplication.DTO;
 using System.Security.Claims;
 using System.Net.Http.Headers;
 using EcommerseApplication.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace EcommerseApplication.Controllers
 {
@@ -31,12 +32,13 @@ namespace EcommerseApplication.Controllers
         private readonly Ipartener partenerRepo;
         private readonly IHttpContextAccessor baseUrl;
         private readonly IProduct_ImageRepository productImageRepo;
+        private readonly UserManager<AppUser> userManager;
 
         public ProductController(IProductRepository _productRepo, IWebHostEnvironment _environment ,
                                  IProductRepository productrepository, ConsumerRespons _Response,
                                  IProduct_InventoryRepository _inventproductRepo, IUserRepository _userRepo,
                                  Ipartener _partenerRepo, IHttpContextAccessor _baseUrl, 
-                                 IProduct_ImageRepository _productImageRepo)
+                                 IProduct_ImageRepository _productImageRepo,UserManager<AppUser> _userManager)
         {
            this. productRepo = _productRepo;
            this.environment = _environment;
@@ -47,6 +49,7 @@ namespace EcommerseApplication.Controllers
             partenerRepo = _partenerRepo;
             this.baseUrl = _baseUrl;
             productImageRepo = _productImageRepo;
+            userManager = _userManager;
             baseUrl2 = string.Format("{0}://{1}//", baseUrl.HttpContext.Request.Scheme, baseUrl.HttpContext.Request.Host.Value);
         }
 
@@ -72,7 +75,7 @@ namespace EcommerseApplication.Controllers
                 //List<Product> AllProducts = productRepo.GetAllWithInclude().Where(p2 => p2.StatusApproval == ProductApprovelEnum.Declined.ToString()).ToList();
                 //List<Product> AllProducts = productRepo.GetAllWithInclude().Where(p2 => p2.StatusApproval != ProductApprovelEnum.Approved.ToString()).ToList();
                 if (AllProducts.Count == 0)
-                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
 
                 if (AllProducts != null)
                 {
@@ -150,7 +153,7 @@ namespace EcommerseApplication.Controllers
 
                 List<Product> AllProducts = productRepo.GetAllNotApproved();
                 if (AllProducts.Count == 0)
-                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
@@ -229,7 +232,7 @@ namespace EcommerseApplication.Controllers
 
                 List<Product> AllProducts = productRepo.GetAllByCategoryID(Id);
                 if (AllProducts.Count == 0)
-                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
@@ -314,7 +317,7 @@ namespace EcommerseApplication.Controllers
 
                 List<Product> AllProducts = productRepo.GetAllBySubCategoryID(Id);
                 if (AllProducts.Count == 0)
-                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
@@ -382,7 +385,7 @@ namespace EcommerseApplication.Controllers
            
             catch(Exception ex) { return NotFound(new { Success = false, Message = NotFoundMSG, Data = ex.Message }); }
             if (product == null) 
-            { return NotFound(new { Success = false, Message = NotFoundMSG, Data = "notfound" }); }
+            { return Ok(new { Success = true, Message = NotFoundMSG, Data = "notfound" }); }
             try
             {
                 ProductResponseDTO productResponseDTO = new ProductResponseDTO();
@@ -455,18 +458,18 @@ namespace EcommerseApplication.Controllers
 
                 User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
                 if (user == null)
-                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+                    return BadRequest(new { Success = false, Message = "You Must Login First" });
 
                 Partener partener = partenerRepo.getByUserID(user.Id);
                 if (partener == null)
-                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+                    return BadRequest(new { Success = false, Message = "You Must Be Partener" });
 
                 int PartnerID = partener.Id;
 
                 List<Product> AllProducts = productRepo.GetPartnerProducts(PartnerID);
 
                 if (AllProducts.Count == 0)
-                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
@@ -544,17 +547,17 @@ namespace EcommerseApplication.Controllers
 
                 User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
                 if (user == null)
-                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+                    return BadRequest(new { Success = false, Message = "You Must Login First" });
 
                 Partener partener = partenerRepo.getByUserID(user.Id);
                 if (partener == null)
-                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+                    return BadRequest(new { Success = false, Message = "You Must Be Partener" });
 
                 int PartnerID = partener.Id;
 
                 List<Product> AllProducts = productRepo.GetPartnerProductsByCategoryID(PartnerID, CategoryID);
                 if (AllProducts.Count == 0)
-                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
@@ -632,17 +635,17 @@ namespace EcommerseApplication.Controllers
 
                 User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
                 if (user == null)
-                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+                    return BadRequest(new { Success = false, Message = "You Must Login First" });
 
                 Partener partener = partenerRepo.getByUserID(user.Id);
                 if (partener == null)
-                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+                    return BadRequest(new { Success = false, Message = "You Must Be Partener" });
 
                 int PartnerID = partener.Id;
 
                 List<Product> AllProducts = productRepo.GetPartnerProductsBySubCategoryID(PartnerID, SubCategoryID);
                 if (AllProducts.Count == 0)
-                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
 
                 if (AllProducts.Count != 0 && AllProducts != null)
                 {
@@ -704,107 +707,8 @@ namespace EcommerseApplication.Controllers
             }
         }
 
-        //[HttpPost]
-        //public IActionResult AddNewProduct([FromForm] ProductCetegorySubcategoryDTO NewProduct)
-        //{
-        //    try
-        //    {
-        //        if (!ModelState.IsValid)
-        //            return BadRequest(new
-        //            {
-        //                Success = false,
-        //                Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)
-        //                                    .Select(m => m.ErrorMessage)),
-        //                Data = new List<ProductResponseDTO>()
-        //            });
-        //        string ss = User?.FindFirstValue("UserId");
-        //        var ss2 = User?.Claims;
-        //        User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
-        //        if (user == null)
-        //            return BadRequest(new { Success = false, Message = BadRequistMSG });
-
-        //        Partener partener = partenerRepo.getByUserID(user.Id);
-        //        if (partener == null)
-        //            return BadRequest(new { Success = false, Message = BadRequistMSG });
-
-        //        int PartnerID = partener.Id;
-
-
-        //        //Images
-        //        var files = Request.Form.Files;
-        //        if (files == null || files.Count == 0)
-        //            return BadRequest(new { Success = false, Message = "You Must Add Image/s" });
-
-        //        string path = Path.Combine(environment.WebRootPath, "Images", "Product");
-        //        if (!Directory.Exists(path))
-        //        {
-        //            Directory.CreateDirectory(path);
-        //        }
-
-        //        Product product = new Product();
-        //        product.CategoryID = NewProduct.CategoryID;
-        //        product.CreatedAt = DateTime.Now;
-        //        product.Name_Ar = NewProduct.Name_Ar;
-        //        product.Description_Ar = NewProduct.Description_Ar;
-        //        product.Description = NewProduct.Description;
-        //        product.Name = NewProduct.Name;
-        //        product.Price = NewProduct.Price;
-        //        product.IsAvailable = NewProduct.IsAvailable;
-        //        product.subcategoryID = NewProduct.subcategoryID;
-        //        product.PartenerID = PartnerID;
-
-
-        //        int ress = inventproductRepo.AddproductInventory(NewProduct.Quantity);
-        //        if (ress == 0)
-        //            return BadRequest(new { Success = false, Message = BadRequistMSG });
-        //        try
-        //        {
-        //            product.InventoryID = ress;
-
-        //            //add images
-
-        //            for (int i = 0; i < files.Count; i++)
-        //            {
-        //                var file = files[i];
-
-        //                string ImageName = Guid.NewGuid() + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-        //                string fileNameWithPath = Path.Combine(path, ImageName);
-        //                var extension = Path.GetExtension(file.FileName);
-        //                var size = file.Length;
-        //                using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
-        //                {
-        //                    file.CopyTo(stream);
-        //                }
-        //                Product_Images NewImage = new Product_Images();
-        //                NewImage.ProductID = product.ID;
-        //                NewImage.ImageFileName = ImageName;
-        //                productImageRepo.Create(NewImage);
-        //            }
-        //            productRepo.Create(product);
-
-        //            Respons.succcess = true;
-        //            Respons.Message = "product Added successfuly";
-        //            Respons.Data = "";
-        //            return Ok(Respons);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            inventproductRepo.Delete(ress);
-        //            Respons.Message = ex.InnerException.Message;
-        //            Respons.succcess = false;
-        //            Respons.Data = "";
-        //            return BadRequest(Respons);
-        //        }
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(new { Success = false, Message = ex.Message});
-        //    }
-
-        //}
         [HttpPost]
-        public IActionResult AddNewProduct([FromForm] ProductCetegorySubcategoryDTO NewProduct)
+        public async Task<IActionResult> AddNewProduct([FromForm] ProductCetegorySubcategoryDTO NewProduct)
         {
             try
             {
@@ -816,23 +720,32 @@ namespace EcommerseApplication.Controllers
                                             .Select(m => m.ErrorMessage)),
                         Data = new List<ProductResponseDTO>()
                     });
-                string ss = User?.FindFirstValue("UserId");
+                string UserIDIdentity = User?.FindFirstValue("UserId");
                 var ss2 = User?.Claims;
-                //User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("userid"));
-                //if (user == null)
-                //    return BadRequest(new { success = false, message = BadRequistMSG });
 
-                //Partener partener = partenerRepo.getByUserID(user.Id);
-                //if (partener == null)
-                //    return BadRequest(new { success = false, message = BadRequistMSG });
+                //var Roles2 = User?.FindAll(ClaimTypes.Role);
 
-                //int partnerid = partener.Id;
+                //AppUser appUser =await userManager.FindByIdAsync(UserIDIdentity);
+                //var Roles = await userManager.GetRolesAsync(appUser);
+
+                //if(!Roles.Contains("Partener"))
+                    //return BadRequest(new { Success = false, Message = "You Must Be Partener" });
+
+                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                if (user == null)
+                    return BadRequest(new { Success = false, Message = "You Must Login First" });
+
+                Partener partener = partenerRepo.getByUserID(user.Id);
+                if (partener == null)
+                    return BadRequest(new { Success = false, Message = "You Must Be Partener" });
+
+                int PartnerID = partener.Id;
 
 
                 //Images
                 var files = Request.Form.Files;
                 if (files == null || files.Count == 0)
-                    return Ok(new { Success = false, Message = "You Must Add Image/s" });
+                    return BadRequest(new { Success = false, Message = "You Must Add Image/s" });
 
                 string path = Path.Combine(environment.WebRootPath, "Images", "Product");
                 if (!Directory.Exists(path))
@@ -851,7 +764,7 @@ namespace EcommerseApplication.Controllers
                 product.IsAvailable = NewProduct.IsAvailable;
                 product.subcategoryID = NewProduct.subcategoryID;
                 product.StatusApproval = ProductApprovelEnum.Pending.ToString();
-                //product.PartenerID = PartnerID;
+                product.PartenerID = PartnerID;
 
 
                 int ress = inventproductRepo.AddproductInventory(NewProduct.Quantity);
@@ -860,6 +773,7 @@ namespace EcommerseApplication.Controllers
                 try
                 {
                     product.InventoryID = ress;
+
                     productRepo.Create(product);
                     //add images
 
@@ -880,11 +794,10 @@ namespace EcommerseApplication.Controllers
                         NewImage.ImageFileName = ImageName;
                         productImageRepo.Create(NewImage);
                     }
-                    
 
                     Respons.succcess = true;
                     Respons.Message = "product Added successfuly";
-                    Respons.Data = product.ID;
+                    Respons.Data = "";
                     return Ok(Respons);
                 }
                 catch (Exception ex)
@@ -895,7 +808,6 @@ namespace EcommerseApplication.Controllers
                     Respons.Data = "";
                     return BadRequest(Respons);
                 }
-
             }
             catch (Exception ex)
             {
@@ -903,26 +815,129 @@ namespace EcommerseApplication.Controllers
             }
 
         }
-        [HttpGet("AssignPartner/{ProductID:int}")]
-        public IActionResult AssignPartner(int ProductID)
-        {
-            User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("userid"));
-            if (user == null)
-                return BadRequest(new { success = false, message = BadRequistMSG });
 
-            Partener partener = partenerRepo.getByUserID(user.Id);
-            if (partener == null)
-                return BadRequest(new { success = false, message = BadRequistMSG });
+        #region
+        //[HttpPost]
+        //public IActionResult AddNewProduct([FromForm] ProductCetegorySubcategoryDTO NewProduct)
+        //{
+        //    try
+        //    {
+        //        if (!ModelState.IsValid)
+        //            return BadRequest(new
+        //            {
+        //                Success = false,
+        //                Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)
+        //                                    .Select(m => m.ErrorMessage)),
+        //                Data = new List<ProductResponseDTO>()
+        //            });
+        //        string ss = User?.FindFirstValue("UserId");
+        //        var ss2 = User?.Claims;
+        //        //User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("userid"));
+        //        //if (user == null)
+        //        //    return BadRequest(new { success = false, message = BadRequistMSG });
 
-            int partnerid = partener.Id;
+        //        //Partener partener = partenerRepo.getByUserID(user.Id);
+        //        //if (partener == null)
+        //        //    return BadRequest(new { success = false, message = BadRequistMSG });
 
-            Product product = productRepo.Get(ProductID);
-            if (product == null)
-                return BadRequest(new { Success = false, Message = "You Must Add Product First" });
-            product.PartenerID = partnerid;
-            productRepo.Update(ProductID, product);
-            return Ok(new { Success = true, Message = SuccessMSG });
-        }
+        //        //int partnerid = partener.Id;
+
+
+        //        //Images
+        //        var files = Request.Form.Files;
+        //        if (files == null || files.Count == 0)
+        //            return Ok(new { Success = false, Message = "You Must Add Image/s" });
+
+        //        string path = Path.Combine(environment.WebRootPath, "Images", "Product");
+        //        if (!Directory.Exists(path))
+        //        {
+        //            Directory.CreateDirectory(path);
+        //        }
+
+        //        Product product = new Product();
+        //        product.CategoryID = NewProduct.CategoryID;
+        //        product.CreatedAt = DateTime.Now;
+        //        product.Name_Ar = NewProduct.Name_Ar;
+        //        product.Description_Ar = NewProduct.Description_Ar;
+        //        product.Description = NewProduct.Description;
+        //        product.Name = NewProduct.Name;
+        //        product.Price = NewProduct.Price;
+        //        product.IsAvailable = NewProduct.IsAvailable;
+        //        product.subcategoryID = NewProduct.subcategoryID;
+        //        product.StatusApproval = ProductApprovelEnum.Pending.ToString();
+        //        //product.PartenerID = PartnerID;
+
+
+        //        int ress = inventproductRepo.AddproductInventory(NewProduct.Quantity);
+        //        if (ress == 0)
+        //            return BadRequest(new { Success = false, Message = BadRequistMSG });
+        //        try
+        //        {
+        //            product.InventoryID = ress;
+        //            productRepo.Create(product);
+        //            //add images
+
+        //            for (int i = 0; i < files.Count; i++)
+        //            {
+        //                var file = files[i];
+
+        //                string ImageName = Guid.NewGuid() + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+        //                string fileNameWithPath = Path.Combine(path, ImageName);
+        //                var extension = Path.GetExtension(file.FileName);
+        //                var size = file.Length;
+        //                using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
+        //                {
+        //                    file.CopyTo(stream);
+        //                }
+        //                Product_Images NewImage = new Product_Images();
+        //                NewImage.ProductID = product.ID;
+        //                NewImage.ImageFileName = ImageName;
+        //                productImageRepo.Create(NewImage);
+        //            }
+
+
+        //            Respons.succcess = true;
+        //            Respons.Message = "product Added successfuly";
+        //            Respons.Data = product.ID;
+        //            return Ok(Respons);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            inventproductRepo.Delete(ress);
+        //            Respons.Message = ex.InnerException.Message;
+        //            Respons.succcess = false;
+        //            Respons.Data = "";
+        //            return BadRequest(Respons);
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(new { Success = false, Message = ex.Message });
+        //    }
+
+        //}
+        //[HttpGet("AssignPartner/{ProductID:int}")]
+        //public IActionResult AssignPartner(int ProductID)
+        //{
+        //    User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("userid"));
+        //    if (user == null)
+        //        return BadRequest(new { success = false, message = BadRequistMSG });
+
+        //    Partener partener = partenerRepo.getByUserID(user.Id);
+        //    if (partener == null)
+        //        return BadRequest(new { success = false, message = BadRequistMSG });
+
+        //    int partnerid = partener.Id;
+
+        //    Product product = productRepo.Get(ProductID);
+        //    if (product == null)
+        //        return BadRequest(new { Success = false, Message = "You Must Add Product First" });
+        //    product.PartenerID = partnerid;
+        //    productRepo.Update(ProductID, product);
+        //    return Ok(new { Success = true, Message = SuccessMSG });
+        //}
+        #endregion
 
         [HttpDelete("DeleteProductById/{Id:int}")]
         public IActionResult DeleteProduct(int Id)
