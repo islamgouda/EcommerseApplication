@@ -64,7 +64,7 @@ namespace EcommerseApplication.Controllers
             Console.WriteLine(user.Id);
             try
             {
-                GetAll = userAddressrepo.GetAllAddress(2);
+                GetAll = userAddressrepo.GetAllAddress(user.Id);
                 if (GetAll == null) {
                     return Ok(new { Success = false, Message = BadRequistMSG, Data = "not Found" });
                 }
