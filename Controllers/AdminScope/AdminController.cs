@@ -110,18 +110,23 @@ namespace EcommerseApplication.Controllers.AdminScope
         /***********/
         [HttpPost]
         [Route("CreateShiperFromRequests")]
-        public IActionResult CreateShipperfromRequests([FromBody] int requestId)
+        public async Task<IActionResult> CreateShipperfromRequests([FromBody] int requestId)
         {
             ShipperRequest shipperR = shipperRequest.Get(requestId);
+            var user = await _userManager.FindByIdAsync(shipperR.AccountID);
+            if (user == null)
+            {
+            return Ok(new Response { Status = "Error", Message = "User Not found " });
+            }
             if (shipperR != null)
             {
                 Shipper shipper = new Shipper();
                 shipper.Name = shipperR.Name;
                 shipper.officePhone = shipperR.officePhone;
                 shipper.arabicName = shipperR.arabicName;
-                //shipper.IdentityId = shipperR.AccountID;
+                shipper.IdentityId = shipperR.AccountID;
                 shiperRepository.insert(shipper);
-
+                await _userManager.AddToRoleAsync(user, "Shiper");
                 shipperRequest.remove(requestId);
             }
             else
@@ -175,7 +180,6 @@ namespace EcommerseApplication.Controllers.AdminScope
         [Route("RemoveUserFromrole")]
         public async Task<IActionResult> RemoveUserFromrole([FromBody]RemoveFromRoleDto model)
         {
-
             var user=await _userManager.FindByIdAsync(model.id);
             await _userManager.RemoveFromRoleAsync(user,model.role);
             return Ok(new Response { Status = "Ok", Message="Successfully Removed" });
