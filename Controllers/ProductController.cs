@@ -723,6 +723,23 @@ namespace EcommerseApplication.Controllers
                 string UserIDIdentity = User?.FindFirstValue("UserId");
                 var ss2 = User?.Claims;
 
+                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                if (user == null)
+                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+
+
+
+                Partener partener = partenerRepo.getByUserID(user.Id);
+                if (partener == null)
+                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+
+
+
+                int PartnerID = partener.Id;
+
+
+
+
                 //var Roles2 = User?.FindAll(ClaimTypes.Role);
 
                 //AppUser appUser =await userManager.FindByIdAsync(UserIDIdentity);
@@ -742,16 +759,20 @@ namespace EcommerseApplication.Controllers
                 int PartnerID = partener.Id;
 
 
+
                 //Images
                 var files = Request.Form.Files;
                 if (files == null || files.Count == 0)
                     return BadRequest(new { Success = false, Message = "You Must Add Image/s" });
+
 
                 string path = Path.Combine(environment.WebRootPath, "Images", "Product");
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
                 }
+
+
 
                 Product product = new Product();
                 product.CategoryID = NewProduct.CategoryID;
@@ -767,6 +788,7 @@ namespace EcommerseApplication.Controllers
                 product.PartenerID = PartnerID;
 
 
+
                 int ress = inventproductRepo.AddproductInventory(NewProduct.Quantity);
                 if (ress == 0)
                     return BadRequest(new { Success = false, Message = BadRequistMSG });
@@ -774,12 +796,17 @@ namespace EcommerseApplication.Controllers
                 {
                     product.InventoryID = ress;
 
+
                     productRepo.Create(product);
                     //add images
+
+
 
                     for (int i = 0; i < files.Count; i++)
                     {
                         var file = files[i];
+
+
 
                         string ImageName = Guid.NewGuid() + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                         string fileNameWithPath = Path.Combine(path, ImageName);
@@ -794,6 +821,7 @@ namespace EcommerseApplication.Controllers
                         NewImage.ImageFileName = ImageName;
                         productImageRepo.Create(NewImage);
                     }
+
 
                     Respons.succcess = true;
                     Respons.Message = "product Added successfuly";
@@ -814,9 +842,11 @@ namespace EcommerseApplication.Controllers
                 return BadRequest(new { Success = false, Message = ex.Message });
             }
 
+
+
         }
 
-        #region
+
         //[HttpPost]
         //public IActionResult AddNewProduct([FromForm] ProductCetegorySubcategoryDTO NewProduct)
         //{
@@ -864,7 +894,10 @@ namespace EcommerseApplication.Controllers
         //        product.Price = NewProduct.Price;
         //        product.IsAvailable = NewProduct.IsAvailable;
         //        product.subcategoryID = NewProduct.subcategoryID;
+
+
         //        product.StatusApproval = ProductApprovelEnum.Pending.ToString();
+
         //        //product.PartenerID = PartnerID;
 
 
@@ -937,7 +970,7 @@ namespace EcommerseApplication.Controllers
         //    productRepo.Update(ProductID, product);
         //    return Ok(new { Success = true, Message = SuccessMSG });
         //}
-        #endregion
+
 
         [HttpDelete("DeleteProductById/{Id:int}")]
         public IActionResult DeleteProduct(int Id)
