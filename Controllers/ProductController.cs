@@ -728,7 +728,7 @@ namespace EcommerseApplication.Controllers
                     return BadRequest(new { Success = false, Message = BadRequistMSG });
 
 
-
+                List<String> Roles = (List<string>)(User?.FindAll(ClaimTypes.Role));
                 Partener partener = partenerRepo.getByUserID(user.Id);
                 if (partener == null)
                     return BadRequest(new { Success = false, Message = BadRequistMSG });
