@@ -1,5 +1,6 @@
 ﻿using EcommerseApplication.DTO;
 using EcommerseApplication.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerseApplication.Repository
 {
@@ -22,7 +23,7 @@ namespace EcommerseApplication.Repository
 
         public List<Shipper> getAll()
         {
-         return  context.shippers.ToList();
+         return  context.shippers.Include(shipper => shipper.Identity).ToList();
         }
 
         public Shipper getByID(int id)

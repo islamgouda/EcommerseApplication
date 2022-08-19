@@ -4,6 +4,7 @@ using EcommerseApplication.Repository;
 using EcommerseApplication.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace EcommerseApplication.Controllers
@@ -30,9 +31,13 @@ namespace EcommerseApplication.Controllers
         {
            if(ModelState.IsValid==true)
             {
+                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("userid"));
+                if (user == null)
+                    return BadRequest(new { success = false, message = "You Must Login First" });
+                int UserID = user.Id;
                 try
                 {
-                    userAddressrepo.AddNewAddresss(NewAdress);
+                    userAddressrepo.AddNewAddresss(UserID,NewAdress);
                     Respons.succcess = true;
                     Respons.Message = "User Address Added";
                     Respons.Data = "";
@@ -74,8 +79,29 @@ namespace EcommerseApplication.Controllers
             {
                 return BadRequest(new { Success = false, Message = BadRequistMSG, Data = "not Found" });
             }
+            List<userAddressDisplayDTO>adresses=new List<userAddressDisplayDTO>();
+            foreach(User_address address in GetAll)
+            {
+                userAddressDisplayDTO userAddressDisplayDTO = new userAddressDisplayDTO();
+                userAddressDisplayDTO.Id = address.Id;
+                userAddressDisplayDTO.AddressLine1 = address.AddressLine1;
+                userAddressDisplayDTO.AddressLine2 = address.AddressLine2;
+                userAddressDisplayDTO.telephone = address.telephone;
+                userAddressDisplayDTO.City = address.City;
+                userAddressDisplayDTO.Country= address.Country;
+                userAddressDisplayDTO.PostalCode = address.PostalCode;
+                userAddressDisplayDTO.mobile = address.mobile;
+                userAddressDisplayDTO.arabicAddressLine1 = address.arabicAddressLine1;
+                userAddressDisplayDTO.arabicAddressLine2 = address.arabicAddressLine2;
+                userAddressDisplayDTO.arabicCity=address.arabicCity;
+                userAddressDisplayDTO.arabicCountry=address.arabicCountry;
+                userAddressDisplayDTO.UserId=address.UserId;
+                adresses.Add(userAddressDisplayDTO);
 
-            return Ok(new { Success = true, Message = SuccessMSG, Data =GetAll  });
+
+
+            }
+            return Ok(new { Success = true, Message = SuccessMSG, Data = adresses });
         }
     }
 }

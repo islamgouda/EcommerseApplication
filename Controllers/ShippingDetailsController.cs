@@ -193,7 +193,10 @@ namespace EcommerseApplication.Controllers
         {
             try
             {
-                int userID = int.Parse(User?.FindFirstValue("UserId"));
+                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                if (user == null)
+                    return BadRequest(new { Success = false, Message = "You Must Login First" });
+                int userID = user.Id;
                 List<Order_Details> Orders = order_DetailsRepo.GetAllByUserID(userID);
                 //int userID = 5;
                 //List<Order_Details> Orders = order_DetailsRepo.GetAllByUserID(5);
@@ -220,5 +223,34 @@ namespace EcommerseApplication.Controllers
             }
 
         }
+
+        [HttpGet("user/getByshippingID")]
+        public IActionResult getShippingByID(int id)
+        {
+            shippingDetails shippD;
+            try
+            {
+                shippD = shippingDetails.getByID(id);
+            }
+            catch
+            {
+                return BadRequest(new { Success = true, Message = NotFoundMSG, Data = "notfound" });
+            }
+                 ShowShippingtoshipperDTO showUserShippingDTO = new ShowShippingtoshipperDTO();
+                showUserShippingDTO.ID = shippD.ID;
+                showUserShippingDTO.shipName = shippD.shipName;
+                showUserShippingDTO.shippingstate = shippD.shippingstate;
+                showUserShippingDTO.ALLaddress = shippD.ALLaddress;
+                showUserShippingDTO.ALLaddress_Ar = shippD.ALLaddress_Ar;
+                showUserShippingDTO.arabicshippingstate = shippD.arabicshippingstate;
+            showUserShippingDTO.customerPhone = shippD.CustomerMobile;
+
+            return Ok(new { Success = true, Message = SuccessMSG, Data = showUserShippingDTO });
+
+
+
+        }
+            
+        
     }
 }

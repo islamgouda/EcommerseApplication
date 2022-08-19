@@ -23,7 +23,7 @@ namespace EcommerseApplication.DTO
         public int Quantity { get; set; }
 
         //[AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png" })]
-        //public List<IFormFile>? ImageFiles { get; set; }
+        //public IFormFileCollection? ImageFiles { get; set; }
         //public byte[]? ImageFiles { get; set; }
     }
 }
