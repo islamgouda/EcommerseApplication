@@ -17,7 +17,10 @@ namespace EcommerseApplication.Repository
             context.User_Payements.Add(newPaement);
             context.SaveChanges();
         }
-
+        public List<User_Payement> GetAllByUser(int UserID)
+        {
+            return context.User_Payements.Where(u => u.UserId == UserID).ToList();
+        }
 
 
 

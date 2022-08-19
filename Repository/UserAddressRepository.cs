@@ -16,7 +16,7 @@ namespace EcommerseApplication.Repository
         {
             return context.User_Addresses.FirstOrDefault(i => i.Id == id);
         }
-        public void AddNewAddresss(UserAddressUSerIdDTO NewAddress)
+        public void AddNewAddresss(int id,UserAddressUSerIdDTO NewAddress)
         {
             User_address user_Address = new User_address();
             user_Address.AddressLine1 = NewAddress.AddressLine1;
@@ -26,7 +26,7 @@ namespace EcommerseApplication.Repository
             user_Address.PostalCode = NewAddress.PostalCode;
             user_Address.mobile = NewAddress.mobile;
             user_Address.telephone = NewAddress.telephone;
-            user_Address.UserId = 2;
+            user_Address.UserId = id;
             context.User_Addresses.Add(user_Address);
             context.SaveChanges();
         }

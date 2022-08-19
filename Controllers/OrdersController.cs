@@ -14,24 +14,38 @@ namespace EcommerseApplication.Controllers
         private readonly string NotFoundMSG = "Data Not Found";
         private readonly string BadRequistMSG = "Invalid Input Data";
         private readonly string SuccessMSG = "Data Found Successfuly";
+        private string baseUrl2;
 
         private readonly IOrder_DetailsRepository order_DetailsRepo;
+        private readonly IWebHostEnvironment environment;
+        private readonly IUserRepository userRepo;
+        private readonly IHttpContextAccessor baseUrl;
 
-        public OrdersController(IOrder_DetailsRepository _order_DetailsRepo)
+        public OrdersController(IOrder_DetailsRepository _order_DetailsRepo,IWebHostEnvironment _environment,
+                                IUserRepository _userRepo, IHttpContextAccessor _baseUrl)
         {
             order_DetailsRepo = _order_DetailsRepo;
+            environment = _environment;
+            userRepo = _userRepo;
+            baseUrl = _baseUrl;
+            baseUrl2 = string.Format("{0}://{1}//", baseUrl.HttpContext.Request.Scheme, baseUrl.HttpContext.Request.Host.Value);
         }
         [HttpGet("GetAll")]
         public IActionResult GetAllByUserID()
         {
             try
             {
-                int UserID = int.Parse(User?.FindFirstValue("UserId"));
+                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                if (user == null)
+                    return BadRequest(new { Success = false, Message = "You Must Login First" });
 
+                int UserID = user.Id;
                 List < Order_Details > Orders = order_DetailsRepo.GetAllByUserID(UserID); 
                 //List<Order_Details> Orders = order_DetailsRepo.GetAllByUserID(5);
                 if (Orders.Count == 0)
                     return NotFound(new { Success = true, Message = NotFoundMSG, Data = new List<OrderDetailsDTO>() });
+
+                string wwwrootPath = environment.WebRootPath;
 
                 if (Orders != null)
                 {
@@ -57,7 +71,12 @@ namespace EcommerseApplication.Controllers
                             OrdersDTO[i].OrderItems[j].ProductName = Items[j].Product.Name;
 
                             if(Items[j].Product.Product_Images.Count > 0 && Items[j].Product.Product_Images != null)
-                                OrdersDTO[i].OrderItems[j].ProductImage = Items[j].Product.Product_Images.FirstOrDefault().ImageFileName;
+                            {
+                                string ImageFullPath = Path.Combine(wwwrootPath, "Images", "Product", Items[j].Product.Product_Images.FirstOrDefault().ImageFileName);
+                                if (System.IO.File.Exists(ImageFullPath))
+                                    OrdersDTO[i].OrderItems[j].ProductImage = Path.Combine(baseUrl2, "Images", "Product", Items[j].Product.Product_Images.FirstOrDefault().ImageFileName);
+
+                            }
                         }
                     }
                     return Ok(new { Success = true, Message = SuccessMSG, Data = OrdersDTO });
