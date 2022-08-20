@@ -1,8 +1,10 @@
 ﻿using EcommerseApplication.DTO;
 using EcommerseApplication.Models;
+using EcommerseApplication.Repository;
 using EcommerseApplication.Respository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EcommerseApplication.Controllers
 {
@@ -12,10 +14,16 @@ namespace EcommerseApplication.Controllers
     {
         private readonly IDiscount discountrepository;
         private ConsumerRespons Response;
-        public DiscountController(IDiscount discountrepository,ConsumerRespons _Response)
+        private readonly IUserRepository userRepo;
+        private readonly Ipartener partenerRepo;
+
+        public DiscountController(IDiscount discountrepository,ConsumerRespons _Response,IUserRepository _userRepo,
+                                  Ipartener _partenerRepo)
         {
             this.discountrepository = discountrepository;
             Response = _Response;
+            userRepo = _userRepo;
+            partenerRepo = _partenerRepo;
         }
         [HttpPost]
         public IActionResult AddNewDiscount(DiscountDTO NewDiscount)
@@ -76,6 +84,98 @@ namespace EcommerseApplication.Controllers
                 return BadRequest(Response);
             }
         }
+
+        [HttpGet("PartenerDiscounts")]
+        public IActionResult GetAllPartenerDiscounts()
+        {
+            try
+            {
+                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                if (user == null)
+                    return BadRequest(new { Success = false, Message = "You Must Login First" });
+
+                Partener partener = partenerRepo.getByUserID(user.Id);
+                if (partener == null)
+                    return BadRequest(new { Success = false, Message = "You Must Be Partener" });
+
+                int PartnerID = partener.Id;
+
+                List<Discount> PartnerDiscounts = discountrepository.GetAllByPartener(PartnerID);
+                List<Discount> test = discountrepository.GetAllByPartener(PartnerID);
+                List<DiscountPartnerDTO> DiscountList = new List<DiscountPartnerDTO>();
+
+                for (int i = 0; i < PartnerDiscounts.Count; i++)
+                {
+                    DiscountList.Add(new DiscountPartnerDTO());
+                    DiscountList[i].Id = PartnerDiscounts[i].ID;
+                    DiscountList[i].Name = PartnerDiscounts[i].Name;
+                    DiscountList[i].Name_Ar = PartnerDiscounts[i].Name_Ar;
+                    DiscountList[i].Description = PartnerDiscounts[i].Description;
+                    DiscountList[i].Description_Ar = PartnerDiscounts[i].Description_Ar;
+                    DiscountList[i].Active = PartnerDiscounts[i].Active;
+                    DiscountList[i].StartTime = PartnerDiscounts[i].StartTime;
+                    DiscountList[i].EndTime = PartnerDiscounts[i].EndTime;
+                    DiscountList[i].Descount_Persent = PartnerDiscounts[i].Descount_Persent;
+
+                    if(PartnerDiscounts[i].Products != null)
+                    {
+                        List<Product> products = PartnerDiscounts[i].Products.ToList();
+                        DiscountList[i].Products = new List<DiscountProductDTO>();
+                        for (int j = 0; j < PartnerDiscounts[i].Products.Count; j++)
+                        {
+                            DiscountList[i].Products.Add(new DiscountProductDTO());
+                            DiscountList[i].Products[j].Id = products[j].ID;
+                            DiscountList[i].Products[j].Name = products[j].Name;
+                            DiscountList[i].Products[j].Description = products[j].Description;
+                            DiscountList[i].Products[j].Price = products[j].Price;
+                        }
+                    }
+                }
+
+                return Ok(new { Success = true, Message = "Data Found Successfuly", Data = DiscountList });
+
+            }
+            catch (Exception ex)
+            {
+                Response.Message = ex.InnerException.Message;
+                Response.succcess = false;
+                Response.Data = "";
+                return BadRequest(Response);
+            }
+        }
+
+        [HttpDelete("DeleteForPartener/{DiscountId:int}")]
+        public IActionResult DeleteForPartener(int DiscountId)
+        {
+            try
+            {
+                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                if (user == null)
+                    return NotFound(new { Success = false, Message = "You Must Login First" });
+
+                Partener partener = partenerRepo.getByUserID(user.Id);
+                if (partener == null)
+                    return NotFound(new { Success = false, Message = "You Must Be Partener" });
+
+                int PartnerID = partener.Id;
+                
+                Discount discount = discountrepository.getDiscountById(DiscountId);
+                if (discount == null)
+                    return Ok(new { Success = false, Message = "There Is No Discount With This ID" });
+
+                int result = discountrepository.DeleteForPartener(DiscountId, PartnerID);
+                if(result == -1)
+                    return Ok(new { Success = false, Message = "There Are Other Products With This Discount" });
+                return Ok(new { Success = true, Message = "Discount Deleted Successfuly" });
+            }
+            catch (Exception ex)
+            {
+                Response.Message = ex.Message;
+                Response.succcess = false;
+                Response.Data = "";
+                return BadRequest(Response);
+            }
+        }
         [HttpPut]
         public IActionResult UpdateDiscount(int Id,DiscountDTO NewDiscount)
         {
@@ -108,38 +208,38 @@ namespace EcommerseApplication.Controllers
         [HttpGet("GetDiscount")]
         public IActionResult GetAllDiscounts()
         {
-            try
-            {
-                List<Discount> ListDiscount = discountrepository.getDiscount();
-                List<DiscountDTO> DiscountList=new List<DiscountDTO>();
-               
-                foreach(Discount discount in ListDiscount)
-                {
-                    DiscountDTO discountDTO = new DiscountDTO();
-                    discountDTO.Id = discount.ID;
-                    discountDTO.Name_Ar = discount.Name_Ar;
-                    discountDTO.Description_Ar = discount.Description_Ar;
-                    discountDTO.Description= discount.Description;
-                    discountDTO.Active = discount.Active;
-                    discountDTO.StartTime = discount.StartTime;
-                    discountDTO.EndTime = discount.EndTime;
-                    discountDTO.Descount_Persent = discount.Descount_Persent;
-                    discountDTO.Name= discount.Name;
-                    DiscountList.Add(discountDTO);
-                }
-                Response.Message = "this is All Discount";
-                Response.succcess = true;
-                Response.Data = DiscountList;
-                return Ok(Response);
+             try
+             {
+                 List<Discount> ListDiscount = discountrepository.getDiscount();
+                 List<DiscountDTO> DiscountList=new List<DiscountDTO>();
 
-            }
-            catch(Exception ex)
-            {
-                Response.Message = ex.InnerException.Message;
-                Response.succcess = false;
-                Response.Data = "";
-                return BadRequest(Response);
-            }
+                 foreach(Discount discount in ListDiscount)
+                 {
+                     DiscountDTO discountDTO = new DiscountDTO();
+                     discountDTO.Id = discount.ID;
+                     discountDTO.Name_Ar = discount.Name_Ar;
+                     discountDTO.Description_Ar = discount.Description_Ar;
+                     discountDTO.Description= discount.Description;
+                     discountDTO.Active = discount.Active;
+                     discountDTO.StartTime = discount.StartTime;
+                     discountDTO.EndTime = discount.EndTime;
+                     discountDTO.Descount_Persent = discount.Descount_Persent;
+                     discountDTO.Name= discount.Name;
+                     DiscountList.Add(discountDTO);
+                 }
+                 Response.Message = "this is All Discount";
+                 Response.succcess = true;
+                 Response.Data = DiscountList;
+                 return Ok(Response);
+
+             }
+             catch(Exception ex)
+             {
+                 Response.Message = ex.InnerException.Message;
+                 Response.succcess = false;
+                 Response.Data = "";
+                 return BadRequest(Response);
+             }
         }
         [HttpGet("getDiscountByID")]
         public IActionResult GetDiscountById(int Id)

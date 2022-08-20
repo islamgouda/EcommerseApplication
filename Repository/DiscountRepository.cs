@@ -1,5 +1,6 @@
 ﻿using EcommerseApplication.DTO;
 using EcommerseApplication.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerseApplication.Respository
 {
@@ -81,6 +82,27 @@ namespace EcommerseApplication.Respository
             }
             return 0;
         }
+
+        public int DeleteForPartener(int DiscountID , int PartenerID)
+        {
+            List<Product> PartnerProducts = context.Products.Where(p => p.PartenerID == PartenerID)
+                                                            .Where(d=>d.DiscountID == DiscountID).ToList();
+            List<Product> AllProducts = context.Products.Where(d => d.DiscountID == DiscountID).ToList();
+            if (AllProducts.Count > PartnerProducts.Count)
+                return -1;
+
+            if (PartnerProducts.Count > 0)
+            {
+                for (int i = 0; i < PartnerProducts.Count; i++)
+                {
+                    PartnerProducts[i].DiscountID = null;
+                }
+            }
+            Discount discount = context.Discounts.FirstOrDefault(p => p.ID == DiscountID);
+            context.Discounts.Remove(discount);
+            context.SaveChanges();
+            return 1;
+        }
         public int UpdateDiscount(int Id , DiscountDTO NewDiscount)
         {
 
@@ -99,6 +121,25 @@ namespace EcommerseApplication.Respository
                 return context.SaveChanges();
             }
             return 0;
+        }
+
+        public List<Discount> GetAllByPartener(int PartnerID)
+        {
+            //List<Product> Products = context.Products.Where(p=>p.PartenerID == PartnerID).ToList();
+            //List<Discount> discounts = context.Discounts.Include(p => p.Products).Where(d=>d.Products.Any(a=>a.PartenerID == PartnerID)).ToList();
+            //List<Discount> discounts2 = context.Discounts.Where(d=>d.Products.Any(a=>a.PartenerID == PartnerID)).ToList();
+            var discountsTemp = context.Discounts.Select(d => new
+            {
+                d,
+                prods = d.Products.Where(p => p.PartenerID == PartnerID).ToList()
+            }).ToList();
+            foreach (var item in discountsTemp)
+            {
+                item.d.Products = item.prods;
+            }
+            List<Discount> discounts = discountsTemp.Where(x=>x.prods.Count != 0).Select(x => x.d).ToList();
+            return discounts;
+            //List<Discount> discounts = Products.Where(d=>d.Products.D)
         }
     }
 }
