@@ -6,6 +6,7 @@ namespace EcommerseApplication.Repository
     {
         List<Product> GetAll();
         List<Product> GetAllNotApproved();
+        List<Product> GetNotApprovedByPartner(int partnerId);
         List<string> GetImages(int id);
         List<Product_Images> GetImagesByProductID(int id);
         List<Product> GetPartnerProducts(int PartnerID);
