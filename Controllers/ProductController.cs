@@ -748,15 +748,7 @@ namespace EcommerseApplication.Controllers
                 //if(!Roles.Contains("Partener"))
                     //return BadRequest(new { Success = false, Message = "You Must Be Partener" });
 
-                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
-                if (user == null)
-                    return BadRequest(new { Success = false, Message = "You Must Login First" });
-
-                Partener partener = partenerRepo.getByUserID(user.Id);
-                if (partener == null)
-                    return BadRequest(new { Success = false, Message = "You Must Be Partener" });
-
-                int PartnerID = partener.Id;
+                
 
 
 
