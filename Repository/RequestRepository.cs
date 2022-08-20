@@ -32,6 +32,11 @@ namespace EcommerseApplication.Repository
         {
             return context.Requests.FirstOrDefault(i => i.IdentityId==id);
         }
+        public void RemoveRequest(Requests request)
+        {
+            context.Remove(request);
+            context.SaveChanges();
+        }
 
 
     }

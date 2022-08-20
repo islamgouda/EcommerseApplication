@@ -725,16 +725,15 @@ namespace EcommerseApplication.Controllers
 
                 User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
                 if (user == null)
-                    return BadRequest(new { Success = false, Message = BadRequistMSG });
+                    return Ok(new { Success = false, Message = "You Must Login First" });
 
-
-                List<String> Roles = (List<string>)(User?.FindAll(ClaimTypes.Role));
+                AppUser appUser = await userManager.FindByIdAsync(UserIDIdentity);
+                var Roles = await userManager.GetRolesAsync(appUser);
+                if (!Roles.Contains("Partener"))
+                    return Ok(new { Success = false, Message = "You Must Be Partener" });
                 Partener partener = partenerRepo.getByUserID(user.Id);
                 if (partener == null)
-                    return BadRequest(new { Success = false, Message = BadRequistMSG });
-
-
-
+                    return Ok(new { Success = false, Message = "You Must Be Partener" });
                 int PartnerID = partener.Id;
 
 
@@ -748,15 +747,15 @@ namespace EcommerseApplication.Controllers
                 //if(!Roles.Contains("Partener"))
                     //return BadRequest(new { Success = false, Message = "You Must Be Partener" });
 
-                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
-                if (user == null)
-                    return BadRequest(new { Success = false, Message = "You Must Login First" });
+                //User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                //if (user == null)
+                //    return BadRequest(new { Success = false, Message = "You Must Login First" });
 
-                Partener partener = partenerRepo.getByUserID(user.Id);
-                if (partener == null)
-                    return BadRequest(new { Success = false, Message = "You Must Be Partener" });
+                //Partener partener = partenerRepo.getByUserID(user.Id);
+                //if (partener == null)
+                //    return BadRequest(new { Success = false, Message = "You Must Be Partener" });
 
-                int PartnerID = partener.Id;
+               // int PartnerID = partener.Id;
 
 
 
@@ -1143,6 +1142,67 @@ namespace EcommerseApplication.Controllers
             {
                 return BadRequest(new { Success = false, Message = ex.Message });
             }
+        }
+        [HttpGet("GetPartnerPendingProducts")]
+        public IActionResult GetPartnerPendingProducts()
+        {
+            List<ProductResponseDTO> ProductDTO = new List<ProductResponseDTO>();
+            User user=  partenerRepo.getByIDentity(User.FindFirstValue("UserId"));
+            Partener partener = partenerRepo.getByUserID(user.Id);
+            List<Product> AllProducts = productRepo.GetNotApprovedByPartner(partener.Id);
+            if (AllProducts.Count == 0)
+                return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+
+            if (AllProducts.Count != 0 && AllProducts != null)
+            {
+                for (int i = 0; i < AllProducts.Count; i++)
+                {
+                    string wwwrootPath = environment.WebRootPath;
+
+                    ProductDTO.Add(new ProductResponseDTO());
+                    ProductDTO[i].ID = AllProducts[i].ID;
+                    ProductDTO[i].Name = AllProducts[i].Name;
+                    ProductDTO[i].Description = AllProducts[i].Description;
+                    ProductDTO[i].Price = AllProducts[i].Price;
+                    ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
+                    ProductDTO[i].StatusApproval = AllProducts[i].StatusApproval;
+                    ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                    ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
+                    if (AllProducts[i].Discount != null)
+                    {
+                        ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
+                                            DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
+                                             AllProducts[i].Discount.Active == false ?
+                                                            0 :
+                                                            AllProducts[i].Discount.Descount_Persent;
+                    }
+                    else { ProductDTO[i].Discount = 0; }
+                    ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                    ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
+                    ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
+
+                    if (AllProducts[i].Name_Ar != null)
+                        ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
+                    if (AllProducts[i].Description_Ar != null)
+                        ProductDTO[i].Description_Ar = AllProducts[i].Description_Ar;
+
+                    ProductDTO[i].Images = new List<string>();
+                    foreach (var item in AllProducts[i].Product_Images)
+                    {
+                        string ImageFullPath = Path.Combine(wwwrootPath, "Images", "Product", item.ImageFileName);
+                        //byte[] imgByte;
+                        if (System.IO.File.Exists(ImageFullPath))
+                        {
+
+                            ProductDTO[i].Images.Add(Path.Combine(baseUrl2, "Images", "Product", item.ImageFileName));
+                        }
+                    }
+
+
+                    
+                }
+            }
+            return Ok(new { Success = true, Message = SuccessMSG, Data = ProductDTO });
         }
     }
 }

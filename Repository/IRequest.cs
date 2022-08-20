@@ -8,5 +8,6 @@ namespace EcommerseApplication.Repository
         public List<Requests> GetAllRequests();
         public Requests GetPartnerById(int id);
         public Requests GetRequestByIdentityId(string id);
+        public void RemoveRequest(Requests request);
     }
 }

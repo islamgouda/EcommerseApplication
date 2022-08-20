@@ -40,8 +40,12 @@ namespace EcommerseApplication.Repository
 
         public void insert(Partener partener)
         {
-            context.Parteners.Add(partener);
-            context.SaveChanges();
+            Partener partener1= context.Parteners.FirstOrDefault(i => i.IdentityId == partener.IdentityId);
+            if (partener1 == null)
+            {
+                context.Parteners.Add(partener);
+                context.SaveChanges();
+            }
         }
         public Partener getByUserID(int id)
         {
