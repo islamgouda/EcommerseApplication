@@ -23,9 +23,35 @@ namespace EcommerseApplication.Controllers
        
         [HttpGet]
         [Route("GetallCategories")]
-        public List<Product_Category> GetallCategories()
+        public IActionResult GetallCategories()
         {
-            return productCategoryRespository.GetAllCategories();
+            List<Product_Category>Listcat= productCategoryRespository.GetAllCategories();
+            List<categoryDTOO> Listt = new List<categoryDTOO>();
+            try
+            {
+                foreach (Product_Category category in productCategoryRespository.GetAllCategories())
+                {
+                    categoryDTOO cattegory = new categoryDTOO();
+                    cattegory.Description = category.Description;
+                    cattegory.Description_Ar = category.Description_Ar;
+                    cattegory.Name = category.Name;
+                    cattegory.Name_Ar = category.Name_Ar;
+                    Listt.Add(cattegory);
+                }
+                Respons.succcess = true;
+                Respons.Message = "successfully";
+                Respons.Data = Listt;
+                return Ok(Respons);
+
+            }
+            catch (Exception ex)
+            {
+                Respons.succcess = false;
+                Respons.Message =ex.Message;
+                Respons.Data = "";
+                return BadRequest(Respons);
+            }
+
         }
         [HttpPost]
         [Route("AddnewCategory")]
