@@ -378,6 +378,7 @@ namespace EcommerseApplication.Controllers
                         }
 
                         AllSubCategoryDTOs[i].CategoryName = AllSubCategorys[i].category.Name;
+                        AllSubCategoryDTOs[i].CategoryId = AllSubCategorys[i].category.ID;
                     }
                     return Ok(new { Success = true, Message = SuccessMSG, Data = AllSubCategoryDTOs });
                 }
