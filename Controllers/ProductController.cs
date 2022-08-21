@@ -214,6 +214,86 @@ namespace EcommerseApplication.Controllers
                 return BadRequest(new { Success = false, Message = ex.Message, Data = new List<Product>() });
             }
         }
+        [HttpGet("ApprovedProducts")]
+        public IActionResult GetAllApproved()
+        {
+            List<ProductResponseDTO> ProductDTO = new List<ProductResponseDTO>();
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)
+                                            .Select(m => m.ErrorMessage)),
+                        Data = new List<ProductResponseDTO>()
+                    });
+
+                List<Product> AllProducts = productRepo.GetAllApproved();
+                if (AllProducts.Count == 0)
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+
+                if (AllProducts.Count != 0 && AllProducts != null)
+                {
+                    string wwwrootPath = environment.WebRootPath;
+
+                    for (int i = 0; i < AllProducts.Count; i++)
+                    {
+                        ProductDTO.Add(new ProductResponseDTO());
+                        ProductDTO[i].ID = AllProducts[i].ID;
+                        ProductDTO[i].Name = AllProducts[i].Name;
+                        ProductDTO[i].Description = AllProducts[i].Description;
+                        ProductDTO[i].Price = AllProducts[i].Price;
+                        ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
+                        ProductDTO[i].StatusApproval = AllProducts[i].StatusApproval;
+                        ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
+                        
+                        if (AllProducts[i].Discount != null)
+                        {
+                            ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
+                                                DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
+                                                 AllProducts[i].Discount.Active == false ?
+                                                                0 :
+                                                                AllProducts[i].Discount.Descount_Persent;
+                        }
+                        else { ProductDTO[i].Discount = 0; }
+                        ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
+                        ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
+                        ProductDTO[i].subcategoryID = AllProducts[i].subcategory.Id;
+
+
+                        if (AllProducts[i].Name_Ar != null)
+                            ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
+                        if (AllProducts[i].Description_Ar != null)
+                            ProductDTO[i].Description_Ar = AllProducts[i].Description_Ar;
+
+                        ProductDTO[i].Images = new List<string>();
+                        foreach (var item in AllProducts[i].Product_Images)
+                        {
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images", "Product", item.ImageFileName);
+                            //byte[] imgByte;
+                            if (System.IO.File.Exists(ImageFullPath))
+                            {
+                                //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                                //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                ProductDTO[i].Images.Add(Path.Combine(baseUrl2, "Images", "Product", item.ImageFileName));
+                            }
+                        }
+                    }
+                    return Ok(new { Success = true, Message = SuccessMSG, Data = ProductDTO });
+                }
+                else
+                {
+                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Success = false, Message = ex.Message, Data = new List<Product>() });
+            }
+        }
 
         [HttpGet("CategoryProducts/{id:int}")]
         public IActionResult GetAllByCategory(int Id)
@@ -441,6 +521,69 @@ namespace EcommerseApplication.Controllers
             }
         }
 
+        [HttpGet("GetAnyProduct/{productID:int}")]
+        public IActionResult GetAnyProductById(int productID)
+        {
+            Product product;
+            try { product = productRepo.GetUnApprovedAndApprovedById(productID); }
+
+            catch (Exception ex) { return NotFound(new { Success = false, Message = NotFoundMSG, Data = ex.Message }); }
+            if (product == null)
+            { return Ok(new { Success = true, Message = NotFoundMSG, Data = "notfound" }); }
+            try
+            {
+                ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+                productResponseDTO.ID = product.ID;
+                productResponseDTO.Name = product.Name;
+                productResponseDTO.Name_Ar = product.Name_Ar;
+                productResponseDTO.Description = product.Description;
+                productResponseDTO.Description_Ar = product.Description_Ar;
+                productResponseDTO.Quantity = product.Product_Inventory.Quantity;
+                productResponseDTO.Price = product.Price;
+                productResponseDTO.IsAvailable = product.IsAvailable;
+                productResponseDTO.StatusApproval = product.StatusApproval;
+
+                productResponseDTO.CategoryName = product.Product_Category.Name;
+                productResponseDTO.subcategoryName = product.subcategory.Name;
+                productResponseDTO.PartenerName = product.Partener.Name;
+                if (product.Discount != null)
+                {
+                    productResponseDTO.Discount = product.Discount.Descount_Persent == decimal.Zero ||
+                                        DateTime.Compare((DateTime)product.Discount.EndTime, DateTime.Now) < 0 ||
+                                         product.Discount.Active == false ?
+                                                        0 :
+                                                        product.Discount.Descount_Persent;
+                }
+                else { productResponseDTO.Discount = 0; }
+
+                // productResponseDTO.Images = productRepo.GetImages(productID);
+                //
+                productResponseDTO.Images = new List<string>();
+                List<string> imges = productRepo.GetImages(productID);
+                string wwwrootPath = environment.WebRootPath;
+                foreach (var item in imges)
+                {
+                    string ImageFullPath = Path.Combine(wwwrootPath, "Images", "Product", item);
+                    //byte[] imgByte;
+                    if (System.IO.File.Exists(ImageFullPath))
+                    {
+                        //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                        //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                        productResponseDTO.Images.Add(Path.Combine(baseUrl2, "Images", "Product", item));
+                    }
+                }
+
+                //productResponseDTO.Discount = product.Discount.Descount_Persent;
+                //return Ok(productResponseDTO);
+                return Ok(new { Success = true, Message = SuccessMSG, Data = productResponseDTO });
+
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new { Success = false, Message = ex.Message });
+            }
+        }
         [HttpGet("PartnerProducts")]
         public IActionResult GetPartnerProducts()
         {
@@ -723,6 +866,7 @@ namespace EcommerseApplication.Controllers
                 string UserIDIdentity = User?.FindFirstValue("UserId");
                 var ss2 = User?.Claims;
 
+
                 User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
                 if (user == null)
                     return Ok(new { Success = false, Message = "You Must Login First" });
@@ -739,13 +883,14 @@ namespace EcommerseApplication.Controllers
 
 
 
+
                 //var Roles2 = User?.FindAll(ClaimTypes.Role);
 
-                //AppUser appUser =await userManager.FindByIdAsync(UserIDIdentity);
-                //var Roles = await userManager.GetRolesAsync(appUser);
+                AppUser appUser = await userManager.FindByIdAsync(UserIDIdentity);
+                var Roles = await userManager.GetRolesAsync(appUser);
 
-                //if(!Roles.Contains("Partener"))
-                    //return BadRequest(new { Success = false, Message = "You Must Be Partener" });
+                if (!Roles.Contains("Partener"))
+                    return BadRequest(new { Success = false, Message = "You Must Be Partener" });
 
                 //User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
                 //if (user == null)
@@ -1204,6 +1349,167 @@ namespace EcommerseApplication.Controllers
             }
             return Ok(new { Success = true, Message = SuccessMSG, Data = ProductDTO });
         }
+
+        //
+        [HttpGet("ProductsByArabicName")]
+        public IActionResult GetAllByArabicName(string Name)
+        {
+            List<ProductResponseDTO> ProductDTO = new List<ProductResponseDTO>();
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)
+                                            .Select(m => m.ErrorMessage)),
+                        Data = new List<ProductResponseDTO>()
+                    });
+
+                List<Product> AllProducts = productRepo.GetIncludeByArabicName(Name);
+                if (AllProducts.Count == 0)
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+
+                if (AllProducts.Count != 0 && AllProducts != null)
+                {
+                    string wwwrootPath = environment.WebRootPath;
+
+                    for (int i = 0; i < AllProducts.Count; i++)
+                    {
+                        ProductDTO.Add(new ProductResponseDTO());
+                        ProductDTO[i].ID = AllProducts[i].ID;
+                        ProductDTO[i].Name = AllProducts[i].Name;
+                        ProductDTO[i].Description = AllProducts[i].Description;
+                        ProductDTO[i].Price = AllProducts[i].Price;
+                        ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
+                        ProductDTO[i].StatusApproval = AllProducts[i].StatusApproval;
+                        ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
+                        if (AllProducts[i].Discount != null)
+                        {
+                            ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
+                                                DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
+                                                 AllProducts[i].Discount.Active == false ?
+                                                                0 :
+                                                                AllProducts[i].Discount.Descount_Persent;
+                        }
+                        else { ProductDTO[i].Discount = 0; }
+                        ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
+                        ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
+
+                        if (AllProducts[i].Name_Ar != null)
+                            ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
+                        if (AllProducts[i].Description_Ar != null)
+                            ProductDTO[i].Description_Ar = AllProducts[i].Description_Ar;
+
+                        ProductDTO[i].Images = new List<string>();
+                        foreach (var item in AllProducts[i].Product_Images)
+                        {
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images", "Product", item.ImageFileName);
+                            //byte[] imgByte;
+                            if (System.IO.File.Exists(ImageFullPath))
+                            {
+                                //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                                //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                ProductDTO[i].Images.Add(Path.Combine(baseUrl2, "Images", "Product", item.ImageFileName));
+                            }
+                        }
+                    }
+                    return Ok(new { Success = true, Message = SuccessMSG, Data = ProductDTO });
+                }
+                else
+                {
+                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Success = false, Message = ex.Message, Data = new List<Product>() });
+            }
+        }
+
+        //
+        [HttpGet("ProductsByName")]
+        public IActionResult GetAllByName(string Name)
+        {
+            List<ProductResponseDTO> ProductDTO = new List<ProductResponseDTO>();
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = String.Join("; ", ModelState.Values.SelectMany(n => n.Errors)
+                                            .Select(m => m.ErrorMessage)),
+                        Data = new List<ProductResponseDTO>()
+                    });
+
+                List<Product> AllProducts = productRepo.GetIncludeByName(Name);
+                if (AllProducts.Count == 0)
+                    return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+
+                if (AllProducts.Count != 0 && AllProducts != null)
+                {
+                    string wwwrootPath = environment.WebRootPath;
+
+                    for (int i = 0; i < AllProducts.Count; i++)
+                    {
+                        ProductDTO.Add(new ProductResponseDTO());
+                        ProductDTO[i].ID = AllProducts[i].ID;
+                        ProductDTO[i].Name = AllProducts[i].Name;
+                        ProductDTO[i].Description = AllProducts[i].Description;
+                        ProductDTO[i].Price = AllProducts[i].Price;
+                        ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
+                        ProductDTO[i].StatusApproval = AllProducts[i].StatusApproval;
+                        ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
+                        if (AllProducts[i].Discount != null)
+                        {
+                            ProductDTO[i].Discount = AllProducts[i].Discount.Descount_Persent == decimal.Zero ||
+                                                DateTime.Compare((DateTime)AllProducts[i].Discount.EndTime, DateTime.Now) < 0 ||
+                                                 AllProducts[i].Discount.Active == false ?
+                                                                0 :
+                                                                AllProducts[i].Discount.Descount_Persent;
+                        }
+                        else { ProductDTO[i].Discount = 0; }
+                        ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
+                        ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
+
+                        if (AllProducts[i].Name_Ar != null)
+                            ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
+                        if (AllProducts[i].Description_Ar != null)
+                            ProductDTO[i].Description_Ar = AllProducts[i].Description_Ar;
+
+                        ProductDTO[i].Images = new List<string>();
+                        foreach (var item in AllProducts[i].Product_Images)
+                        {
+                            string ImageFullPath = Path.Combine(wwwrootPath, "Images", "Product", item.ImageFileName);
+                            //byte[] imgByte;
+                            if (System.IO.File.Exists(ImageFullPath))
+                            {
+                                //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                                //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                                ProductDTO[i].Images.Add(Path.Combine(baseUrl2, "Images", "Product", item.ImageFileName));
+                            }
+                        }
+                    }
+                    return Ok(new { Success = true, Message = SuccessMSG, Data = ProductDTO });
+                }
+                else
+                {
+                    return NotFound(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Success = false, Message = ex.Message, Data = new List<Product>() });
+            }
+        }
+
+
+
     }
 }
 

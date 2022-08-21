@@ -28,6 +28,17 @@ namespace EcommerseApplication.Repository
                 .Where(p => p.DeletedAt == null)
                 .Where(p2=>p2.StatusApproval != ProductApprovelEnum.Approved.ToString()).ToList();
         }
+        public List<Product> GetAllApproved()
+        {
+            return context.Products.Include(p => p.Discount)
+                .Include(p => p.Partener)
+                .Include(p => p.Product_Images)
+                .Include(p => p.subcategory)
+                .Include(p => p.Product_Category)
+                .Include(p => p.Product_Inventory)
+                .Where(p => p.DeletedAt == null)
+                .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString()).ToList();
+        }
         public void ReduseQuantity(int ProductID, int DecreasedQuantity)
         {
             Product pro = context.Products.Include(p => p.Product_Inventory).FirstOrDefault(p1 => p1.ID == ProductID);
@@ -200,7 +211,13 @@ namespace EcommerseApplication.Repository
                 .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString())
                 .FirstOrDefault(y => y.ID == Id);
         }
-
+        public Product GetUnApprovedAndApprovedById(int Id)
+        {
+            return context.Products.Include(e => e.Product_Category).Include(c => c.subcategory)
+                .Include(r => r.Product_Inventory).Include(pr => pr.Discount).Include(im => im.Product_Images)
+                .Include(par => par.Partener)
+                .FirstOrDefault(y => y.ID == Id);
+        }
         public List<Product> GetAllwithCategoryID(int id)
         {
             return context.Products.Where(e => e.CategoryID == id).ToList();
@@ -222,8 +239,22 @@ namespace EcommerseApplication.Repository
                 .Where(p2 => p2.StatusApproval != ProductApprovelEnum.Approved.ToString()).ToList();
         }
 
+        public List<Product> GetIncludeByName(string Name)
+        {
+            return context.Products.Include(e => e.Product_Category).Include(c => c.subcategory)
+                .Include(r => r.Product_Inventory).Include(pr => pr.Discount).Include(im => im.Product_Images)
+                .Include(par => par.Partener)
+                .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString())
+                .Where(proud => EF.Functions.Like(proud.Name, '%'+Name+'%')).ToList();
+        }
 
-
-
+        public List<Product> GetIncludeByArabicName(string Name)
+        {
+            return context.Products.Include(e => e.Product_Category).Include(c => c.subcategory)
+               .Include(r => r.Product_Inventory).Include(pr => pr.Discount).Include(im => im.Product_Images)
+               .Include(par => par.Partener)
+               .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString())
+               .Where(proud => EF.Functions.Like(proud.Name_Ar, '%' + Name + '%')).ToList();
+        }
     }
 }
