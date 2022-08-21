@@ -211,7 +211,13 @@ namespace EcommerseApplication.Repository
                 .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString())
                 .FirstOrDefault(y => y.ID == Id);
         }
-
+        public Product GetUnApprovedAndApprovedById(int Id)
+        {
+            return context.Products.Include(e => e.Product_Category).Include(c => c.subcategory)
+                .Include(r => r.Product_Inventory).Include(pr => pr.Discount).Include(im => im.Product_Images)
+                .Include(par => par.Partener)
+                .FirstOrDefault(y => y.ID == Id);
+        }
         public List<Product> GetAllwithCategoryID(int id)
         {
             return context.Products.Where(e => e.CategoryID == id).ToList();
