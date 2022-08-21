@@ -28,6 +28,17 @@ namespace EcommerseApplication.Repository
                 .Where(p => p.DeletedAt == null)
                 .Where(p2=>p2.StatusApproval != ProductApprovelEnum.Approved.ToString()).ToList();
         }
+        public List<Product> GetAllApproved()
+        {
+            return context.Products.Include(p => p.Discount)
+                .Include(p => p.Partener)
+                .Include(p => p.Product_Images)
+                .Include(p => p.subcategory)
+                .Include(p => p.Product_Category)
+                .Include(p => p.Product_Inventory)
+                .Where(p => p.DeletedAt == null)
+                .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString()).ToList();
+        }
         public void ReduseQuantity(int ProductID, int DecreasedQuantity)
         {
             Product pro = context.Products.Include(p => p.Product_Inventory).FirstOrDefault(p1 => p1.ID == ProductID);
@@ -215,6 +226,18 @@ namespace EcommerseApplication.Repository
         //{
 
         //}
+        public List<Product> GetNotApprovedByPartner(int partnerId)
+        {
+            return context.Products.Include(p => p.Discount)
+                .Include(p => p.Partener)
+                .Include(p => p.Product_Images)
+                .Include(p => p.subcategory)
+                .Include(p => p.Product_Category)
+                .Include(p => p.Product_Inventory)
+                .Where(p => p.DeletedAt == null)
+                .Where(p => p.PartenerID == partnerId)
+                .Where(p2 => p2.StatusApproval != ProductApprovelEnum.Approved.ToString()).ToList();
+        }
 
 
 

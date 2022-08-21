@@ -126,6 +126,7 @@ namespace EcommerseApplication.Controllers.AdminScope
                 shipper.arabicName = shipperR.arabicName;
                 shipper.IdentityId = shipperR.AccountID;
                 shiperRepository.insert(shipper);
+                var result = await _userManager.RemoveFromRoleAsync(user, "User");
                 await _userManager.AddToRoleAsync(user, "Shiper");
                 shipperRequest.remove(requestId);
             }
@@ -156,7 +157,9 @@ namespace EcommerseApplication.Controllers.AdminScope
             partener.IdentityId = request.IdentityId;
             partener.userID = userpartner.Id;
             ipartenerRepository.insert(partener);
+            requestRepository.RemoveRequest(request);
             var user=await _userManager.FindByIdAsync(request.IdentityId);
+           var result= await _userManager.RemoveFromRoleAsync(user, "User");
             await _userManager.AddToRoleAsync(user, "Partener");
             return Ok(new Response { Status = "oK", Message = "Saved" });
         }

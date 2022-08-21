@@ -1,4 +1,6 @@
-﻿namespace EcommerseApplication.DTO
+﻿using EcommerseApplication.Models;
+
+namespace EcommerseApplication.DTO
 {
     public class SubCategoryResponseDTO
     {
