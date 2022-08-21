@@ -17,6 +17,16 @@ namespace EcommerseApplication.Repository
             return context.Products.Where(p => p.DeletedAt == null)
                                    .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString()).ToList();
         }
+        public List<Product> GetAllApprovedd(int partnerId)
+        {
+            return context.Products.Include(p => p.Discount)
+                .Include(p => p.Partener)
+                .Include(p => p.Product_Images)
+                .Include(p => p.subcategory)
+                .Include(p => p.Product_Category)
+                .Include(p => p.Product_Inventory).Where(pp => pp.PartenerID == partnerId).Where(ppp => ppp.DiscountID == null)
+                .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString()).ToList();
+        }
         public List<Product> GetAllNotApproved()
         {
             return context.Products.Include(p => p.Discount)
