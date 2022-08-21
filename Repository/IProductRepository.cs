@@ -29,6 +29,9 @@ namespace EcommerseApplication.Repository
         void Delete(int Id);
         int Deletee(int Id);
         public Product GetIncludeById(int Id);
-        
+        public List<Product> GetIncludeByName(string Name);
+        public List<Product> GetIncludeByArabicName(string Name);
+
+
     }
 }
