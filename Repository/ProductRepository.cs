@@ -222,8 +222,22 @@ namespace EcommerseApplication.Repository
                 .Where(p2 => p2.StatusApproval != ProductApprovelEnum.Approved.ToString()).ToList();
         }
 
+        public List<Product> GetIncludeByName(string Name)
+        {
+            return context.Products.Include(e => e.Product_Category).Include(c => c.subcategory)
+                .Include(r => r.Product_Inventory).Include(pr => pr.Discount).Include(im => im.Product_Images)
+                .Include(par => par.Partener)
+                .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString())
+                .Where(proud => EF.Functions.Like(proud.Name, '%'+Name+'%')).ToList();
+        }
 
-
-
+        public List<Product> GetIncludeByArabicName(string Name)
+        {
+            return context.Products.Include(e => e.Product_Category).Include(c => c.subcategory)
+               .Include(r => r.Product_Inventory).Include(pr => pr.Discount).Include(im => im.Product_Images)
+               .Include(par => par.Partener)
+               .Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString())
+               .Where(proud => EF.Functions.Like(proud.Name_Ar, '%' + Name + '%')).ToList();
+        }
     }
 }
