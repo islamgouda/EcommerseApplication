@@ -8,6 +8,7 @@ namespace EcommerseApplication.Repository
         List<Product> GetAllNotApproved();
 
         Product GetUnApprovedAndApprovedById(int Id);
+        public List<Product> GetAllApprovedd(int partnerId);
 
         public List<Product> GetNotApprovedByPartner(int partnerId);
         public List<Product> GetAllApproved();
