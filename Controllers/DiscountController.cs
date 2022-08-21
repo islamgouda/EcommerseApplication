@@ -208,38 +208,38 @@ namespace EcommerseApplication.Controllers
         [HttpGet("GetDiscount")]
         public IActionResult GetAllDiscounts()
         {
-            try
-            {
-                List<Discount> ListDiscount = discountrepository.getDiscount();
-                List<DiscountDTO> DiscountList=new List<DiscountDTO>();
-               
-                foreach(Discount discount in ListDiscount)
-                {
-                    DiscountDTO discountDTO = new DiscountDTO();
-                    discountDTO.Id = discount.ID;
-                    discountDTO.Name_Ar = discount.Name_Ar;
-                    discountDTO.Description_Ar = discount.Description_Ar;
-                    discountDTO.Description= discount.Description;
-                    discountDTO.Active = discount.Active;
-                    discountDTO.StartTime = discount.StartTime;
-                    discountDTO.EndTime = discount.EndTime;
-                    discountDTO.Descount_Persent = discount.Descount_Persent;
-                    discountDTO.Name= discount.Name;
-                    DiscountList.Add(discountDTO);
-                }
-                Response.Message = "this is All Discount";
-                Response.succcess = true;
-                Response.Data = DiscountList;
-                return Ok(Response);
+             try
+             {
+                 List<Discount> ListDiscount = discountrepository.getDiscount();
+                 List<DiscountDTO> DiscountList=new List<DiscountDTO>();
 
-            }
-            catch(Exception ex)
-            {
-                Response.Message = ex.InnerException.Message;
-                Response.succcess = false;
-                Response.Data = "";
-                return BadRequest(Response);
-            }
+                 foreach(Discount discount in ListDiscount)
+                 {
+                     DiscountDTO discountDTO = new DiscountDTO();
+                     discountDTO.Id = discount.ID;
+                     discountDTO.Name_Ar = discount.Name_Ar;
+                     discountDTO.Description_Ar = discount.Description_Ar;
+                     discountDTO.Description= discount.Description;
+                     discountDTO.Active = discount.Active;
+                     discountDTO.StartTime = discount.StartTime;
+                     discountDTO.EndTime = discount.EndTime;
+                     discountDTO.Descount_Persent = discount.Descount_Persent;
+                     discountDTO.Name= discount.Name;
+                     DiscountList.Add(discountDTO);
+                 }
+                 Response.Message = "this is All Discount";
+                 Response.succcess = true;
+                 Response.Data = DiscountList;
+                 return Ok(Response);
+
+             }
+             catch(Exception ex)
+             {
+                 Response.Message = ex.InnerException.Message;
+                 Response.succcess = false;
+                 Response.Data = "";
+                 return BadRequest(Response);
+             }
         }
         [HttpGet("getDiscountByID")]
         public IActionResult GetDiscountById(int Id)
