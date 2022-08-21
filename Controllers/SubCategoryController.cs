@@ -75,6 +75,7 @@ namespace EcommerseApplication.Controllers
                         }
 
                         AllSubCategoryDTOs[i].CategoryName = AllSubCategorys[i].category.Name;
+                        AllSubCategoryDTOs[i].categoryId = AllSubCategorys[i].category.ID;
                     }
                     return Ok(new { Success = true, Message = SuccessMSG, Data = AllSubCategoryDTOs });
                 }
@@ -321,6 +322,7 @@ namespace EcommerseApplication.Controllers
                         SubCategoryDTOs.Image = domainName + "//Images/SubCategory/" + SubCategory.image; //fileNameWithPath;
                     }
                     SubCategoryDTOs.CategoryName = SubCategory.category.Name;
+                    SubCategoryDTOs.categoryId = SubCategory.category.ID;
 
                     return Ok(new { Success = true, Message = SuccessMSG, Data = SubCategoryDTOs });
                 }
@@ -378,7 +380,7 @@ namespace EcommerseApplication.Controllers
                         }
 
                         AllSubCategoryDTOs[i].CategoryName = AllSubCategorys[i].category.Name;
-                        AllSubCategoryDTOs[i].CategoryId = AllSubCategorys[i].category.ID;
+                        AllSubCategoryDTOs[i].categoryId = AllSubCategorys[i].category.ID;
                     }
                     return Ok(new { Success = true, Message = SuccessMSG, Data = AllSubCategoryDTOs });
                 }

@@ -886,11 +886,11 @@ namespace EcommerseApplication.Controllers
 
                 //var Roles2 = User?.FindAll(ClaimTypes.Role);
 
-                //AppUser appUser =await userManager.FindByIdAsync(UserIDIdentity);
-                //var Roles = await userManager.GetRolesAsync(appUser);
+                AppUser appUser = await userManager.FindByIdAsync(UserIDIdentity);
+                var Roles = await userManager.GetRolesAsync(appUser);
 
-                //if(!Roles.Contains("Partener"))
-                    //return BadRequest(new { Success = false, Message = "You Must Be Partener" });
+                if (!Roles.Contains("Partener"))
+                    return BadRequest(new { Success = false, Message = "You Must Be Partener" });
 
                 //User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
                 //if (user == null)
