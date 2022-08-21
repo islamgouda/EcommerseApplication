@@ -441,6 +441,69 @@ namespace EcommerseApplication.Controllers
             }
         }
 
+        [HttpGet("GetAnyProduct/{productID:int}")]
+        public IActionResult GetAnyProductById(int productID)
+        {
+            Product product;
+            try { product = productRepo.GetUnApprovedAndApprovedById(productID); }
+
+            catch (Exception ex) { return NotFound(new { Success = false, Message = NotFoundMSG, Data = ex.Message }); }
+            if (product == null)
+            { return Ok(new { Success = true, Message = NotFoundMSG, Data = "notfound" }); }
+            try
+            {
+                ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+                productResponseDTO.ID = product.ID;
+                productResponseDTO.Name = product.Name;
+                productResponseDTO.Name_Ar = product.Name_Ar;
+                productResponseDTO.Description = product.Description;
+                productResponseDTO.Description_Ar = product.Description_Ar;
+                productResponseDTO.Quantity = product.Product_Inventory.Quantity;
+                productResponseDTO.Price = product.Price;
+                productResponseDTO.IsAvailable = product.IsAvailable;
+                productResponseDTO.StatusApproval = product.StatusApproval;
+
+                productResponseDTO.CategoryName = product.Product_Category.Name;
+                productResponseDTO.subcategoryName = product.subcategory.Name;
+                productResponseDTO.PartenerName = product.Partener.Name;
+                if (product.Discount != null)
+                {
+                    productResponseDTO.Discount = product.Discount.Descount_Persent == decimal.Zero ||
+                                        DateTime.Compare((DateTime)product.Discount.EndTime, DateTime.Now) < 0 ||
+                                         product.Discount.Active == false ?
+                                                        0 :
+                                                        product.Discount.Descount_Persent;
+                }
+                else { productResponseDTO.Discount = 0; }
+
+                // productResponseDTO.Images = productRepo.GetImages(productID);
+                //
+                productResponseDTO.Images = new List<string>();
+                List<string> imges = productRepo.GetImages(productID);
+                string wwwrootPath = environment.WebRootPath;
+                foreach (var item in imges)
+                {
+                    string ImageFullPath = Path.Combine(wwwrootPath, "Images", "Product", item);
+                    //byte[] imgByte;
+                    if (System.IO.File.Exists(ImageFullPath))
+                    {
+                        //imgByte = System.IO.File.ReadAllBytes(ImageFullPath);
+                        //ProductDTO[i].Images.Add(Convert.ToBase64String(imgByte));
+                        productResponseDTO.Images.Add(Path.Combine(baseUrl2, "Images", "Product", item));
+                    }
+                }
+
+                //productResponseDTO.Discount = product.Discount.Descount_Persent;
+                //return Ok(productResponseDTO);
+                return Ok(new { Success = true, Message = SuccessMSG, Data = productResponseDTO });
+
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new { Success = false, Message = ex.Message });
+            }
+        }
         [HttpGet("PartnerProducts")]
         public IActionResult GetPartnerProducts()
         {
@@ -722,23 +785,6 @@ namespace EcommerseApplication.Controllers
                     });
                 string UserIDIdentity = User?.FindFirstValue("UserId");
                 var ss2 = User?.Claims;
-
-                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
-                if (user == null)
-                    return BadRequest(new { Success = false, Message = BadRequistMSG });
-
-
-                List<String> Roles = (List<string>)(User?.FindAll(ClaimTypes.Role));
-                Partener partener = partenerRepo.getByUserID(user.Id);
-                if (partener == null)
-                    return BadRequest(new { Success = false, Message = BadRequistMSG });
-
-
-
-                int PartnerID = partener.Id;
-
-
-
 
                 //var Roles2 = User?.FindAll(ClaimTypes.Role);
 
