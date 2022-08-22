@@ -55,7 +55,7 @@ namespace EcommerseApplication.Controllers
                 {
                     // string path = Path.Combine(baseUrl2, "Images/SubCategory");
                     string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/SubCategory");
-                    string domainName = HttpContext.Request.Host.ToString();
+                    //string domainName = HttpContext.Request.Host.ToString();
 
                     for (int i = 0; i < AllSubCategorys.Count; i++)
                     {
@@ -71,7 +71,7 @@ namespace EcommerseApplication.Controllers
                         {
                             //byte[] imgByte = System.IO.File.ReadAllBytes(fileNameWithPath);
                             //AllSubCategoryDTOs[i].Image = Convert.ToBase64String(imgByte);
-                            AllSubCategoryDTOs[i].Image = domainName + "//Images/SubCategory/" + AllSubCategorys[i].image; //fileNameWithPath;
+                            AllSubCategoryDTOs[i].Image = baseUrl2 + "//Images/SubCategory/" + AllSubCategorys[i].image; //fileNameWithPath;
                         }
 
                         AllSubCategoryDTOs[i].CategoryName = AllSubCategorys[i].category.Name;
@@ -319,7 +319,7 @@ namespace EcommerseApplication.Controllers
                     {
                         //byte[] imgByte = System.IO.File.ReadAllBytes(fileNameWithPath);
                         //AllSubCategoryDTOs[i].Image = Convert.ToBase64String(imgByte);
-                        SubCategoryDTOs.Image = domainName + "//Images/SubCategory/" + SubCategory.image; //fileNameWithPath;
+                        SubCategoryDTOs.Image = baseUrl2 + "//Images/SubCategory/" + SubCategory.image; //fileNameWithPath;
                     }
                     SubCategoryDTOs.CategoryName = SubCategory.category.Name;
                     SubCategoryDTOs.categoryId = SubCategory.category.ID;
@@ -376,7 +376,7 @@ namespace EcommerseApplication.Controllers
                         //AllSubCategoryDTOs[i].Image = Convert.ToBase64String(imgByte);
                        // http://localhost:5092
                             string domainName = HttpContext.Request.Host.ToString();
-                            AllSubCategoryDTOs[i].Image = domainName+"//Images/SubCategory/" + AllSubCategorys[i].image; //fileNameWithPath;
+                            AllSubCategoryDTOs[i].Image = baseUrl2 + "//Images/SubCategory/" + AllSubCategorys[i].image; //fileNameWithPath;
                         }
 
                         AllSubCategoryDTOs[i].CategoryName = AllSubCategorys[i].category.Name;

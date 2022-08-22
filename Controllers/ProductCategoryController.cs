@@ -58,6 +58,7 @@ namespace EcommerseApplication.Controllers
                             AllCategoryDTOs[i].SubCategories[j].Description = AllCategorys[i].SubCategories[j].Description;
                             AllCategoryDTOs[i].SubCategories[j].Image = AllCategorys[i].SubCategories[j].image;
                             AllCategoryDTOs[i].SubCategories[j].CategoryName = AllCategorys[i].Name;
+                            AllCategoryDTOs[i].SubCategories[j].categoryId = AllCategorys[i].ID;
                         }
                     }
                     return Ok(new { Success = true, Message = SuccessMSG, Data = AllCategoryDTOs });

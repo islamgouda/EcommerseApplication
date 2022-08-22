@@ -102,7 +102,9 @@ namespace EcommerseApplication.Controllers
                         }
                         else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        ProductDTO[i].CategoryID = (int)AllProducts[i].CategoryID;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
+                        ProductDTO[i].subcategoryID = (int)AllProducts[i].subcategoryID;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
 
                         if(AllProducts[i].Name_Ar != null)
@@ -168,7 +170,8 @@ namespace EcommerseApplication.Controllers
                         ProductDTO[i].Price = AllProducts[i].Price;
                         ProductDTO[i].IsAvailable = AllProducts[i].IsAvailable;
                         ProductDTO[i].StatusApproval = AllProducts[i].StatusApproval;
-                        ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        if(AllProducts[i].Partener != null)
+                            ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].Quantity = AllProducts[i].Product_Inventory.Quantity;
                         if (AllProducts[i].Discount != null)
                         {
@@ -179,8 +182,10 @@ namespace EcommerseApplication.Controllers
                                                                 AllProducts[i].Discount.Descount_Persent;
                         }
                         else { ProductDTO[i].Discount = 0; }
-                        ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        //ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        ProductDTO[i].CategoryID = (int)AllProducts[i].CategoryID;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
+                        ProductDTO[i].subcategoryID = (int)AllProducts[i].subcategoryID;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
 
 
@@ -259,9 +264,10 @@ namespace EcommerseApplication.Controllers
                         }
                         else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        ProductDTO[i].CategoryID = (int)AllProducts[i].CategoryID;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
+                        ProductDTO[i].subcategoryID = (int)AllProducts[i].subcategoryID;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
-                        ProductDTO[i].subcategoryID = AllProducts[i].subcategory.Id;
 
 
                         if (AllProducts[i].Name_Ar != null)
@@ -346,9 +352,10 @@ namespace EcommerseApplication.Controllers
                         }
                         else { ProductDTO[i].Discount = 0; }*/
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        ProductDTO[i].CategoryID = (int)AllProducts[i].CategoryID;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
+                        ProductDTO[i].subcategoryID = (int)AllProducts[i].subcategoryID;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
-                        ProductDTO[i].subcategoryID = AllProducts[i].subcategory.Id;
 
 
                         if (AllProducts[i].Name_Ar != null)
@@ -427,7 +434,9 @@ namespace EcommerseApplication.Controllers
                         }
                         else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        ProductDTO[i].CategoryID = (int)AllProducts[i].CategoryID;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
+                        ProductDTO[i].subcategoryID = (int)AllProducts[i].subcategoryID;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
 
 
@@ -512,7 +521,9 @@ namespace EcommerseApplication.Controllers
                         }
                         else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        ProductDTO[i].CategoryID = (int)AllProducts[i].CategoryID;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
+                        ProductDTO[i].subcategoryID = (int)AllProducts[i].subcategoryID;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
 
                         if (AllProducts[i].Name_Ar != null)
@@ -568,7 +579,9 @@ namespace EcommerseApplication.Controllers
                 productResponseDTO.StatusApproval = product.StatusApproval;
 
                 productResponseDTO.CategoryName = product.Product_Category.Name;
+                productResponseDTO.CategoryID = (int)product.CategoryID;
                 productResponseDTO.subcategoryName = product.subcategory.Name;
+                productResponseDTO.subcategoryID = (int)product.subcategoryID;
                 productResponseDTO.PartenerName = product.Partener.Name;
                 if (product.Discount != null)
                 {
@@ -632,7 +645,9 @@ namespace EcommerseApplication.Controllers
                 productResponseDTO.StatusApproval = product.StatusApproval;
 
                 productResponseDTO.CategoryName = product.Product_Category.Name;
+                productResponseDTO.CategoryID = (int)product.CategoryID;
                 productResponseDTO.subcategoryName = product.subcategory.Name;
+                productResponseDTO.subcategoryID = (int)product.subcategoryID;
                 productResponseDTO.PartenerName = product.Partener.Name;
                 if (product.Discount != null)
                 {
@@ -728,7 +743,9 @@ namespace EcommerseApplication.Controllers
                         else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
+                        ProductDTO[i].CategoryID = (int)AllProducts[i].CategoryID;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
+                        ProductDTO[i].subcategoryID = (int)AllProducts[i].subcategoryID;
 
                         if (AllProducts[i].Name_Ar != null)
                             ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
@@ -815,7 +832,9 @@ namespace EcommerseApplication.Controllers
                         }
                         else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
+                        ProductDTO[i].CategoryID = (int)AllProducts[i].CategoryID;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
+                        ProductDTO[i].subcategoryID = (int)AllProducts[i].subcategoryID;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
 
                         if (AllProducts[i].Name_Ar != null)
@@ -904,7 +923,9 @@ namespace EcommerseApplication.Controllers
                         else { ProductDTO[i].Discount = 0; }
                         ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                         ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
+                        ProductDTO[i].CategoryID = (int)AllProducts[i].CategoryID;
                         ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
+                        ProductDTO[i].subcategoryID = (int)AllProducts[i].subcategoryID;
 
                         if (AllProducts[i].Name_Ar != null)
                             ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
@@ -978,7 +999,8 @@ namespace EcommerseApplication.Controllers
                 //var Roles = await userManager.GetRolesAsync(appUser);
 
                 //if (!Roles.Contains("Partener"))
-                  //  return BadRequest(new { Success = false, Message = "You Must Be Partener" });
+                //    return BadRequest(new { Success = false, Message = "You Must Be Partener" });
+
 
                 //User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
                 //if (user == null)
@@ -1255,7 +1277,7 @@ namespace EcommerseApplication.Controllers
                     //Images
                     var files = Request.Form.Files;
                     //if (files == null || files.Count == 0)
-                    //return BadRequest(new { Success = false, Message = "You Must Add Image/s" });
+
 
                     string path = Path.Combine(environment.WebRootPath, "Images", "Product");
                     if (!Directory.Exists(path))
@@ -1266,20 +1288,22 @@ namespace EcommerseApplication.Controllers
                     Product oldproduct = productrepository.Get(Id);
                     if (oldproduct != null)
                     {
-                        oldproduct.CategoryID = NewProduct.CategoryID;
                         oldproduct.Name_Ar = NewProduct.Name_Ar;
                         oldproduct.Description_Ar = NewProduct.Description_Ar;
                         oldproduct.Description = NewProduct.Description;
                         oldproduct.Name = NewProduct.Name;
                         oldproduct.Price = NewProduct.Price;
                         oldproduct.IsAvailable = NewProduct.IsAvailable;
+                        oldproduct.CategoryID = NewProduct.CategoryID;
                         oldproduct.subcategoryID = NewProduct.subcategoryID;
                         oldproduct.PartenerID = PartnerID;
                         oldproduct.StatusApproval = ProductApprovelEnum.Pending.ToString();
 
                         //Old Images to remove later
                         //List<string> OldImages = productRepo.GetImages(Id);
-                        if (files != null && files.Count > 0)
+
+                        if(files != null && files.Count > 0)
+
                         {
                             List<Product_Images> OldImages = productRepo.GetImagesByProductID(Id);
                             for (int i = 0; i < files.Count; i++)
@@ -1305,8 +1329,6 @@ namespace EcommerseApplication.Controllers
                                 System.IO.File.Delete(Path.Combine("wwwroot", "Images", "Product", image.ImageFileName));
                             }
                         }
-
-
 
                         try
                         {
@@ -1385,8 +1407,16 @@ namespace EcommerseApplication.Controllers
         public IActionResult GetPartnerPendingProducts()
         {
             List<ProductResponseDTO> ProductDTO = new List<ProductResponseDTO>();
-            User user=  partenerRepo.getByIDentity(User.FindFirstValue("UserId"));
+            //User user=  partenerRepo.getByIDentity(User.FindFirstValue("UserId"));
+            //Partener partener = partenerRepo.getByUserID(user.Id);
+            User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+            if (user == null)
+                return BadRequest(new { Success = false, Message = "You Must Login First" });
+
             Partener partener = partenerRepo.getByUserID(user.Id);
+            if (partener == null)
+                return BadRequest(new { Success = false, Message = "You Must Be Partener" });
+
             List<Product> AllProducts = productRepo.GetNotApprovedByPartner(partener.Id);
             if (AllProducts.Count == 0)
                 return Ok(new { Success = true, Message = NotFoundMSG, Data = ProductDTO });
@@ -1417,7 +1447,9 @@ namespace EcommerseApplication.Controllers
                     else { ProductDTO[i].Discount = 0; }
                     ProductDTO[i].PartenerName = AllProducts[i].Partener.Name;
                     ProductDTO[i].CategoryName = AllProducts[i].Product_Category.Name;
+                    ProductDTO[i].CategoryID = (int)AllProducts[i].CategoryID;
                     ProductDTO[i].subcategoryName = AllProducts[i].subcategory.Name;
+                    ProductDTO[i].subcategoryID = (int)AllProducts[i].subcategoryID;
 
                     if (AllProducts[i].Name_Ar != null)
                         ProductDTO[i].Name_Ar = AllProducts[i].Name_Ar;
