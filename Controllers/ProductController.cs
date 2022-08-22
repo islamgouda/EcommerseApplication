@@ -1234,15 +1234,16 @@ namespace EcommerseApplication.Controllers
                 return BadRequest(Respons);
             }
         }
+
         [HttpPut("updateProduct/{Id:int}")]
-        public IActionResult UpdateProduct(int Id,[FromForm] ProductCetegorySubcategoryDTO NewProduct)
+        public IActionResult UpdateProduct(int Id, [FromForm] ProductCetegorySubcategoryDTO NewProduct)
         {
             try
             {
                 if (ModelState.IsValid == true)
                 {
                     User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
-                    if(user == null)
+                    if (user == null)
                         return BadRequest(new { Success = false, Message = BadRequistMSG });
 
                     Partener partener = partenerRepo.getByUserID(user.Id);
@@ -1253,8 +1254,8 @@ namespace EcommerseApplication.Controllers
 
                     //Images
                     var files = Request.Form.Files;
-                    if (files == null || files.Count == 0)
-                        return BadRequest(new { Success = false, Message = "You Must Add Image/s" });
+                    //if (files == null || files.Count == 0)
+                    //return BadRequest(new { Success = false, Message = "You Must Add Image/s" });
 
                     string path = Path.Combine(environment.WebRootPath, "Images", "Product");
                     if (!Directory.Exists(path))
@@ -1274,34 +1275,39 @@ namespace EcommerseApplication.Controllers
                         oldproduct.IsAvailable = NewProduct.IsAvailable;
                         oldproduct.subcategoryID = NewProduct.subcategoryID;
                         oldproduct.PartenerID = PartnerID;
+                        oldproduct.StatusApproval = ProductApprovelEnum.Pending.ToString();
 
                         //Old Images to remove later
                         //List<string> OldImages = productRepo.GetImages(Id);
-                        List<Product_Images> OldImages = productRepo.GetImagesByProductID(Id);
-                        for (int i = 0; i < files.Count; i++)
+                        if (files != null && files.Count > 0)
                         {
-                            var file = files[i];
-
-                            string ImageName = Guid.NewGuid() + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                            string fileNameWithPath = Path.Combine(path, ImageName);
-                            var extension = Path.GetExtension(file.FileName);
-                            var size = file.Length;
-                            using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
+                            List<Product_Images> OldImages = productRepo.GetImagesByProductID(Id);
+                            for (int i = 0; i < files.Count; i++)
                             {
-                                file.CopyTo(stream);
+                                var file = files[i];
+
+                                string ImageName = Guid.NewGuid() + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                                string fileNameWithPath = Path.Combine(path, ImageName);
+                                var extension = Path.GetExtension(file.FileName);
+                                var size = file.Length;
+                                using (FileStream stream = new FileStream(fileNameWithPath, FileMode.Create))
+                                {
+                                    file.CopyTo(stream);
+                                }
+                                Product_Images NewImage = new Product_Images();
+                                NewImage.ProductID = Id;
+                                NewImage.ImageFileName = ImageName;
+                                productImageRepo.Create(NewImage);
                             }
-                            Product_Images NewImage = new Product_Images();
-                            NewImage.ProductID = Id;
-                            NewImage.ImageFileName = ImageName;
-                            productImageRepo.Create(NewImage);
+                            foreach (var image in OldImages)
+                            {
+                                productImageRepo.Delete(image.Id);
+                                System.IO.File.Delete(Path.Combine("wwwroot", "Images", "Product", image.ImageFileName));
+                            }
                         }
-                        foreach (var image in OldImages)
-                        {
-                            productImageRepo.Delete(image.Id);
-                            System.IO.File.Delete(Path.Combine("wwwroot", "Images", "Product", image.ImageFileName));
-                        }
-                        
-                        
+
+
+
                         try
                         {
                             inventproductRepo.updateproductInventory((int)oldproduct.InventoryID, NewProduct.Quantity);
@@ -1337,11 +1343,10 @@ namespace EcommerseApplication.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message});
+                return BadRequest(new { Success = false, Message = ex.Message });
             }
-            
-        }
 
+        }
         [HttpGet("ApproveProduct/{ProductId:int}")]
         public IActionResult ApproveProductByAdmin(int ProductId)
         {

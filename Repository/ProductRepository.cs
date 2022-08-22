@@ -167,7 +167,7 @@ namespace EcommerseApplication.Repository
             Product product = Get(Id);
             if (product != null)
             {
-                context.Products.Remove(product);
+                product.StatusApproval = ProductApprovelEnum.Declined.ToString();
                 return context.SaveChanges();
             }
             return 0;
