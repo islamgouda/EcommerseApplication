@@ -1256,15 +1256,16 @@ namespace EcommerseApplication.Controllers
                 return BadRequest(Respons);
             }
         }
+
         [HttpPut("updateProduct/{Id:int}")]
-        public IActionResult UpdateProduct(int Id,[FromForm] ProductCetegorySubcategoryDTO NewProduct)
+        public IActionResult UpdateProduct(int Id, [FromForm] ProductCetegorySubcategoryDTO NewProduct)
         {
             try
             {
                 if (ModelState.IsValid == true)
                 {
                     User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
-                    if(user == null)
+                    if (user == null)
                         return BadRequest(new { Success = false, Message = BadRequistMSG });
 
                     Partener partener = partenerRepo.getByUserID(user.Id);
@@ -1276,7 +1277,7 @@ namespace EcommerseApplication.Controllers
                     //Images
                     var files = Request.Form.Files;
                     //if (files == null || files.Count == 0)
-                        //return BadRequest(new { Success = false, Message = "You Must Add Image/s" });
+
 
                     string path = Path.Combine(environment.WebRootPath, "Images", "Product");
                     if (!Directory.Exists(path))
@@ -1300,7 +1301,9 @@ namespace EcommerseApplication.Controllers
 
                         //Old Images to remove later
                         //List<string> OldImages = productRepo.GetImages(Id);
+
                         if(files != null && files.Count > 0)
+
                         {
                             List<Product_Images> OldImages = productRepo.GetImagesByProductID(Id);
                             for (int i = 0; i < files.Count; i++)
@@ -1326,9 +1329,7 @@ namespace EcommerseApplication.Controllers
                                 System.IO.File.Delete(Path.Combine("wwwroot", "Images", "Product", image.ImageFileName));
                             }
                         }
-                        
-                        
-                        
+
                         try
                         {
                             inventproductRepo.updateproductInventory((int)oldproduct.InventoryID, NewProduct.Quantity);
@@ -1364,11 +1365,10 @@ namespace EcommerseApplication.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message});
+                return BadRequest(new { Success = false, Message = ex.Message });
             }
-            
-        }
 
+        }
         [HttpGet("ApproveProduct/{ProductId:int}")]
         public IActionResult ApproveProductByAdmin(int ProductId)
         {

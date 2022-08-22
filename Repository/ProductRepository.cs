@@ -119,6 +119,7 @@ namespace EcommerseApplication.Repository
                 //.Where(p2 => p2.StatusApproval == ProductApprovelEnum.Approved.ToString())
                 .Where(p => p.PartenerID == PartnerID)
                 .Where(p => p.subcategoryID == SubCategoryID)
+                .Where(p=>p.StatusApproval=="Approved")
                 .Where(p => p.DeletedAt == null).ToList();
         }
         public List<Product> GetAllWithInclude()
@@ -166,7 +167,7 @@ namespace EcommerseApplication.Repository
             Product product = Get(Id);
             if (product != null)
             {
-                context.Products.Remove(product);
+                product.StatusApproval = ProductApprovelEnum.Declined.ToString();
                 return context.SaveChanges();
             }
             return 0;
