@@ -28,7 +28,6 @@
 
 
   <ItemGroup>
-    <Folder Include="wwwroot\Images\SubCategory\" />
     <Folder Include="wwwroot\Images\User\" />
   </ItemGroup>
 

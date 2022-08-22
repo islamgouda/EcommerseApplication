@@ -6,7 +6,13 @@ namespace EcommerseApplication.Repository
     {
         List<Product> GetAll();
         List<Product> GetAllNotApproved();
-        List<Product> GetNotApprovedByPartner(int partnerId);
+
+        Product GetUnApprovedAndApprovedById(int Id);
+        public List<Product> GetAllApprovedd(int partnerId);
+
+        public List<Product> GetNotApprovedByPartner(int partnerId);
+        public List<Product> GetAllApproved();
+
         List<string> GetImages(int id);
         List<Product_Images> GetImagesByProductID(int id);
         List<Product> GetPartnerProducts(int PartnerID);
@@ -24,6 +30,9 @@ namespace EcommerseApplication.Repository
         void Delete(int Id);
         int Deletee(int Id);
         public Product GetIncludeById(int Id);
-        
+        public List<Product> GetIncludeByName(string Name);
+        public List<Product> GetIncludeByArabicName(string Name);
+
+
     }
 }

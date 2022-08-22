@@ -122,6 +122,98 @@ namespace EcommerseApplication.Controllers
 
 
         }
+
+        //
+        [HttpPut("updateshippingStateToPickUp")]
+        public IActionResult updateShipingStateTopickup(int shipId)
+        {
+            UpdateshippingDTO updateshippingDTO=new UpdateshippingDTO();
+            updateshippingDTO.shipID = shipId;//Pick-up, on-process, on-delivery, Delivered)
+                                              ////(استلام شركة الشحن, جاري التنفيذ, جاري التوصيل, تم التوصيل
+            updateshippingDTO.shippingState = "Pick-up";
+            updateshippingDTO.arabicshippingState = "استلام شركة الشحن";
+            try
+            {
+                shippingDetails.updateStatewithDTo(updateshippingDTO);
+            }
+            catch
+            {
+                return BadRequest(new { Success = true, Message = BadRequistMSG, Data = "dontsaved" });
+            }
+            return Ok(new { Success = true, Message = SuccessMSG, Data = "saved" });
+            //shippingDetails.updateState(id, shippingstate);
+
+
+        }
+
+        [HttpPut("updateshippingStateToOnProcess")]
+        public IActionResult updateShipingStateToOnProcess(int shipId)
+        {
+            UpdateshippingDTO updateshippingDTO = new UpdateshippingDTO();
+            updateshippingDTO.shipID = shipId;//Pick-up, on-process, on-delivery, Delivered)
+                                              ////(استلام شركة الشحن, جاري التنفيذ, جاري التوصيل, تم التوصيل
+            updateshippingDTO.shippingState = "on-process";
+            updateshippingDTO.arabicshippingState = "جاري التنفيذ";
+            try
+            {
+                shippingDetails.updateStatewithDTo(updateshippingDTO);
+            }
+            catch
+            {
+                return BadRequest(new { Success = true, Message = BadRequistMSG, Data = "dontsaved" });
+            }
+            return Ok(new { Success = true, Message = SuccessMSG, Data = "saved" });
+            //shippingDetails.updateState(id, shippingstate);
+        }
+
+        [HttpPut("updateshippingStateToOnDelivery")]
+        public IActionResult updateShipingStateToOnOnDelivery(int shipId)
+        {
+            UpdateshippingDTO updateshippingDTO = new UpdateshippingDTO();
+            updateshippingDTO.shipID = shipId;//Pick-up, on-process, on-delivery, Delivered)
+                                              ////(استلام شركة الشحن, جاري التنفيذ, جاري التوصيل, تم التوصيل
+            updateshippingDTO.shippingState = "on-delivery";
+            updateshippingDTO.arabicshippingState = "جاري التوصيل";
+            try
+            {
+                shippingDetails.updateStatewithDTo(updateshippingDTO);
+            }
+            catch
+            {
+                return BadRequest(new { Success = true, Message = BadRequistMSG, Data = "dontsaved" });
+            }
+            return Ok(new { Success = true, Message = SuccessMSG, Data = "saved" });
+            //shippingDetails.updateState(id, shippingstate);
+        }
+
+        [HttpPut("updateshippingStateToDelivered")]
+        public IActionResult updateShipingStateToDelivered(int shipId)
+        {
+            UpdateshippingDTO updateshippingDTO = new UpdateshippingDTO();
+            updateshippingDTO.shipID = shipId;//Pick-up, on-process, on-delivery, Delivered)
+                                              ////(استلام شركة الشحن, جاري التنفيذ, جاري التوصيل, تم التوصيل
+            updateshippingDTO.shippingState = "Delivered";
+            updateshippingDTO.arabicshippingState = "تم التوصيل";
+            try
+            {
+                shippingDetails.updateStatewithDTo(updateshippingDTO);
+            }
+            catch
+            {
+                return BadRequest(new { Success = true, Message = BadRequistMSG, Data = "dontsaved" });
+            }
+            return Ok(new { Success = true, Message = SuccessMSG, Data = "saved" });
+            //shippingDetails.updateState(id, shippingstate);
+        }
+
+
+
+
+
+
+
+
+
         //ShippingDetails/shipper/1   --Get
         [HttpGet("shipper/{id}")]
         public IActionResult getbyShipperID(int id)
@@ -250,7 +342,39 @@ namespace EcommerseApplication.Controllers
 
 
         }
+
+        //
+        [HttpGet("shipper/getShippingByShipID")]
+        public IActionResult getShipperShippingByShipID(int id)
+        {
             
-        
+            shippingDetails shippD;
+            try
+            {
+                shippD = shippingDetails.getByID(id);
+            }
+            catch
+            {
+                return BadRequest(new { Success = true, Message = NotFoundMSG, Data = "notfound" });
+            }
+            
+           
+                ShowShippingtoshipperDTO showUserShippingDTO = new ShowShippingtoshipperDTO();
+                showUserShippingDTO.ID = shippD.ID;
+                showUserShippingDTO.shipName = shippD.shipName;
+                showUserShippingDTO.shippingstate = shippD.shippingstate;
+                showUserShippingDTO.ALLaddress = shippD.ALLaddress;
+                showUserShippingDTO.ALLaddress_Ar = shippD.ALLaddress_Ar;
+                showUserShippingDTO.arabicshippingstate = shippD.arabicshippingstate;
+                showUserShippingDTO.customerPhone = shippD.CustomerMobile;
+
+
+
+              
+            return Ok(new{ Success = true, Message = SuccessMSG, Data = showUserShippingDTO});
+
+        }
+
+
     }
 }

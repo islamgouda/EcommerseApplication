@@ -18,6 +18,15 @@ namespace EcommerseApplication.Respository
             context.Add(newdiscount);
             context.SaveChanges();
         }
+        public List<Discount> GetAllDiscountByPartener(int PartnerID)
+        {
+            //List<Product> Products = context.Products.Where(p=>p.PartenerID == PartnerID).ToList();
+            //List<Discount> discounts = context.Discounts.Include(p => p.Products).Where(d=>d.Products.Any(a=>a.PartenerID == PartnerID)).ToList();
+            //List<Discount> discounts2 = context.Discounts.Where(d=>d.Products.Any(a=>a.PartenerID == PartnerID)).ToList();
+            List<Discount> ListDiscount = context.Discounts.Where(d => d.PartnerId == PartnerID).ToList();
+            return ListDiscount;
+            //List<Discount> discounts = Products.Where(d=>d.Products.D)
+        }
         public void AddnewDiscountt(DiscountDTO NewDiscount)
         {
             Discount discount = new Discount();

@@ -1,4 +1,6 @@
-﻿namespace EcommerseApplication.DTO
+﻿using EcommerseApplication.Models;
+
+namespace EcommerseApplication.DTO
 {
     public class SubCategoryResponseDTO
     {
@@ -9,5 +11,6 @@
         public string? arabicDescription { get; set; }
         public string Image { get; set; }
         public string CategoryName { get; set; }
+        public int categoryId { get; set; }
     }
 }
