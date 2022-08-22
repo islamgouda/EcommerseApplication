@@ -8,6 +8,7 @@ namespace EcommerseApplication.Respository
         public void AddnewDiscount(Discount newdiscount);
         public void AddnewDiscountt(DiscountDTO NewDiscount);
         public List<Discount> getDiscount();
+        public List<Discount> GetAllDiscountByPartener(int PartnerID);
 
         public List<Discount> GetAllByPartener(int PartnerID);
         int DeleteForPartener(int DiscountID, int PartenerID);

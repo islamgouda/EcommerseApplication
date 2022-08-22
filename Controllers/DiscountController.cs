@@ -32,7 +32,28 @@ namespace EcommerseApplication.Controllers
             {
                 try
                 {
-                    discountrepository.AddnewDiscountt(NewDiscount);
+
+                    User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                    if (user == null)
+                        return BadRequest(new { Success = false, Message = "You Must Login First" });
+
+                    Partener partener = partenerRepo.getByUserID(user.Id);
+                    if (partener == null)
+                        return BadRequest(new { Success = false, Message = "You Must Be Partener" });
+
+
+                    Discount discount = new Discount();
+                    discount.Name = NewDiscount.Name;
+                    discount.Description_Ar = NewDiscount.Description_Ar;
+                    discount.Name_Ar = NewDiscount.Name_Ar;
+                    discount.Description = NewDiscount.Description;
+                    discount.Descount_Persent = NewDiscount.Descount_Persent;
+                    discount.CreatedAt = DateTime.Now;
+                    discount.EndTime = NewDiscount.EndTime;
+                    discount.StartTime = NewDiscount.StartTime;
+                    discount.Active = NewDiscount.Active;
+                    discount.PartnerId = partener.Id;
+                    discountrepository.AddnewDiscount(discount);
                     Response.succcess = true;
                     Response.Message = "Discount Added";
                     Response.Data = "";
@@ -130,6 +151,50 @@ namespace EcommerseApplication.Controllers
                             DiscountList[i].Products[j].Price = products[j].Price;
                         }
                     }
+                }
+
+                return Ok(new { Success = true, Message = "Data Found Successfuly", Data = DiscountList });
+
+            }
+            catch (Exception ex)
+            {
+                Response.Message = ex.InnerException.Message;
+                Response.succcess = false;
+                Response.Data = "";
+                return BadRequest(Response);
+            }
+        }
+        [HttpGet("DiscountsByPartnerId")]
+        public IActionResult GetAllDiscountsBypartnerId()
+        {
+            try
+            {
+                User user = userRepo.GetUserByIdentityId(User?.FindFirstValue("UserId"));
+                if (user == null)
+                    return BadRequest(new { Success = false, Message = "You Must Login First" });
+
+                Partener partener = partenerRepo.getByUserID(user.Id);
+                if (partener == null)
+                    return BadRequest(new { Success = false, Message = "You Must Be Partener" });
+
+                int PartnerID = partener.Id;
+
+                List<Discount> PartnerDiscounts = discountrepository.GetAllDiscountByPartener(PartnerID);
+                List<Discount> test = discountrepository.GetAllByPartener(PartnerID);
+                List<DiscountPartnerDTO> DiscountList = new List<DiscountPartnerDTO>();
+
+                for (int i = 0; i < PartnerDiscounts.Count; i++)
+                {
+                    DiscountList.Add(new DiscountPartnerDTO());
+                    DiscountList[i].Id = PartnerDiscounts[i].ID;
+                    DiscountList[i].Name = PartnerDiscounts[i].Name;
+                    DiscountList[i].Name_Ar = PartnerDiscounts[i].Name_Ar;
+                    DiscountList[i].Description = PartnerDiscounts[i].Description;
+                    DiscountList[i].Description_Ar = PartnerDiscounts[i].Description_Ar;
+                    DiscountList[i].Active = PartnerDiscounts[i].Active;
+                    DiscountList[i].StartTime = PartnerDiscounts[i].StartTime;
+                    DiscountList[i].EndTime = PartnerDiscounts[i].EndTime;
+                    DiscountList[i].Descount_Persent = PartnerDiscounts[i].Descount_Persent;
                 }
 
                 return Ok(new { Success = true, Message = "Data Found Successfuly", Data = DiscountList });
