@@ -21,6 +21,7 @@ namespace EcommerseApplication.DTO
         public string PartenerName { get; set; }
         public string CategoryName { get; set; }
         public string subcategoryName { get; set; }
-        public int subcategoryID { get; set; }
+        public int? CategoryID { get; set; }
+        public int? subcategoryID { get; set; }
     }
 }
